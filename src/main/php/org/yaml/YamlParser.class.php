@@ -10,6 +10,8 @@ class YamlParser extends \lang\Object {
         $r[$key]= true;
       } else if ('false' === $value) {
         $r[$key]= false;
+      } else if ("'" === $value{0}) {
+        $r[$key]= substr($value, 1, -1);
       } else if (preg_match('/^[+-]?[0-9]+$/', $value)) {
         $r[$key]= (int)$value;
       } else if (preg_match('/^[+-]?[0-9]+\.[0-9]+$/', $value)) {
