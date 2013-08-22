@@ -50,6 +50,11 @@ class YamlParserTest extends \unittest\TestCase {
     $this->assertEquals(array('bool' => $result), $this->parse($input));
   }
 
+  #[@test]
+  public function parse_null() {
+    $this->assertEquals(array('nil' => null), $this->parse('nil: '));
+  }
+
   #[@test, @values(array(
   #  array("str: ''", ''), array("str: 'Test'", 'Test')
   #))]
