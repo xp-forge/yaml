@@ -4,8 +4,14 @@ class YamlParser extends \lang\Object {
 
   public function parse(\io\streams\TextReader $reader) {
     $r= array();
+    $id= 0;
     while (null !== ($line= $reader->readLine())) {
-      sscanf($line, "%[^:]: %[^\r]", $key, $value);
+      if ('-' === $line{0}) {
+        $key= $id++;
+        $value= substr($line, 2);
+      } else {
+        sscanf($line, "%[^:]: %[^\r]", $key, $value);
+      }
       if ('true' === $value) {
         $r[$key]= true;
       } else if ('false' === $value) {

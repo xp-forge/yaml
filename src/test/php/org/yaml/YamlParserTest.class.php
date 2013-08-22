@@ -63,4 +63,12 @@ class YamlParserTest extends \unittest\TestCase {
   public function parse_string($input, $result) {
     $this->assertEquals(array('str' => $result), $this->parse($input));
   }
+
+  #[@test]
+  public function parse_sequence() {
+    $this->assertEquals(
+      array('Mark McGwire', 'Sammy Sosa', 'Ken Griffey'),
+      $this->parse("- Mark McGwire\n- Sammy Sosa\n- Ken Griffey")
+    );
+  }
 }
