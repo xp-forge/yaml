@@ -28,4 +28,12 @@ class YamlParserTest extends \unittest\TestCase {
       $this->parse("time: 20:03:20\nplayer: Sammy Sosa\naction: strike (miss)")
     );
   }
+
+  #[@test, @values(array(
+  #  array('num: 1', 1), array('num: 0', 0),
+  #  array('num: -1', -1), array('num: +1', 1)
+  #))]
+  public function parse_integer($input, $result) {
+    $this->assertEquals(array('num' => $result), $this->parse($input));
+  }
 }
