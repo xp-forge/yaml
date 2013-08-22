@@ -44,4 +44,9 @@ class YamlParserTest extends \unittest\TestCase {
   public function parse_float($input, $result) {
     $this->assertEquals(array('num' => $result), $this->parse($input));
   }
+
+  #[@test, @values(array(array('bool: true', TRUE), array('bool: false', FALSE)))]
+  public function parse_bool($input, $result) {
+    $this->assertEquals(array('bool' => $result), $this->parse($input));
+  }
 }

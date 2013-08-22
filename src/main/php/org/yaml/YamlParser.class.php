@@ -6,7 +6,11 @@ class YamlParser extends \lang\Object {
     $r= array();
     while (null !== ($line= $reader->readLine())) {
       sscanf($line, "%[^:]: %[^\r]", $key, $value);
-      if (preg_match('/^[+-]?[0-9]+$/', $value)) {
+      if ('true' === $value) {
+        $r[$key]= true;
+      } else if ('false' === $value) {
+        $r[$key]= false;
+      } else if (preg_match('/^[+-]?[0-9]+$/', $value)) {
         $r[$key]= (int)$value;
       } else if (preg_match('/^[+-]?[0-9]+\.[0-9]+$/', $value)) {
         $r[$key]= (double)$value;
