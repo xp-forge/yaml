@@ -8,27 +8,9 @@ class YamlParserTest extends \unittest\TestCase {
   }
 
   protected function parse($str) {
-    return create(new YamlParser())->parse(
-      newinstance('lang.Object', array(new \io\streams\TextReader(new \io\streams\MemoryInputStream($str))), '{
-        protected $stack= array();
-        protected $reader= null;
-
-        public function __construct($reader) {
-          $this->reader= $reader;
-        }
-
-        public function resetLine($l) {
-          $this->stack[]= $l;
-        }
-
-        public function nextLine() {
-          if ($this->stack) {
-            return array_shift($this->stack);
-          }
-          return $this->reader->readLine();
-        }
-      }')
-    );
+    return create(new YamlParser())->parse(new ReaderInput(
+      new \io\streams\TextReader(new \io\streams\MemoryInputStream($str))
+    ));
   }
 
   #[@test]
