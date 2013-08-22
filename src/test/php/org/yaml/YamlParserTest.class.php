@@ -31,7 +31,8 @@ class YamlParserTest extends \unittest\TestCase {
 
   #[@test, @values(array(
   #  array('num: 1', 1), array('num: 0', 0),
-  #  array('num: -1', -1), array('num: +1', 1)
+  #  array('num: -1', -1), array('num: +1', 1),
+  #  array('num: 0o14', 014), array('num: 0xC', 0xC)
   #))]
   public function parse_integer($input, $result) {
     $this->assertEquals(array('num' => $result), $this->parse($input));
