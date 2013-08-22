@@ -18,7 +18,7 @@ class YamlParser extends \lang\Object {
         $r[$key]= hexdec(substr($value, 2));
       } else if (preg_match('/^[+-]?[0-9]+$/', $value)) {
         $r[$key]= (int)$value;
-      } else if (preg_match('/^[+-]?[0-9]+\.[0-9]+$/', $value)) {
+      } else if (preg_match('/^[+-]?[0-9]+\.[0-9]+(e\+[0-9]+)?$/', $value)) {
         $r[$key]= (double)$value;
       } else {
         $r[$key]= $value;

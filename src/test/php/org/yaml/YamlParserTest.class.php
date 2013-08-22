@@ -40,7 +40,8 @@ class YamlParserTest extends \unittest\TestCase {
 
   #[@test, @values(array(
   #  array('num: 1.0', 1.0), array('num: 0.0', 0.0), array('num: 0.5', 0.5),
-  #  array('num: -1.0', -1.0), array('num: +1.0', 1.0)
+  #  array('num: -1.0', -1.0), array('num: +1.0', 1.0),
+  #  array('num: 1.23015e+3', 1.23015e+3), array('num: 12.3015e+02', 12.3015e+02)
   #))]
   public function parse_float($input, $result) {
     $this->assertEquals(array('num' => $result), $this->parse($input));
