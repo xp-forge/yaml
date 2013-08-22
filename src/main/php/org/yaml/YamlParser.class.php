@@ -34,7 +34,7 @@ class YamlParser extends \lang\Object {
         $reader->resetLine($line);
         break;
       } else {
-        if ('- ' === substr($line, $level, 2)) {
+        if ('-' === $line{$level}) {
           $key= $id++;
           $value= substr($line, $level + 2);
         } else {

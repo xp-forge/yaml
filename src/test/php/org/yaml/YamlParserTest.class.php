@@ -105,4 +105,18 @@ class YamlParserTest extends \unittest\TestCase {
       )
     );
   }
+
+  #[@test]
+  public function sequence_of_mappings() {
+    $this->assertEquals(
+      array(
+        array('name' => 'Mark McGwire', 'hr' => 65, 'avg' => 0.278),
+        array('name' => 'Sammy Sosa', 'hr' => 63, 'avg' => 0.288)
+      ),
+      $this->parse(
+        "-\n  name: Mark McGwire\n  hr:   65\n  avg:  0.278\n".
+        "-\n  name: Sammy Sosa\n  hr:   63\n  avg:  0.288\n"
+      )
+    );
+  }
 }
