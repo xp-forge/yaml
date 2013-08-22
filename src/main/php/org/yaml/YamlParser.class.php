@@ -30,20 +30,21 @@ class YamlParser extends \lang\Object {
       if ($spaces > $level) {           // indent
         $reader->resetLine($line);
         $r[$key]= $this->parse($reader, $level + $spaces);
+        continue;
       } else if ($spaces < $level) {    // dedent
         $reader->resetLine($line);
         break;
+      } else if ('#' === $line{$level}) {
+        continue;
+      } else if ('-' === $line{$level}) {
+        $key= $id++;
+        $value= substr($line, $level + 2);
       } else {
-        if ('-' === $line{$level}) {
-          $key= $id++;
-          $value= substr($line, $level + 2);
-        } else {
-          sscanf($line, "%[^:]: %[^\r]", $key, $value);
-          $key= substr($key, $level);
-        }
-
-        $r[$key]= $this->valueOf($value);
+        sscanf($line, "%[^:]: %[^\r]", $key, $value);
+        $key= substr($key, $level);
       }
+
+      $r[$key]= $this->valueOf($value);
     }
     return $r;
   }

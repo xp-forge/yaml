@@ -119,4 +119,14 @@ class YamlParserTest extends \unittest\TestCase {
       )
     );
   }
+
+  #[@test]
+  public function parse_comment() {
+    $this->assertEquals(array(), $this->parse('# Comments are ignored'));
+  }
+
+  #[@test]
+  public function parse_comments() {
+    $this->assertEquals(array(), $this->parse("# Line 1\n# Line 2\n"));
+  }
 }
