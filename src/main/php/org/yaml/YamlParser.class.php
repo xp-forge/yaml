@@ -2,32 +2,47 @@
 
 class YamlParser extends \lang\Object {
 
-  public function parse(\io\streams\TextReader $reader) {
+  protected function valueOf($value) {
+    if ('true' === $value) {
+      return true;
+    } else if ('false' === $value) {
+      return false;
+    } else if ("'" === $value{0}) {
+      return substr($value, 1, -1);
+    } else if ('0o' === substr($value, 0, 2)) {
+      return octdec(substr($value, 2));
+    } else if ('0x' === substr($value, 0, 2)) {
+      return hexdec(substr($value, 2));
+    } else if (preg_match('/^[+-]?[0-9]+$/', $value)) {
+      return (int)$value;
+    } else if (preg_match('/^[+-]?[0-9]+\.[0-9]+(e\+[0-9]+)?$/', $value)) {
+      return (double)$value;
+    } else {
+      return $value;
+    }
+  }
+
+  public function parse($reader, $level= 0) {
     $r= array();
     $id= 0;
-    while (null !== ($line= $reader->readLine())) {
-      if ('-' === $line{0}) {
-        $key= $id++;
-        $value= substr($line, 2);
+    while (null !== ($line= $reader->nextLine())) {
+      $spaces= strspn($line, ' ');
+      if ($spaces > $level) {           // indent
+        $reader->resetLine($line);
+        $r[$key]= $this->parse($reader, $level + $spaces);
+      } else if ($spaces < $level) {    // dedent
+        $reader->resetLine($line);
+        break;
       } else {
-        sscanf($line, "%[^:]: %[^\r]", $key, $value);
-      }
-      if ('true' === $value) {
-        $r[$key]= true;
-      } else if ('false' === $value) {
-        $r[$key]= false;
-      } else if ("'" === $value{0}) {
-        $r[$key]= substr($value, 1, -1);
-      } else if ('0o' === substr($value, 0, 2)) {
-        $r[$key]= octdec(substr($value, 2));
-      } else if ('0x' === substr($value, 0, 2)) {
-        $r[$key]= hexdec(substr($value, 2));
-      } else if (preg_match('/^[+-]?[0-9]+$/', $value)) {
-        $r[$key]= (int)$value;
-      } else if (preg_match('/^[+-]?[0-9]+\.[0-9]+(e\+[0-9]+)?$/', $value)) {
-        $r[$key]= (double)$value;
-      } else {
-        $r[$key]= $value;
+        if ('- ' === substr($line, $level, 2)) {
+          $key= $id++;
+          $value= substr($line, $level + 2);
+        } else {
+          sscanf($line, "%[^:]: %[^\r]", $key, $value);
+          $key= substr($key, $level);
+        }
+
+        $r[$key]= $this->valueOf($value);
       }
     }
     return $r;

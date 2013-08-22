@@ -8,7 +8,27 @@ class YamlParserTest extends \unittest\TestCase {
   }
 
   protected function parse($str) {
-    return create(new YamlParser())->parse(new \io\streams\TextReader(new \io\streams\MemoryInputStream($str)));
+    return create(new YamlParser())->parse(
+      newinstance('lang.Object', array(new \io\streams\TextReader(new \io\streams\MemoryInputStream($str))), '{
+        protected $stack= array();
+        protected $reader= null;
+
+        public function __construct($reader) {
+          $this->reader= $reader;
+        }
+
+        public function resetLine($l) {
+          $this->stack[]= $l;
+        }
+
+        public function nextLine() {
+          if ($this->stack) {
+            return array_shift($this->stack);
+          }
+          return $this->reader->readLine();
+        }
+      }')
+    );
   }
 
   #[@test]
@@ -69,6 +89,20 @@ class YamlParserTest extends \unittest\TestCase {
     $this->assertEquals(
       array('Mark McGwire', 'Sammy Sosa', 'Ken Griffey'),
       $this->parse("- Mark McGwire\n- Sammy Sosa\n- Ken Griffey")
+    );
+  }
+
+  #[@test]
+  public function mapping_scalars_to_sequences() {
+    $this->assertEquals(
+      array(
+        'american' => array('Boston Red Sox', 'Detroit Tigers', 'New York Yankees'),
+        'national' => array('New York Mets', 'Chicago Cubs', 'Atlanta Braves')
+      ),
+      $this->parse(
+        "american:\n  - Boston Red Sox\n  - Detroit Tigers\n  - New York Yankees\n".
+        "national:\n  - New York Mets\n  - Chicago Cubs\n  - Atlanta Braves\n"
+      )
     );
   }
 }
