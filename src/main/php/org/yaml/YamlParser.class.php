@@ -21,7 +21,18 @@ class YamlParser extends \lang\Object {
     } else if ("'" === $value{0}) {
       return substr($value, 1, -1);
     } else if ('{' === $value{0}) {
-      return array($this->matching($reader, $value, '{', '}'));
+      $r= array();
+      $o= 0;
+      $matching= $this->matching($reader, $value, '{', '}');
+      while ($o < strlen($matching)) {
+        $s= strcspn($matching, ',', $o);
+        $token= trim(substr($matching, $o, $s), ' ');
+        $key= $value= null;
+        sscanf($token, "%[^:]: %[^\r]", $key, $value);
+        $r[$key]= $this->valueOf($reader, $value);
+        $o+= $s + 1;
+      }
+      return $r;
     } else if ('[' === $value{0}) {
       return array($this->matching($reader, $value, '[', ']'));
     } else if ('0o' === substr($value, 0, 2)) {
