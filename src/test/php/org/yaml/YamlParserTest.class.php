@@ -230,4 +230,12 @@ class YamlParserTest extends \unittest\TestCase {
       $this->parse("sentence: >\n  Mark McGwire's\n  year was crippled\n  by a knee injury.")
     );
   }
+
+  #[@test]
+  public function folded_scalars() {
+    $this->assertEquals(
+      array('one' => 'This is sentence number 1', 'two' => 'This is sentence number 2'),
+      $this->parse("one: >\n  This is sentence\n  number 1\ntwo: >\n  This is sentence\n  number 2\n")
+    );
+  }
 }
