@@ -99,6 +99,8 @@ class YamlParser extends \lang\Object {
       return (int)$value;
     } else if (preg_match('/^[+-]?[0-9]+\.[0-9]+(e\+[0-9]+)?$/', $value)) {
       return (double)$value;
+    } else if (preg_match('/^[0-9]{4}\-[0-9]{2}-[0-9]{2}/', $value)) {
+      return new \util\Date($value);
     } else if ('>' === $value{strlen($value)- 1}) {
       $r= '';
       $next= $reader->nextLine();

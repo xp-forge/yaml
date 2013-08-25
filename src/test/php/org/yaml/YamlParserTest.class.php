@@ -1,5 +1,9 @@
 <?php namespace org\yaml;
 
+use util\Date;
+use io\streams\TextReader;
+use io\streams\MemoryInputStream;
+
 class YamlParserTest extends \unittest\TestCase {
 
   #[@test]
@@ -8,9 +12,7 @@ class YamlParserTest extends \unittest\TestCase {
   }
 
   protected function parse($str) {
-    return create(new YamlParser())->parse(new ReaderInput(
-      new \io\streams\TextReader(new \io\streams\MemoryInputStream($str))
-    ));
+    return create(new YamlParser())->parse(new ReaderInput(new TextReader(new MemoryInputStream($str))));
   }
 
   #[@test]
@@ -67,6 +69,35 @@ class YamlParserTest extends \unittest\TestCase {
   #[@test]
   public function parse_null() {
     $this->assertEquals(array('nil' => null), $this->parse('nil: '));
+  }
+
+  #[@test]
+  public function parse_date() {
+    $this->assertEquals(array('date' => new Date('2002-12-14')), $this->parse('date: 2002-12-14'));
+  }
+
+  #[@test]
+  public function parse_canonical() {
+    $this->assertEquals(
+      array('canonical' => new Date('2001-12-15 02:59:43', \util\TimeZone::getByName('GMT'))),
+      $this->parse('canonical: 2001-12-15T02:59:43.1Z')
+    );
+  }
+
+  #[@test]
+  public function parse_iso8601() {
+    $this->assertEquals(
+      array('iso8601' => new Date('2001-12-14 21:59:43-05:00')),
+      $this->parse('iso8601: 2001-12-14t21:59:43.10-05:00')
+    );
+  }
+
+  #[@test]
+  public function spaced() {
+    $this->assertEquals(
+      array('spaced' => new Date('2001-12-14 21:59:43-05:00')),
+      $this->parse('spaced: 2001-12-14 21:59:43.10 -5')
+    );
   }
 
   #[@test, @values(array(
