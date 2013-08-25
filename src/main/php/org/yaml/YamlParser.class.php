@@ -13,6 +13,12 @@ class YamlParser extends \lang\Object {
     return substr($value, $offset, $s - $offset);
   }
 
+  /**
+   * Expand escapes sequences inside a string
+   *
+   * @param  string $value
+   * @return string
+   */
   protected function expand($value) {
     static $escapes= array('r' => "\x0d", 'n' => "\x0a", 't' => "\x09", 'b' => "\x08");
 
@@ -34,6 +40,13 @@ class YamlParser extends \lang\Object {
     return $r;
   }
 
+  /**
+   * Parse a value
+   *
+   * @param  org.yaml.Input $reader
+   * @param  string $value
+   * @return var
+   */
   protected function valueOf($reader, $value) {
     if ('true' === $value) {
       return true;
