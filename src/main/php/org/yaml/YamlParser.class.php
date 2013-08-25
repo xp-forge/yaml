@@ -22,6 +22,13 @@ class YamlParser extends \lang\Object {
     }
   }
 
+  /**
+   * Parse a given input source
+   *
+   * @param  org.yaml.Input $reader
+   * @param  int $level
+   * @return var
+   */
   public function parse($reader, $level= 0) {
     $r= array();
     $id= 0;

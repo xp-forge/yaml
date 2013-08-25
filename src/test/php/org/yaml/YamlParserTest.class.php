@@ -23,9 +23,14 @@ class YamlParserTest extends \unittest\TestCase {
     $this->assertEquals(array(), $this->parse($value));
   }
 
+  #[@test, @values(array("key: value", "key: value\n"))]
+  public function parse_single_key_value($value) {
+    $this->assertEquals(array('key' => 'value'), $this->parse($value));
+  }
+
   #[@test]
-  public function parse_single_key_value() {
-    $this->assertEquals(array('key' => 'value'), $this->parse('key: value'));
+  public function parse_single_key_value_surrounded_by_empty_lines() {
+    $this->assertEquals(array('key' => 'value'), $this->parse("\nkey: value\n\n"));
   }
 
   #[@test]
@@ -115,5 +120,10 @@ class YamlParserTest extends \unittest\TestCase {
   #[@test]
   public function parse_comments() {
     $this->assertEquals(array(), $this->parse("# Line 1\n# Line 2\n"));
+  }
+
+  #[@test]
+  public function parse_comments_and_whitespace() {
+    $this->assertEquals(array(), $this->parse("# Line 1\n\n# Line 3\n"));
   }
 }
