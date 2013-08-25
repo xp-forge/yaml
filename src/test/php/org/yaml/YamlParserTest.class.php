@@ -204,7 +204,7 @@ class YamlParserTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function  compact_nested_mapping() {
+  public function compact_nested_mapping() {
     $this->assertEquals(
       array(
         array('item' => 'Super Hoop', 'quantity' => 1),
@@ -220,6 +220,14 @@ class YamlParserTest extends \unittest\TestCase {
         "- item    : Big Shoes\n".
         "  quantity: 1"
       )
+    );
+  }
+
+  #[@test]
+  public function folded_scalar() {
+    $this->assertEquals(
+      array('sentence' => "Mark McGwire's year was crippled by a knee injury."),
+      $this->parse("sentence: >\n  Mark McGwire's\n  year was crippled\n  by a knee injury.")
     );
   }
 }
