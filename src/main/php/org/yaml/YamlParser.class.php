@@ -48,6 +48,10 @@ class YamlParser extends \lang\Object {
    * @return var
    */
   protected function valueOf($reader, $value) {
+    static $literals= array(
+      'null' => null, 'Null' => null, 'NULL' => null, '~' => null,
+    );
+
     if (0 === strncmp('!!str', $value, 5)) {
       return substr($value, 6);
     } else if ('true' === $value) {
@@ -97,6 +101,8 @@ class YamlParser extends \lang\Object {
       return octdec(substr($value, 2));
     } else if ('0x' === substr($value, 0, 2)) {
       return hexdec(substr($value, 2));
+    } else if (array_key_exists((string)$value, $literals)) {
+      return $literals[$value];
     } else if (preg_match('/^[+-]?[0-9]+$/', $value)) {
       return (int)$value;
     } else if (preg_match('/^[+-]?[0-9]+\.[0-9]+(e\+[0-9]+)?$/', $value)) {
