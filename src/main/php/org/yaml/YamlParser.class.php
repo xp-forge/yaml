@@ -48,7 +48,9 @@ class YamlParser extends \lang\Object {
    * @return var
    */
   protected function valueOf($reader, $value) {
-    if ('true' === $value) {
+    if (0 === strncmp('!!str', $value, 5)) {
+      return substr($value, 6);
+    } else if ('true' === $value) {
       return true;
     } else if ('false' === $value) {
       return false;

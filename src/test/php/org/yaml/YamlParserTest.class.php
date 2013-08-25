@@ -277,4 +277,9 @@ class YamlParserTest extends \unittest\TestCase {
       $this->parse("one: >\n  This is sentence\n  number 1\ntwo: >\n  This is sentence\n  number 2\n")
     );
   }
+
+  #[@test]
+  public function explicit_str_tag() {
+    $this->assertEquals(array('not-date' => '2002-04-28'), $this->parse('not-date: !!str 2002-04-28'));
+  }
 }
