@@ -130,6 +130,23 @@ class YamlParserTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function flowstyle_sequence_of_sequences() {
+    $this->assertEquals(
+      array(
+        array('name', 'hr', 'avg'),
+        array('Mark McGwire', 65, 0.278),
+        array('Sammy Sosa', 63, 0.288)
+      ),
+      $this->parse(
+        "- [name        , hr, avg  ]\n".
+        "- [Mark McGwire, 65, 0.278]\n".
+        "- [Sammy Sosa  , 63, 0.288]\n"
+      )
+    );
+  }
+
+
+  #[@test]
   public function comment() {
     $this->assertEquals(array(), $this->parse('# Comments are ignored'));
   }

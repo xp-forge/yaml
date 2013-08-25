@@ -20,11 +20,12 @@ class YamlParser extends \lang\Object {
       return false;
     } else if ("'" === $value{0}) {
       return substr($value, 1, -1);
-    } else if ('{' === $value{0}) {
+    } else if ('{' === $value{0}) {     // Flow style map
+      $matching= $this->matching($reader, $value, '{', '}');
+      $l= strlen($matching);
       $r= array();
       $o= 0;
-      $matching= $this->matching($reader, $value, '{', '}');
-      while ($o < strlen($matching)) {
+      while ($o < $l) {
         $s= strcspn($matching, ',', $o);
         $token= trim(substr($matching, $o, $s), ' ');
         $key= $value= null;
@@ -34,7 +35,17 @@ class YamlParser extends \lang\Object {
       }
       return $r;
     } else if ('[' === $value{0}) {
-      return array($this->matching($reader, $value, '[', ']'));
+      $matching= $this->matching($reader, $value, '[', ']');
+      $l= strlen($matching);
+      $r= array();
+      $o= 0;
+      while ($o < $l) {
+        $s= strcspn($matching, ',', $o);
+        $token= trim(substr($matching, $o, $s), ' ');
+        $r[]= $this->valueOf($reader, $token);
+        $o+= $s + 1;
+      }
+      return $r;
     } else if ('0o' === substr($value, 0, 2)) {
       return octdec(substr($value, 2));
     } else if ('0x' === substr($value, 0, 2)) {
