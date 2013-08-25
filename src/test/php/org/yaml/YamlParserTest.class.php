@@ -202,4 +202,24 @@ class YamlParserTest extends \unittest\TestCase {
       $this->parse("- &SS Sammy Sosa\n- *SS # Same\n")
     );
   }
+
+  #[@test]
+  public function  compact_nested_mapping() {
+    $this->assertEquals(
+      array(
+        array('item' => 'Super Hoop', 'quantity' => 1),
+        array('item' => 'Basketball', 'quantity' => 4),
+        array('item' => 'Big Shoes', 'quantity' => 1)
+      ),
+      $this->parse(
+        "# Products purchased\n".
+        "- item    : Super Hoop\n".
+        "  quantity: 1\n".
+        "- item    : Basketball\n".
+        "  quantity: 4\n".
+        "- item    : Big Shoes\n".
+        "  quantity: 1"
+      )
+    );
+  }
 }

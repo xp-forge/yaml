@@ -138,11 +138,19 @@ class YamlParser extends \lang\Object {
       // Sequences (begin with a dash) and maps (key: value)
       if ('-' === $line{$level}) {
         $key= $id++;
-        $r[$key]= $this->valueOf($reader, substr($line, $level + 2));
-      } else {
+
+        if (strpos($line, ':')) {
+          $reader->resetLine(str_repeat(' ', $level + 2).substr($line, $level + 2));
+        } else {
+          $r[$key]= $this->valueOf($reader, substr($line, $level + 2));
+        }
+      } else if (strpos($line, ':')) {
         $key= $value= null;
         sscanf($line, "%[^:]: %[^\r]", $key, $value);
-        $r[substr($key, $level)]= $this->valueOf($reader, $value);
+        $key= trim(substr($key, $level), ' ');
+        $r[$key]= $this->valueOf($reader, $value);
+      } else {
+        throw new \lang\FormatException('Unparseable line "'.$line.'"');
       }
     }
     return $r;
