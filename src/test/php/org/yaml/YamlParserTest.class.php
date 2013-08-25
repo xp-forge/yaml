@@ -79,12 +79,18 @@ class YamlParserTest extends \unittest\TestCase {
 
   #[@test]
   public function control() {
-    $this->assertEquals(array('str' => "\b1998\t1999\t2000\n"), $this->parse('str: "\b1998\t1999\t2000\n"'));
+    $this->assertEquals(
+      array('str' => "\x081998\x091999\x092000\x0a"),
+      $this->parse('str: "\b1998\t1999\t2000\n"')
+    );
   }
 
   #[@test]
   public function hex_esc() {
-    $this->assertEquals(array('str' => "\x0d\x0a is \r\n"), $this->parse('str: "\x0d\x0a is \r\n"'));
+    $this->assertEquals(
+      array('str' => "\x0d\x0a is \x0d\x0a"),
+      $this->parse('str: "\x0d\x0a is \r\n"')
+    );
   }
 
   #[@test]

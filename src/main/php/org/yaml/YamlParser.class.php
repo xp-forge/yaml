@@ -13,6 +13,27 @@ class YamlParser extends \lang\Object {
     return substr($value, $offset, $s - $offset);
   }
 
+  protected function expand($value) {
+    static $escapes= array('r' => "\x0d", 'n' => "\x0a", 't' => "\x09", 'b' => "\x08");
+
+    $r= '';
+    for ($i= 0, $l= strlen($value); $i < $l; $i++) {
+      if ('\\' === $value{$i}) {
+        $e= $value{$i + 1};
+        if (isset($escapes[$e])) {
+          $r.= $escapes[$e];
+          $i+= 1;
+        } else if ('x' === $e) {
+          $r.= chr(hexdec(substr($value, $i + 2, 2)));
+          $i+= 3;
+        }
+      } else {
+        $r.= $value{$i};
+      }
+    }
+    return $r;
+  }
+
   protected function valueOf($reader, $value) {
     if ('true' === $value) {
       return true;
@@ -21,7 +42,7 @@ class YamlParser extends \lang\Object {
     } else if ("'" === $value{0}) {
       return substr($value, 1, -1);
     } else if ('"' === $value{0}) {
-      return eval('return '.$value.';');
+      return $this->expand(substr($value, 1, -1));
     } else if ('{' === $value{0}) {     // Flow style map
       $matching= $this->matching($reader, $value, '{', '}');
       $l= strlen($matching);
