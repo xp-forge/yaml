@@ -188,6 +188,14 @@ class YamlParserTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function comment_at_end_of_lines() {
+    $this->assertEquals(
+      array('hr' => 65, 'avg' => 0.278, 'rbi' => 147),
+      $this->parse("hr:  65    # Home runs\navg: 0.278 # Batting average\nrbi: 147   # Runs Batted In")
+    );
+  }
+
+  #[@test]
   public function repeated_nodes() {
     $this->assertEquals(
       array('Sammy Sosa', 'Sammy Sosa'),
