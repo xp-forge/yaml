@@ -50,14 +50,12 @@ class YamlParser extends \lang\Object {
   protected function valueOf($reader, $value) {
     static $literals= array(
       'null' => null, 'Null' => null, 'NULL' => null, '~' => null,
+      'true' => true, 'True' => true, 'TRUE' => true,
+      'false' => false, 'False' => false, 'FALSE' => false,
     );
 
     if (0 === strncmp('!!str', $value, 5)) {
       return substr($value, 6);
-    } else if ('true' === $value) {
-      return true;
-    } else if ('false' === $value) {
-      return false;
     } else if ("'" === $value{0}) {
       return substr($value, 1, -1);
     } else if ('"' === $value{0}) {
@@ -97,9 +95,9 @@ class YamlParser extends \lang\Object {
       }
     } else if ('*' === $value{0}) {
       return $this->identifiers[substr($value, 1)];
-    } else if ('0o' === substr($value, 0, 2)) {
+    } else if (0 === strncmp('0o', $value, 2)) {
       return octdec(substr($value, 2));
-    } else if ('0x' === substr($value, 0, 2)) {
+    } else if (0 === strncmp('0x', $value, 2)) {
       return hexdec(substr($value, 2));
     } else if (array_key_exists((string)$value, $literals)) {
       return $literals[$value];
