@@ -145,7 +145,6 @@ class YamlParserTest extends \unittest\TestCase {
     );
   }
 
-
   #[@test]
   public function comment() {
     $this->assertEquals(array(), $this->parse('# Comments are ignored'));
@@ -169,5 +168,13 @@ class YamlParserTest extends \unittest\TestCase {
   #[@test, @values(array('key: value # A value', 'key: value        # A value'))]
   public function comment_at_end_of_line($value) {
     $this->assertEquals(array('key' => 'value'), $this->parse($value));
+  }
+
+  #[@test]
+  public function repeated_nodes() {
+    $this->assertEquals(
+      array('Sammy Sosa', 'Sammy Sosa'),
+      $this->parse("- &SS Sammy Sosa\n- *SS # Same\n")
+    );
   }
 }

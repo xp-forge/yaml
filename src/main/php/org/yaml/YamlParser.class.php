@@ -46,6 +46,15 @@ class YamlParser extends \lang\Object {
         $o+= $s + 1;
       }
       return $r;
+    } else if ('&' === $value{0}) {
+      if (false === ($o= strpos($value, ' '))) {
+        return $this->identifiers[$value]= null;
+      } else {
+        $id= substr($value, 1, $o - 1);
+        return $this->identifiers[$id]= substr($value, $o + 1);
+      }
+    } else if ('*' === $value{0}) {
+      return $this->identifiers[substr($value, 1)];
     } else if ('0o' === substr($value, 0, 2)) {
       return octdec(substr($value, 2));
     } else if ('0x' === substr($value, 0, 2)) {
@@ -69,6 +78,7 @@ class YamlParser extends \lang\Object {
   public function parse($reader, $level= 0) {
     $r= array();
     $id= 0;
+    $this->identifiers= array();
     while (null !== ($line= $reader->nextLine())) {
 
       // Everything after the comment is ignored
