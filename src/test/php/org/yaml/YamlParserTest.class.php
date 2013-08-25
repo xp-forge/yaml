@@ -18,6 +18,11 @@ class YamlParserTest extends \unittest\TestCase {
     $this->assertEquals(array(), $this->parse(''));
   }
 
+  #[@test, @values(array("\n", "\n\n", " \n \n", "  \n\n"))]
+  public function parse_lines($value) {
+    $this->assertEquals(array(), $this->parse($value));
+  }
+
   #[@test]
   public function parse_single_key_value() {
     $this->assertEquals(array('key' => 'value'), $this->parse('key: value'));

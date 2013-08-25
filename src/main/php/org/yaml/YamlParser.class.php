@@ -27,7 +27,9 @@ class YamlParser extends \lang\Object {
     $id= 0;
     while (null !== ($line= $reader->nextLine())) {
       $spaces= strspn($line, ' ');
-      if ($spaces > $level) {           // indent
+      if ($spaces === strlen($line)) {
+        continue;
+      } else if ($spaces > $level) {           // indent
         $reader->resetLine($line);
         $r[$key]= $this->parse($reader, $level + $spaces);
         continue;
