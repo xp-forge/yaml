@@ -224,6 +224,14 @@ class YamlParserTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function literal_style() {
+    $this->assertEquals(
+      array('stats' => "65 Home Runs\n0.278 Batting Average"),
+      $this->parse("stats: |\n 65 Home Runs\n 0.278 Batting Average")
+    );
+  }
+
+  #[@test]
   public function folded_scalar() {
     $this->assertEquals(
       array('sentence' => "Mark McGwire's year was crippled by a knee injury."),

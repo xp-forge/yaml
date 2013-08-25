@@ -109,6 +109,16 @@ class YamlParser extends \lang\Object {
       } while (null !== ($next= $reader->nextLine()));
       $reader->resetLine($next);
       return substr($r, 1);
+    } else if ('|' === $value{strlen($value)- 1}) {
+      $r= '';
+      $next= $reader->nextLine();
+      $spaces= strspn($next, ' ');
+      do {
+        if (strspn($next, ' ') < $spaces) break;
+        $r.= "\n".substr($next, $spaces);
+      } while (null !== ($next= $reader->nextLine()));
+      $reader->resetLine($next);
+      return substr($r, 1);
     } else {
       return $value;
     }
