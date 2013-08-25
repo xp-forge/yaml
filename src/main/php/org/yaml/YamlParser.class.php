@@ -2,13 +2,28 @@
 
 class YamlParser extends \lang\Object {
 
-  protected function valueOf($value) {
+  protected function matching($reader, $value, $begin, $end) {
+    while (false === ($s= strrpos($value, $end))) {
+      if (null === ($line= $reader->nextLine())) {
+        throw new \lang\FormatException('Unmatched "'.$begin.'", encountered EOF');
+      }
+      $value.= $line;
+    }
+    $offset= strlen($begin);
+    return substr($value, $offset, $s - $offset);
+  }
+
+  protected function valueOf($reader, $value) {
     if ('true' === $value) {
       return true;
     } else if ('false' === $value) {
       return false;
     } else if ("'" === $value{0}) {
       return substr($value, 1, -1);
+    } else if ('{' === $value{0}) {
+      return array($this->matching($reader, $value, '{', '}'));
+    } else if ('[' === $value{0}) {
+      return array($this->matching($reader, $value, '[', ']'));
     } else if ('0o' === substr($value, 0, 2)) {
       return octdec(substr($value, 2));
     } else if ('0x' === substr($value, 0, 2)) {
@@ -55,11 +70,11 @@ class YamlParser extends \lang\Object {
       // Sequences (begin with a dash) and maps (key: value)
       if ('-' === $line{$level}) {
         $key= $id++;
-        $r[$key]= $this->valueOf(substr($line, $level + 2));
+        $r[$key]= $this->valueOf($reader, substr($line, $level + 2));
       } else {
         $key= $value= null;
         sscanf($line, "%[^:]: %[^\r]", $key, $value);
-        $r[substr($key, $level)]= $this->valueOf($value);
+        $r[substr($key, $level)]= $this->valueOf($reader, $value);
       }
     }
     return $r;

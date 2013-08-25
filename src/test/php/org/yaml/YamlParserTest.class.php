@@ -113,6 +113,23 @@ class YamlParserTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function flowstyle_mappings_of_mappings() {
+    $this->assertEquals(
+      array(
+        'Mark McGwire' => array('hr' => 65, 'avg' => 0.278),
+        'Sammy Sosa'   => array('hr' => 63, 'avg' => 0.288)
+      ),
+      $this->parse(
+        "Mark McGwire: {hr: 65, avg: 0.278}\n".
+        "Sammy Sosa: {\n".
+        "    hr: 63,\n".
+        "    avg: 0.288\n".
+        "  }"
+      )
+    );
+  }
+
+  #[@test]
   public function comment() {
     $this->assertEquals(array(), $this->parse('# Comments are ignored'));
   }
