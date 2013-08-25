@@ -70,7 +70,8 @@ class YamlParserTest extends \unittest\TestCase {
   }
 
   #[@test, @values(array(
-  #  array("str: ''", ''), array("str: 'Test'", 'Test')
+  #  array("str: ''", ''), array("str: 'Test'", 'Test'),
+  #  array('str: ""', ''), array('str: "Test"', 'Test')
   #))]
   public function parse_string($input, $result) {
     $this->assertEquals(array('str' => $result), $this->parse($input));

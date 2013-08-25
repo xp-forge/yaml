@@ -18,7 +18,7 @@ class YamlParser extends \lang\Object {
       return true;
     } else if ('false' === $value) {
       return false;
-    } else if ("'" === $value{0}) {
+    } else if ("'" === $value{0} || '"' === $value{0}) {
       return substr($value, 1, -1);
     } else if ('{' === $value{0}) {     // Flow style map
       $matching= $this->matching($reader, $value, '{', '}');
