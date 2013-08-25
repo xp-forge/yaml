@@ -33,27 +33,34 @@ class YamlParser extends \lang\Object {
     $r= array();
     $id= 0;
     while (null !== ($line= $reader->nextLine())) {
+
+      // Everything after the comment is ignored
+      if (false !== ($comment= strrpos($line, '#'))) {
+        $line= rtrim(substr($line, 0, $comment), ' ');
+      }
+
+      // Indentation gives structure
       $spaces= strspn($line, ' ');
       if ($spaces === strlen($line)) {
         continue;
-      } else if ($spaces > $level) {           // indent
+      } else if ($spaces > $level) {    // indent
         $reader->resetLine($line);
         $r[$key]= $this->parse($reader, $level + $spaces);
         continue;
       } else if ($spaces < $level) {    // dedent
         $reader->resetLine($line);
         break;
-      } else if ('#' === $line{$level}) {
-        continue;
-      } else if ('-' === $line{$level}) {
-        $key= $id++;
-        $value= substr($line, $level + 2);
-      } else {
-        sscanf($line, "%[^:]: %[^\r]", $key, $value);
-        $key= substr($key, $level);
       }
 
-      $r[$key]= $this->valueOf($value);
+      // Sequences (begin with a dash) and maps (key: value)
+      if ('-' === $line{$level}) {
+        $key= $id++;
+        $r[$key]= $this->valueOf(substr($line, $level + 2));
+      } else {
+        $key= $value= null;
+        sscanf($line, "%[^:]: %[^\r]", $key, $value);
+        $r[substr($key, $level)]= $this->valueOf($value);
+      }
     }
     return $r;
   }

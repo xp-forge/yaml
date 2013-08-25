@@ -113,17 +113,27 @@ class YamlParserTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function parse_comment() {
+  public function comment() {
     $this->assertEquals(array(), $this->parse('# Comments are ignored'));
   }
 
   #[@test]
-  public function parse_comments() {
+  public function indented_comment() {
+    $this->assertEquals(array(), $this->parse('  # Comments are ignored'));
+  }
+
+  #[@test]
+  public function comments() {
     $this->assertEquals(array(), $this->parse("# Line 1\n# Line 2\n"));
   }
 
   #[@test]
-  public function parse_comments_and_whitespace() {
+  public function comments_and_whitespace() {
     $this->assertEquals(array(), $this->parse("# Line 1\n\n# Line 3\n"));
+  }
+
+  #[@test, @values(array('key: value # A value', 'key: value        # A value'))]
+  public function comment_at_end_of_line($value) {
+    $this->assertEquals(array('key' => 'value'), $this->parse($value));
   }
 }
