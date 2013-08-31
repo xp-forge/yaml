@@ -16,7 +16,12 @@ class YamlParser extends \lang\Object {
     );
   }
 
+  /**
+   * Creates a new instance of the YAML parser
+   */
   public function __construct() {
+
+    // Initialize default tag handlers: str, int, float, null and bool
     $literals= self::$literals;
     $this->constructors['str']= function($in) { return $in; };
     $this->constructors['int']= function($in) { 
