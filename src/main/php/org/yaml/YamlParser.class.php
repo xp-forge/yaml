@@ -21,9 +21,10 @@ class YamlParser extends \lang\Object {
    */
   public function __construct() {
 
-    // Initialize default tag handlers: str, int, float, null and bool
+    // Initialize default tag handlers: str, null, int, float and bool
     $literals= self::$literals;
     $this->constructors['str']= function($in) { return $in; };
+    $this->constructors['null']= function($in) { return null; };
     $this->constructors['int']= function($in) { 
       if (0 === strncmp('0o', $in, 2)) {
         return octdec(substr($in, 2));
@@ -36,7 +37,6 @@ class YamlParser extends \lang\Object {
     $this->constructors['float']= function($in) use($literals) {
       return (float)(isset($literals[$in]) ? $literals[$in] : $in);
     };
-    $this->constructors['null']= function($in) { return null; };
     $this->constructors['bool']= function($in) use($literals) { 
       return (bool)(isset($literals[$in]) ? $literals[$in] : $in);
     };
