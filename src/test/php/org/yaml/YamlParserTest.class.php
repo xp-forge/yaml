@@ -1,18 +1,12 @@
 <?php namespace org\yaml;
 
 use util\Date;
-use io\streams\TextReader;
-use io\streams\MemoryInputStream;
 
-class YamlParserTest extends \unittest\TestCase {
+class YamlParserTest extends AbstractYamlParserTest {
 
   #[@test]
   public function can_create() {
     new YamlParser();
-  }
-
-  protected function parse($str) {
-    return create(new YamlParser())->parse(new ReaderInput(new TextReader(new MemoryInputStream($str))));
   }
 
   #[@test]
@@ -174,39 +168,6 @@ class YamlParserTest extends \unittest\TestCase {
       $this->parse(
         "-\n  name: Mark McGwire\n  hr:   65\n  avg:  0.278\n".
         "-\n  name: Sammy Sosa\n  hr:   63\n  avg:  0.288\n"
-      )
-    );
-  }
-
-  #[@test]
-  public function flowstyle_mappings_of_mappings() {
-    $this->assertEquals(
-      array(
-        'Mark McGwire' => array('hr' => 65, 'avg' => 0.278),
-        'Sammy Sosa'   => array('hr' => 63, 'avg' => 0.288)
-      ),
-      $this->parse(
-        "Mark McGwire: {hr: 65, avg: 0.278}\n".
-        "Sammy Sosa: {\n".
-        "    hr: 63,\n".
-        "    avg: 0.288\n".
-        "  }"
-      )
-    );
-  }
-
-  #[@test]
-  public function flowstyle_sequence_of_sequences() {
-    $this->assertEquals(
-      array(
-        array('name', 'hr', 'avg'),
-        array('Mark McGwire', 65, 0.278),
-        array('Sammy Sosa', 63, 0.288)
-      ),
-      $this->parse(
-        "- [name        , hr, avg  ]\n".
-        "- [Mark McGwire, 65, 0.278]\n".
-        "- [Sammy Sosa  , 63, 0.288]\n"
       )
     );
   }
