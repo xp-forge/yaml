@@ -195,11 +195,12 @@ class YamlParser extends \lang\Object {
 
       // Indentation gives structure
       $spaces= strspn($line, ' ');
+
       if ($spaces === strlen($line)) {
         continue;
       } else if ($spaces > $level) {    // indent
         $reader->resetLine($line);
-        $r[$key]= $this->parse($reader, $level + $spaces);
+        $r[$key]= $this->parse($reader, $spaces);
         continue;
       } else if ($spaces < $level) {    // dedent
         $reader->resetLine($line);
