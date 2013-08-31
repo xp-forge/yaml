@@ -285,4 +285,9 @@ class YamlParserTest extends \unittest\TestCase {
   public function explicit_str_tag() {
     $this->assertEquals(array('not-date' => '2002-04-28'), $this->parse('not-date: !!str 2002-04-28'));
   }
+
+  #[@test]
+  public function explicit_int_tag() {
+    $this->assertEquals(array('int' => 3), $this->parse('int: !!int 3'));
+  }
 }

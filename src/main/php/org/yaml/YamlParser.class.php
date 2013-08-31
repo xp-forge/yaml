@@ -1,6 +1,12 @@
 <?php namespace org\yaml;
 
 class YamlParser extends \lang\Object {
+  protected $constructors= array();
+
+  public function __construct() {
+    $this->constructors['str']= function($in) { return $in; };
+    $this->constructors['int']= function($in) { return (int)$in; };
+  }
 
   protected function matching($reader, $value, $begin, $end) {
     while (false === ($s= strrpos($value, $end))) {
@@ -54,8 +60,13 @@ class YamlParser extends \lang\Object {
       'false' => false, 'False' => false, 'FALSE' => false,
     );
 
-    if (0 === strncmp('!!str', $value, 5)) {
-      return substr($value, 6);
+    if (0 === strncmp('!!', $value, 2)) {
+      $p= strpos($value, ' ', 2);
+      $constructor= substr($value, 2, $p - 2);
+      if (!isset($this->constructors[$constructor])) {
+        throw new \lang\IllegalArgumentException('Cannot construct '.$constructor);
+      }
+      return $this->constructors[$constructor](substr($value, $p + 1));
     } else if ("'" === $value{0}) {
       return substr($value, 1, -1);
     } else if ('"' === $value{0}) {
