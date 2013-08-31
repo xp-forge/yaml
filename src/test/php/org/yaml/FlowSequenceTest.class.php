@@ -25,6 +25,16 @@ class FlowSequenceTest extends AbstractYamlParserTest {
   }
 
   #[@test]
+  public function explicit() {
+    $this->assertEquals(array('one', 'two'), $this->parse('!!seq [ one, two ]'));
+  }
+
+  #[@test]
+  public function explicit_indented() {
+    $this->assertEquals(array('one', 'two'), $this->parse("!!seq [\n  one,\n  two\n]"));
+  }
+
+  #[@test]
   public function sequence_of_sequences() {
     $this->assertEquals(
       array(

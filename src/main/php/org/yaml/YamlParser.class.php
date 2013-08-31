@@ -40,9 +40,45 @@ class YamlParser extends \lang\Object {
     $this->constructors['bool']= function($in) use($literals) { 
       return (bool)(isset($literals[$in]) ? $literals[$in] : $in);
     };
+    $this->constructors['seq']= function($in, $reader, $parser) {
+      if ('[' === $in{0}) {
+        $matching= rtrim($parser->matching($reader, $in, '[', ']'), ' ,');
+        $l= strlen($matching);
+        $r= array();
+        $o= 0;
+        while ($o < $l) {
+          $s= strcspn($matching, ',', $o);
+          $token= trim(substr($matching, $o, $s), ' ');
+          $r[]= $parser->valueOf($reader, $token);
+          $o+= $s + 1;
+        }
+        return $r;
+      } else {
+        throw new \lang\FormatException('Unsupported sequence style');
+      }
+    };
+    $this->constructors['map']= function($in, $reader, $parser) {
+      if ('{' === $in{0}) {
+        $matching= rtrim($parser->matching($reader, $in, '{', '}'), ' ,');
+        $l= strlen($matching);
+        $r= array();
+        $o= 0;
+        while ($o < $l) {
+          $s= strcspn($matching, ',', $o);
+          $token= trim(substr($matching, $o, $s), ' ');
+          $key= $value= null;
+          sscanf($token, "%[^:]: %[^\r]", $key, $value);
+          $r[trim($key)]= $parser->valueOf($reader, $value);
+          $o+= $s + 1;
+        }
+        return $r;
+      } else {
+        throw new \lang\FormatException('Unsupported mapping style');
+      }
+    };
   }
 
-  protected function matching($reader, $value, $begin, $end) {
+  public function matching($reader, $value, $begin, $end) {
     while (false === ($s= strrpos($value, $end))) {
       if (null === ($line= $reader->nextLine())) {
         throw new \lang\FormatException('Unmatched "'.$begin.'", encountered EOF');
@@ -100,7 +136,7 @@ class YamlParser extends \lang\Object {
    * @param  int $level
    * @return var
    */
-  protected function valueOf($reader, $value, $level= 0) {
+  public function valueOf($reader, $value, $level= 0) {
     if (null === $value) {
       if (null === ($line= $reader->nextLine())) return null;  // EOF
 
@@ -139,7 +175,7 @@ class YamlParser extends \lang\Object {
           } else {
             $r[$key]= $this->valueOf($reader, substr($line, $spaces + 2), $spaces);
           }
-        } else if (strpos($line, ':')) {
+        } else if (!strpos('#!?{[', $line{$spaces}) && strpos($line, ':')) {
           $key= $value= null;
           sscanf($line, "%[^:]: %[^\r]", $key, $value);
           $key= trim(substr($key, $spaces), ' ');
@@ -186,37 +222,15 @@ class YamlParser extends \lang\Object {
       if (!isset($this->constructors[$constructor])) {
         throw new \lang\IllegalArgumentException('Cannot construct '.$constructor);
       }
-      return $this->constructors[$constructor](substr($value, $p + 2 + 1));
+      return $this->constructors[$constructor](substr($value, $p + 2 + 1), $reader, $this);
     } else if ("'" === $value{0}) {
       return substr($value, 1, -1);
     } else if ('"' === $value{0}) {
       return $this->expand(substr($value, 1, -1));
     } else if ('{' === $value{0}) {     // Flow style map
-      $matching= rtrim($this->matching($reader, $value, '{', '}'), ' ,');
-      $l= strlen($matching);
-      $r= array();
-      $o= 0;
-      while ($o < $l) {
-        $s= strcspn($matching, ',', $o);
-        $token= trim(substr($matching, $o, $s), ' ');
-        $key= $value= null;
-        sscanf($token, "%[^:]: %[^\r]", $key, $value);
-        $r[$key]= $this->valueOf($reader, $value);
-        $o+= $s + 1;
-      }
-      return $r;
+      return $this->constructors['map']($value, $reader, $this);
     } else if ('[' === $value{0}) {
-      $matching= rtrim($this->matching($reader, $value, '[', ']'), ' ,');
-      $l= strlen($matching);
-      $r= array();
-      $o= 0;
-      while ($o < $l) {
-        $s= strcspn($matching, ',', $o);
-        $token= trim(substr($matching, $o, $s), ' ');
-        $r[]= $this->valueOf($reader, $token);
-        $o+= $s + 1;
-      }
-      return $r;
+      return $this->constructors['seq']($value, $reader, $this);
     } else if (0 === strncmp('0o', $value, 2)) {
       return octdec(substr($value, 2));
     } else if (0 === strncmp('0x', $value, 2)) {
