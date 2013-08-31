@@ -6,6 +6,15 @@ class YamlParser extends \lang\Object {
   public function __construct() {
     $this->constructors['str']= function($in) { return $in; };
     $this->constructors['int']= function($in) { return (int)$in; };
+    $this->constructors['float']= function($in) { return (float)$in; };
+    $this->constructors['null']= function($in) { return null; };
+    $this->constructors['bool']= function($in) { 
+      static $literals= array(
+        'true' => true, 'True' => true, 'TRUE' => true,
+        'false' => false, 'False' => false, 'FALSE' => false,
+      );
+      return isset($literals[$in]) ? $literals[$in] : false;
+    };
   }
 
   protected function matching($reader, $value, $begin, $end) {
@@ -61,12 +70,12 @@ class YamlParser extends \lang\Object {
     );
 
     if (0 === strncmp('!!', $value, 2)) {
-      $p= strpos($value, ' ', 2);
-      $constructor= substr($value, 2, $p - 2);
+      $p= strcspn($value, ' ', 2);
+      $constructor= substr($value, 2, $p);
       if (!isset($this->constructors[$constructor])) {
         throw new \lang\IllegalArgumentException('Cannot construct '.$constructor);
       }
-      return $this->constructors[$constructor](substr($value, $p + 1));
+      return $this->constructors[$constructor](substr($value, $p + 2 + 1));
     } else if ("'" === $value{0}) {
       return substr($value, 1, -1);
     } else if ('"' === $value{0}) {

@@ -286,8 +286,32 @@ class YamlParserTest extends \unittest\TestCase {
     $this->assertEquals(array('not-date' => '2002-04-28'), $this->parse('not-date: !!str 2002-04-28'));
   }
 
-  #[@test]
-  public function explicit_int_tag() {
-    $this->assertEquals(array('int' => 3), $this->parse('int: !!int 3'));
+  #[@test, @values(array(
+  #  array('!!int 3', 3), array('!!int 0', 0), array('!!int -1', -1)
+  #))]
+  public function explicit_int_tag($input, $value) {
+    $this->assertEquals(array('r' => $value), $this->parse('r: '.$input));
   }
+
+  #[@test, @values(array(
+  #  array('!!float 0.3', 0.3), array('!!float 0.0', 0.0), array('!!float -1.0', -1.0),
+  #  array('!!float 3', 3.0), array('!!float 0.', 0.0), array('!!float .5', 0.5)
+  #))]
+  public function explicit_float_tag($input, $value) {
+    $this->assertEquals(array('r' => $value), $this->parse('r: '.$input));
+  }
+
+  #[@test, @values(array(
+  #  array('!!bool true', true), array('!!bool TRUE', true), array('!!bool True', true),
+  #  array('!!bool false', false), array('!!bool FALSE', false), array('!!bool False', false)
+  #))]
+  public function explicit_bool_tag($input, $value) {
+    $this->assertEquals(array('r' => $value), $this->parse('r: '.$input));
+  }
+
+  #[@test, @values(array('!!null ""', '!!null'))]
+  public function explicit_null_tag($input) {
+    $this->assertEquals(array('r' => null), $this->parse('r: '.$input));
+  }
+
 }
