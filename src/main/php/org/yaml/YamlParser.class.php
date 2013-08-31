@@ -53,6 +53,18 @@ class YamlParser extends \lang\Object {
     return substr($value, $offset, $s - $offset);
   }
 
+  protected function indented($reader, $join) {
+    $r= '';
+    $next= $reader->nextLine();
+    $spaces= strspn($next, ' ');
+    do {
+      if (strspn($next, ' ') < $spaces) break;
+      $r.= $join.substr($next, $spaces);
+    } while (null !== ($next= $reader->nextLine()));
+    $reader->resetLine($next);
+    return substr($r, 1);
+  }
+
   /**
    * Expand escapes sequences inside a string
    *
@@ -147,25 +159,9 @@ class YamlParser extends \lang\Object {
     } else if (preg_match('/^[0-9]{4}\-[0-9]{2}-[0-9]{2}/', $value)) {
       return new \util\Date($value);
     } else if ('>' === $value{strlen($value)- 1}) {
-      $r= '';
-      $next= $reader->nextLine();
-      $spaces= strspn($next, ' ');
-      do {
-        if (strspn($next, ' ') < $spaces) break;
-        $r.= ' '.substr($next, $spaces);
-      } while (null !== ($next= $reader->nextLine()));
-      $reader->resetLine($next);
-      return substr($r, 1);
+      return $this->indented($reader, ' ');
     } else if ('|' === $value{strlen($value)- 1}) {
-      $r= '';
-      $next= $reader->nextLine();
-      $spaces= strspn($next, ' ');
-      do {
-        if (strspn($next, ' ') < $spaces) break;
-        $r.= "\n".substr($next, $spaces);
-      } while (null !== ($next= $reader->nextLine()));
-      $reader->resetLine($next);
-      return substr($r, 1);
+      return $this->indented($reader, "\n");
     } else {
       return $value;
     }
