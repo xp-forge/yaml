@@ -100,7 +100,7 @@ class YamlParser extends \lang\Object {
    * @return var
    */
   protected function valueOf($reader, $value, $level= 0) {
-    if (null === $value || false === $value) {
+    if (null === $value) {
       if (null === ($line= $reader->nextLine())) return null;  // EOF
 
       // Check whether the next line at same or lesser indentation level. This
@@ -117,9 +117,10 @@ class YamlParser extends \lang\Object {
       $id= 0;
       do {
         $p= strspn($line, ' ');
+        $l= strlen($line);
         if ($p < $spaces) {
           break;
-        } else if ($p === strlen($line)) {
+        } else if ($p === $l) {
           continue;
         } else if ('#' === $line{$spaces}) {
           continue;
@@ -131,6 +132,8 @@ class YamlParser extends \lang\Object {
 
           if (strpos($line, ':')) {
             $reader->resetLine(str_repeat(' ', $spaces + 2).substr($line, $spaces + 2));
+            $r[$key]= $this->valueOf($reader, null, $spaces);
+          } else if ($spaces + 2 > $l) {
             $r[$key]= $this->valueOf($reader, null, $spaces);
           } else {
             $r[$key]= $this->valueOf($reader, substr($line, $spaces + 2), $spaces);
