@@ -158,6 +158,28 @@ class YamlParser extends \lang\Object {
       $value= rtrim(substr($value, 0, $comment), ' ');
     }
 
+    // Resolve references
+    if ('&' === $value{0}) {
+      if (false === ($o= strpos($value, ' '))) {
+        $id= substr($value, 1);
+        return $this->identifiers[$id]= $this->valueOf($reader, null, $level);
+      } else {
+        $id= substr($value, 1, $o - 1);
+        return $this->identifiers[$id]= $this->valueOf($reader, substr($value, $o + 1), $level);
+      }
+    } else if ('*' === $value{0}) {
+      $id= substr($value, 1);
+      if (!isset($this->identifiers[$id])) {
+        throw new \lang\IllegalArgumentException(sprintf(
+          'Unresolved reference "%s", have ["%s"]',
+          $id,
+          implode('", "', array_keys($this->identifiers))
+        ));
+      }
+      return $this->identifiers[$id];
+    }
+
+    // Now check for tags starting with !!, finally match based on patterns
     if (0 === strncmp('!!', $value, 2)) {
       $p= strcspn($value, ' ', 2);
       $constructor= substr($value, 2, $p);
@@ -195,15 +217,6 @@ class YamlParser extends \lang\Object {
         $o+= $s + 1;
       }
       return $r;
-    } else if ('&' === $value{0}) {
-      if (false === ($o= strpos($value, ' '))) {
-        return $this->identifiers[$value]= null;
-      } else {
-        $id= substr($value, 1, $o - 1);
-        return $this->identifiers[$id]= substr($value, $o + 1);
-      }
-    } else if ('*' === $value{0}) {
-      return $this->identifiers[substr($value, 1)];
     } else if (0 === strncmp('0o', $value, 2)) {
       return octdec(substr($value, 2));
     } else if (0 === strncmp('0x', $value, 2)) {

@@ -253,6 +253,20 @@ class YamlParserTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function repeated_map_nodes() {
+    $person= array('id' => 1549, 'name' => 'Timm');
+    $this->assertEquals(
+      array($person, $person),
+      $this->parse("- &person\n  id: 1549\n  name: Timm\n- *person\n")
+    );
+  }
+
+  #[@test, @expect(class= 'lang.IllegalArgumentException', withMessage= 'Unresolved reference "TF", have ["SS"]')]
+  public function unresolved_reference() {
+    $this->parse("- &SS Sammy Sosa\n- *TF # Does not exist\n");
+  }
+
+  #[@test]
   public function compact_nested_mapping() {
     $this->assertEquals(
       array(
