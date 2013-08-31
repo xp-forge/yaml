@@ -99,7 +99,61 @@ class YamlParser extends \lang\Object {
    * @param  string $value
    * @return var
    */
-  protected function valueOf($reader, $value) {
+  protected function valueOf($reader, $value, $level= 0) {
+    if (null === $value || false === $value) {
+      if (null === ($line= $reader->nextLine())) return null;  // EOF
+
+      // Check whether the next line at same or lesser indentation level. This
+      // means we have a line like "key:\n" which means we're encountering an 
+      // empty value, which means NULL. If we find elements indented at the same
+      // level, they're either a sequence (- value) or a map (key: value).
+      $spaces= strspn($line, ' ');
+      if ($spaces < $level) {
+        $reader->resetLine($line);
+        return null;
+      }
+
+      $r= array();
+      $id= 0;
+      do {
+        $p= strspn($line, ' ');
+        if ($p < $spaces) {
+          break;
+        } else if ($p === strlen($line)) {
+          continue;
+        } else if ('#' === $line{$spaces}) {
+          continue;
+        }
+
+        // Sequences (begin with a dash) and maps (key: value)
+        if ('-' === $line{$spaces}) {
+          $key= $id++;
+
+          if (strpos($line, ':')) {
+            $reader->resetLine(str_repeat(' ', $spaces + 2).substr($line, $spaces + 2));
+            $r[$key]= $this->valueOf($reader, null, $spaces);
+          } else {
+            $r[$key]= $this->valueOf($reader, substr($line, $spaces + 2), $spaces);
+          }
+        } else if (strpos($line, ':')) {
+          $key= $value= null;
+          sscanf($line, "%[^:]: %[^\r]", $key, $value);
+          $key= trim(substr($key, $spaces), ' ');
+          $r[$key]= $this->valueOf($reader, $value, $spaces);
+        } else {
+          throw new \lang\FormatException('Unparseable line "'.$line.'"');
+        }
+
+      } while (null !== ($line= $reader->nextLine()));
+      $reader->resetLine($line);
+      return $r;
+    }
+
+    // Everything after the comment is ignored
+    if (false !== ($comment= strrpos($value, '#'))) {
+      $value= rtrim(substr($value, 0, $comment), ' ');
+    }
+
     if (0 === strncmp('!!', $value, 2)) {
       $p= strcspn($value, ' ', 2);
       $constructor= substr($value, 2, $p);
@@ -175,48 +229,7 @@ class YamlParser extends \lang\Object {
    * @return var
    */
   public function parse($reader, $level= 0) {
-    $r= array();
-    $id= 0;
     $this->identifiers= array();
-    while (null !== ($line= $reader->nextLine())) {
-
-      // Everything after the comment is ignored
-      if (false !== ($comment= strrpos($line, '#'))) {
-        $line= rtrim(substr($line, 0, $comment), ' ');
-      }
-
-      // Indentation gives structure
-      $spaces= strspn($line, ' ');
-
-      if ($spaces === strlen($line)) {
-        continue;
-      } else if ($spaces > $level) {    // indent
-        $reader->resetLine($line);
-        $r[$key]= $this->parse($reader, $spaces);
-        continue;
-      } else if ($spaces < $level) {    // dedent
-        $reader->resetLine($line);
-        break;
-      }
-
-      // Sequences (begin with a dash) and maps (key: value)
-      if ('-' === $line{$level}) {
-        $key= $id++;
-
-        if (strpos($line, ':')) {
-          $reader->resetLine(str_repeat(' ', $level + 2).substr($line, $level + 2));
-        } else {
-          $r[$key]= $this->valueOf($reader, substr($line, $level + 2));
-        }
-      } else if (strpos($line, ':')) {
-        $key= $value= null;
-        sscanf($line, "%[^:]: %[^\r]", $key, $value);
-        $key= trim(substr($key, $level), ' ');
-        $r[$key]= $this->valueOf($reader, $value);
-      } else {
-        throw new \lang\FormatException('Unparseable line "'.$line.'"');
-      }
-    }
-    return $r;
+    return $this->valueOf($reader, null, 0);
   }
 }

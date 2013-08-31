@@ -17,7 +17,7 @@ class YamlParserTest extends \unittest\TestCase {
 
   #[@test]
   public function parse_empty() {
-    $this->assertEquals(array(), $this->parse(''));
+    $this->assertEquals(null, $this->parse(''));
   }
 
   #[@test, @values(array("\n", "\n\n", " \n \n", "  \n\n"))]
