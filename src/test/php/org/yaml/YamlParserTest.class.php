@@ -296,10 +296,17 @@ class YamlParserTest extends \unittest\TestCase {
 
   #[@test, @values(array(
   #  array('!!float 0.3', 0.3), array('!!float 0.0', 0.0), array('!!float -1.0', -1.0),
-  #  array('!!float 3', 3.0), array('!!float 0.', 0.0), array('!!float .5', 0.5)
+  #  array('!!float 3', 3.0), array('!!float 0.', 0.0), array('!!float .5', 0.5),
+  #  array('!!float +.INF', INF), array('!!float -.INF', -INF)
   #))]
   public function explicit_float_tag($input, $value) {
     $this->assertEquals(array('r' => $value), $this->parse('r: '.$input));
+  }
+
+  #[@test]
+  public function explicit_float_nan() {
+    $r= $this->parse('nan: !!float .NAN');
+    $this->assertTrue(is_nan($r['nan']), $r['nan']);
   }
 
   #[@test, @values(array(

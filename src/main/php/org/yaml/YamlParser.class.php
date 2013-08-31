@@ -14,7 +14,15 @@ class YamlParser extends \lang\Object {
         return (int)$in;
       }
     };
-    $this->constructors['float']= function($in) { return (float)$in; };
+    $this->constructors['float']= function($in) {
+      $literals= array(
+        '.nan' => NAN, '.NaN' => NAN, '.NAN' => NAN,
+        '-.inf' => -INF, '-.Inf' => -INF, '-.INF' => -INF,
+        '+.inf' => INF, '+.Inf' => INF, '+.INF' => INF,
+        '.inf' => INF, '.Inf' => INF, '.INF' => INF
+      );
+      return isset($literals[$in]) ? $literals[$in] : (float)$in;
+    };
     $this->constructors['null']= function($in) { return null; };
     $this->constructors['bool']= function($in) { 
       static $literals= array(
