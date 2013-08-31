@@ -2,6 +2,19 @@
 
 class YamlParser extends \lang\Object {
   protected $constructors= array();
+  protected static $literals;
+
+  static function __static() {
+    self::$literals= array(
+      'null' => null, 'Null' => null, 'NULL' => null, '~' => null,
+      'true' => true, 'True' => true, 'TRUE' => true,
+      'false' => false, 'False' => false, 'FALSE' => false,
+      '.nan' => NAN, '.NaN' => NAN, '.NAN' => NAN,
+      '-.inf' => -INF, '-.Inf' => -INF, '-.INF' => -INF,
+      '+.inf' => INF, '+.Inf' => INF, '+.INF' => INF,
+      '.inf' => INF, '.Inf' => INF, '.INF' => INF
+    );
+  }
 
   public function __construct() {
     $this->constructors['str']= function($in) { return $in; };
@@ -79,12 +92,6 @@ class YamlParser extends \lang\Object {
    * @return var
    */
   protected function valueOf($reader, $value) {
-    static $literals= array(
-      'null' => null, 'Null' => null, 'NULL' => null, '~' => null,
-      'true' => true, 'True' => true, 'TRUE' => true,
-      'false' => false, 'False' => false, 'FALSE' => false,
-    );
-
     if (0 === strncmp('!!', $value, 2)) {
       $p= strcspn($value, ' ', 2);
       $constructor= substr($value, 2, $p);
@@ -135,8 +142,8 @@ class YamlParser extends \lang\Object {
       return octdec(substr($value, 2));
     } else if (0 === strncmp('0x', $value, 2)) {
       return hexdec(substr($value, 2));
-    } else if (array_key_exists((string)$value, $literals)) {
-      return $literals[$value];
+    } else if (array_key_exists((string)$value, self::$literals)) {
+      return self::$literals[$value];
     } else if (preg_match('/^[+-]?[0-9]+$/', $value)) {
       return (int)$value;
     } else if (preg_match('/^[+-]?[0-9]+\.[0-9]+(e\+[0-9]+)?$/', $value)) {

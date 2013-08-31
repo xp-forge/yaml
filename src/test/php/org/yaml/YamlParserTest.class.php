@@ -61,6 +61,12 @@ class YamlParserTest extends \unittest\TestCase {
     $this->assertEquals(array('num' => $result), $this->parse($input));
   }
 
+  #[@test, @values(array('nan: .nan', 'nan: .NaN', 'nan: .NAN'))]
+  public function parse_nan($input) {
+    $r= $this->parse($input);
+    $this->assertTrue(is_nan($r['nan']), $r['nan']);
+  }
+
   #[@test, @values(array(
   #  array('bool: true', true), array('bool: True', true), array('bool: TRUE', true),
   #  array('bool: false', false), array('bool: False', false), array('bool: FALSE', false)
