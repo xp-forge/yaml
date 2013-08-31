@@ -26,3 +26,18 @@ $ xp -w 'create(new \org\yaml\YamlParser())->parse(new \org\yaml\FileInput($argv
   ]
 ]
 ```
+
+Installation
+------------
+
+YAML for XP Framework can be installed using the `xpi` utility. The most current release can be discovered as follows:
+
+```sh
+$ xpi info -r xp-forge/yaml
+@http://builds.planet-xp.net/
+Module<xp-forge/yaml>: YAML
+https://github.com/xp-forge/yaml
+Releases: 1, list {
+  0.9.0 (series= "0.9", rc= false, published= "2013-08-31T18:26:47+02:00")
+}
+```
