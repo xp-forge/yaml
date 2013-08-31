@@ -5,7 +5,15 @@ class YamlParser extends \lang\Object {
 
   public function __construct() {
     $this->constructors['str']= function($in) { return $in; };
-    $this->constructors['int']= function($in) { return (int)$in; };
+    $this->constructors['int']= function($in) { 
+      if (0 === strncmp('0o', $in, 2)) {
+        return octdec(substr($in, 2));
+      } else if (0 === strncmp('0x', $in, 2)) {
+        return hexdec(substr($in, 2));
+      } else {
+        return (int)$in;
+      }
+    };
     $this->constructors['float']= function($in) { return (float)$in; };
     $this->constructors['null']= function($in) { return null; };
     $this->constructors['bool']= function($in) { 

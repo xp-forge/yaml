@@ -287,7 +287,8 @@ class YamlParserTest extends \unittest\TestCase {
   }
 
   #[@test, @values(array(
-  #  array('!!int 3', 3), array('!!int 0', 0), array('!!int -1', -1)
+  #  array('!!int 3', 3), array('!!int 0', 0), array('!!int -1', -1),
+  #  array('!!int 0o7', 7), array('!!int 0x3A', 58)
   #))]
   public function explicit_int_tag($input, $value) {
     $this->assertEquals(array('r' => $value), $this->parse('r: '.$input));
