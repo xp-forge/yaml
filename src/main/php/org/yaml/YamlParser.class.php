@@ -17,6 +17,7 @@ class YamlParser extends \lang\Object {
   }
 
   public function __construct() {
+    $literals= self::$literals;
     $this->constructors['str']= function($in) { return $in; };
     $this->constructors['int']= function($in) { 
       if (0 === strncmp('0o', $in, 2)) {
@@ -27,22 +28,12 @@ class YamlParser extends \lang\Object {
         return (int)$in;
       }
     };
-    $this->constructors['float']= function($in) {
-      $literals= array(
-        '.nan' => NAN, '.NaN' => NAN, '.NAN' => NAN,
-        '-.inf' => -INF, '-.Inf' => -INF, '-.INF' => -INF,
-        '+.inf' => INF, '+.Inf' => INF, '+.INF' => INF,
-        '.inf' => INF, '.Inf' => INF, '.INF' => INF
-      );
-      return isset($literals[$in]) ? $literals[$in] : (float)$in;
+    $this->constructors['float']= function($in) use($literals) {
+      return (float)(isset($literals[$in]) ? $literals[$in] : $in);
     };
     $this->constructors['null']= function($in) { return null; };
-    $this->constructors['bool']= function($in) { 
-      static $literals= array(
-        'true' => true, 'True' => true, 'TRUE' => true,
-        'false' => false, 'False' => false, 'FALSE' => false,
-      );
-      return isset($literals[$in]) ? $literals[$in] : false;
+    $this->constructors['bool']= function($in) use($literals) { 
+      return (bool)(isset($literals[$in]) ? $literals[$in] : $in);
     };
   }
 
