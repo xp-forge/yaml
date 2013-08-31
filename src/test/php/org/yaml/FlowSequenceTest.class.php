@@ -1,5 +1,12 @@
 <?php namespace org\yaml;
 
+/**
+ * 7.4.1. Flow sequences
+ * ---------------------
+ * Flow sequence content is denoted by surrounding “[” and “]” characters.
+ *
+ * @see   http://www.yaml.org/spec/1.2/spec.html#id2790320
+ */
 class FlowSequenceTest extends AbstractYamlParserTest {
 
   #[@test]
