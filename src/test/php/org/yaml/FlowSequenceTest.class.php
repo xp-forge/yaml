@@ -13,6 +13,11 @@ class FlowSequenceTest extends AbstractYamlParserTest {
   }
 
   #[@test]
+  public function without_space() {
+    $this->assertEquals(array('one', 'two'), $this->parse('[one,two]'));
+  }
+
+  #[@test]
   public function sequence_of_sequences() {
     $this->assertEquals(
       array(
