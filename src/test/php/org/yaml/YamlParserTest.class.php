@@ -68,6 +68,15 @@ class YamlParserTest extends \unittest\TestCase {
   }
 
   #[@test, @values(array(
+  #  array('num: .inf', INF), array('num: .Inf', INF), array('num: .INF', INF),
+  #  array('num: -.inf', -INF), array('num: -.Inf', -INF), array('num: -.INF', -INF),
+  #  array('num: +.inf', +INF), array('num: +.Inf', +INF), array('num: +.INF', +INF),
+  #))]
+  public function parse_inf($input, $result) {
+    $this->assertEquals(array('num' => $result), $this->parse($input));
+  }
+
+  #[@test, @values(array(
   #  array('bool: true', true), array('bool: True', true), array('bool: TRUE', true),
   #  array('bool: false', false), array('bool: False', false), array('bool: FALSE', false)
   #))]
