@@ -97,6 +97,7 @@ class YamlParser extends \lang\Object {
    *
    * @param  org.yaml.Input $reader
    * @param  string $value
+   * @param  int $level
    * @return var
    */
   protected function valueOf($reader, $value, $level= 0) {
