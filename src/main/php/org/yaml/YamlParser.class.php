@@ -145,7 +145,7 @@ class YamlParser extends \lang\Object {
           $key= trim(substr($key, $spaces), ' ');
           $r[$key]= $this->valueOf($reader, $value, $spaces);
         } else {
-          throw new \lang\FormatException('Unparseable line "'.$line.'"');
+          $r= $this->valueOf($reader, $line, $spaces);
         }
 
       } while (null !== ($line= $reader->nextLine()));
@@ -192,7 +192,7 @@ class YamlParser extends \lang\Object {
     } else if ('"' === $value{0}) {
       return $this->expand(substr($value, 1, -1));
     } else if ('{' === $value{0}) {     // Flow style map
-      $matching= $this->matching($reader, $value, '{', '}');
+      $matching= rtrim($this->matching($reader, $value, '{', '}'), ' ,');
       $l= strlen($matching);
       $r= array();
       $o= 0;
@@ -206,7 +206,7 @@ class YamlParser extends \lang\Object {
       }
       return $r;
     } else if ('[' === $value{0}) {
-      $matching= $this->matching($reader, $value, '[', ']');
+      $matching= rtrim($this->matching($reader, $value, '[', ']'), ' ,');
       $l= strlen($matching);
       $r= array();
       $o= 0;
