@@ -131,7 +131,7 @@ class YamlParser extends \lang\Object {
         if ('-' === $line{$spaces}) {
           $key= $id++;
 
-          if (strpos($line, ':')) {
+          if (strpos($line, ': ')) {
             $reader->resetLine(str_repeat(' ', $spaces + 2).substr($line, $spaces + 2));
             $r[$key]= $this->valueOf($reader, null, $spaces);
           } else if ($spaces + 2 > $l) {
