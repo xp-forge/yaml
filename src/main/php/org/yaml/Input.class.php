@@ -79,6 +79,15 @@ abstract class Input extends \lang\Object {
     return trim($token);
   }
 
+  /**
+   * Returns characters between matching quote signs
+   *
+   * @param  string $value
+   * @param  string $chr
+   * @param  string $escape
+   * @param  int $offset
+   * @return string
+   */
   public function quoted($value, $chr, $escape, $offset= 0) {
     for ($o= $offset+ strlen($chr), $i= $o, $l= strlen($value), $b= 1; $b > 0; $i++) {
       if ($i >= $l) {
@@ -101,14 +110,10 @@ abstract class Input extends \lang\Object {
    * Returns characters between matching begin and end characters from 
    * a given reader. Continues to read lines until sequence is matched.
    *
-   * ```
-   * matching("[hello]", "[", "]") = "hello"
-   * matching("[[hello],[world]]", "[", "]") = "[hello],[world]"
-   * ```
-   *
    * @param  string $value
    * @param  string $begin
    * @param  string $end
+   * @param  int $offset
    * @return string
    */
   public function matching($value, $begin, $end, $offset= 0) {
