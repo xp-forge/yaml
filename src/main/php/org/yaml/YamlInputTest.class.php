@@ -125,6 +125,24 @@ class YamlInputTest extends AbstractYamlParserTest {
     $this->tokensOf($value);
   }
 
+  #[
+  #  @test,
+  #  @values(array('[one', '[one, []', '[one, [nested]', '[', '[[[')),
+  #  @expect(class= 'lang.FormatException', withMessage= '/Unmatched "\[", encountered EOF/')
+  #]
+  public function unclosed_sequence($value) {
+    $this->tokensOf($value);
+  }
+
+  #[
+  #  @test,
+  #  @values(array('{one: two', '{one: two, {}', '{', '{{{')),
+  #  @expect(class= 'lang.FormatException', withMessage= '/Unmatched "\{", encountered EOF/')
+  #]
+  public function unclosed_map($value) {
+    $this->tokensOf($value);
+  }
+
   #[@test]
   public function matching() {
     $this->assertEquals('hello', $this->newFixture()->matching('[hello]', '[', ']'));
