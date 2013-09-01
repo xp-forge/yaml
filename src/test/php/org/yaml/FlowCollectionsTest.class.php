@@ -59,6 +59,22 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
   }
 
   #[@test]
+  public function nested_sequence() {
+    $this->assertEquals(
+      array(array('one', 'two')),
+      $this->parse('[[one, two]]')
+    );
+  }
+
+  #[@test]
+  public function nested_sequences() {
+    $this->assertEquals(
+      array(array('one', 'two'), array('three', 'four')),
+      $this->parse('[[one, two], [three, four]]')
+    );
+  }
+
+  #[@test]
   public function map_with_surrounding_space() {
     $this->assertEquals(
       array('one' => 'two', 'three' => 'four'),
@@ -104,6 +120,14 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
         "    avg: 0.288\n".
         "  }"
       )
+    );
+  }
+
+  #[@test]
+  public function nested_map() {
+    $this->assertEquals(
+      array('map' => array('one' => 'two', 'three' => 'four')),
+      $this->parse('{ map: { one : two , three: four } }')
     );
   }
 }
