@@ -86,7 +86,7 @@ class YamlInputTest extends AbstractYamlParserTest {
     $this->assertEquals(explode(': ', $value), $this->tokensOf($value));
   }
 
-  #[@test, @values(array('[hello]', '["hello"]', "['hello']", '[hello, world]'))]
+  #[@test, @values(array('[a]', '["a"]', "['a']", '[a, b]'))]
   public function sequence_token($value) {
     $this->assertEquals(array($value), $this->tokensOf($value));
   }
