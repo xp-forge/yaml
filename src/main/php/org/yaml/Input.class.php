@@ -26,8 +26,8 @@ abstract class Input extends \lang\Object {
    * a given reader. Continues to read lines until sequence is matched.
    *
    * ```
-   * matching(reader, "[hello]", "[", "]") = "hello"
-   * matching(reader, "[[hello],[world]]", "[", "]") = "[hello],[world]"
+   * matching("[hello]", "[", "]") = "hello"
+   * matching("[[hello],[world]]", "[", "]") = "[hello],[world]"
    * ```
    *
    * @param  string $value
