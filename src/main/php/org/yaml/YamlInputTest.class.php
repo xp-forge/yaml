@@ -61,8 +61,18 @@ class YamlInputTest extends AbstractYamlParserTest {
   }
 
   #[@test]
+  public function single_quoted_token() {
+    $this->assertEquals(array('"hello"'), $this->tokensOf('"hello"'));
+  }
+
+  #[@test]
   public function comma_delimited_tokens() {
     $this->assertEquals(array('hello', 'world'), $this->tokensOf('hello, world'));
+  }
+
+  #[@test]
+  public function comma_delimited_quoted_tokens() {
+    $this->assertEquals(array('"hello"', '"world"'), $this->tokensOf('"hello", "world"'));
   }
 
   #[@test]

@@ -63,7 +63,7 @@ abstract class Input extends \lang\Object {
       } else if ('{' === $in{$p}) {
         $token= '{'.$this->matching($in, '{', '}', $p).'}';
       } else if ('"' === $in{$p} || "'" === $in{$p}) {
-        throw new \lang\MethodNotImplementedException('Strings');
+        $token= $in{$p}.$this->ending($in, $in{$p}, $p).$in{$p};
       } else if (',' === $in{$p} || ':' === $in{$p}) {
         $in= substr($in, 1);
         continue;
@@ -75,6 +75,19 @@ abstract class Input extends \lang\Object {
     // fputs(STDERR, "  '$token'\n");
     $in= (string)substr($in, strlen($token) + 1);
     return trim($token);
+  }
+
+  public function ending($value, $chr, $offset= 0) {
+    for ($o= $offset+ strlen($chr), $i= $o, $b= 1; $b > 0; $i++) {
+      if ($i >= strlen($value)) {
+        if (null === ($line= $this->nextLine())) {
+          throw new \lang\FormatException('Unmatched "'.$chr.'", encountered EOF');
+        }
+        $value.= $line;
+      }
+      if ($chr === $value{$i}) $b--;
+    }
+    return substr($value, $o, $i - $o - strlen($chr));
   }
 
   /**
