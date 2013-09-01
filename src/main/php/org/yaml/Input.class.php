@@ -46,6 +46,8 @@ abstract class Input extends \lang\Object {
    * @return string
    */
   public function nextToken(&$in) {
+    static $escape= array('"' => '\\', "'" => "'");
+
     $token= null;
 
     // fputs(STDERR, "\n> '$in'\n");
@@ -63,7 +65,7 @@ abstract class Input extends \lang\Object {
       } else if ('{' === $in{$p}) {
         $token= '{'.$this->matching($in, '{', '}', $p).'}';
       } else if ('"' === $in{$p} || "'" === $in{$p}) {
-        $token= $in{$p}.$this->ending($in, $in{$p}, $p).$in{$p};
+        $token= $in{$p}.$this->ending($in, $in{$p}, $escape[$in{$p}], $p).$in{$p};
       } else if (',' === $in{$p} || ':' === $in{$p}) {
         $in= substr($in, 1);
         continue;
@@ -77,15 +79,20 @@ abstract class Input extends \lang\Object {
     return trim($token);
   }
 
-  public function ending($value, $chr, $offset= 0) {
-    for ($o= $offset+ strlen($chr), $i= $o, $b= 1; $b > 0; $i++) {
-      if ($i >= strlen($value)) {
+  public function ending($value, $chr, $escape, $offset= 0) {
+    for ($o= $offset+ strlen($chr), $i= $o, $l= strlen($value), $b= 1; $b > 0; $i++) {
+      if ($i >= $l) {
         if (null === ($line= $this->nextLine())) {
           throw new \lang\FormatException('Unmatched "'.$chr.'", encountered EOF');
         }
         $value.= $line;
+        $l= strlen($value);
       }
-      if ($chr === $value{$i}) $b--;
+      if ($escape === $value{$i} && $i + 1 < $l && $chr === $value{$i + 1}) {
+        $i++;
+      } else if ($chr === $value{$i}) {
+        $b--;
+      }
     }
     return substr($value, $o, $i - $o - strlen($chr));
   }

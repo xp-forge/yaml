@@ -61,7 +61,7 @@ class YamlInputTest extends AbstractYamlParserTest {
     return $tokens;
   }
 
-  #[@test, @values(array('hello', '"hello"', "'hello'"))]
+  #[@test, @values(array('hello', '"hello"', "'hello'", '"He said: \"Hello\""', "'He said: ''Hello'''"))]
   public function single_token($value) {
     $this->assertEquals(array($value), $this->tokensOf($value));
   }
