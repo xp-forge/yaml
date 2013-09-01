@@ -86,19 +86,14 @@ class YamlInputTest extends AbstractYamlParserTest {
     $this->assertEquals(explode(': ', $value), $this->tokensOf($value));
   }
 
-  #[@test, @values(array('[hello]', '["hello"]', "['hello']"))]
-  public function single_element_seq_token($value) {
+  #[@test, @values(array('[hello]', '["hello"]', "['hello']", '[hello, world]'))]
+  public function sequence_token($value) {
     $this->assertEquals(array($value), $this->tokensOf($value));
   }
 
-  #[@test, @values(array('{hello}', '{"hello"}', "{'hello'}"))]
-  public function single_element_map_token($value) {
+  #[@test, @values(array('{hello}', '{"hello"}', "{'hello'}", '{hello, world}'))]
+  public function mapping_token($value) {
     $this->assertEquals(array($value), $this->tokensOf($value));
-  }
-
-  #[@test]
-  public function seq_of_two_elements_token() {
-    $this->assertEquals(array('[hello, world]'), $this->tokensOf('[hello, world]'));
   }
 
   #[@test, @values(array('[a, b], [c, d]', '[a, b] , [c, d]'))]
