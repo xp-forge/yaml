@@ -56,6 +56,6 @@ abstract class Input extends \lang\Object {
       }
       if ($begin === $value{$i}) $b++; else if ($end === $value{$i}) $b--;
     }
-    return substr($value, $o, $i - $o - 1);
+    return substr($value, $o, $i - $o - strlen($end));
   }
 }
