@@ -2,7 +2,7 @@
 
 /**
  * 7.1 Alias Nodes
- * ---------------
+ * ===============
  * Subsequent occurrences of a previously serialized node are presented
  * as alias nodes. The first occurrence of the node must be marked by an
  * anchor to allow subsequent occurrences to be presented as alias nodes. 
