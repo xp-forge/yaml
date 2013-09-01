@@ -83,7 +83,7 @@ abstract class Input extends \lang\Object {
     for ($o= $offset+ strlen($chr), $i= $o, $l= strlen($value), $b= 1; $b > 0; $i++) {
       if ($i >= $l) {
         if (null === ($line= $this->nextLine())) {
-          throw new \lang\FormatException('Unmatched "'.$chr.'", encountered EOF');
+          throw new \lang\FormatException('Unclosed '.$chr.' quote, encountered EOF');
         }
         $value.= $line;
         $l= strlen($value);

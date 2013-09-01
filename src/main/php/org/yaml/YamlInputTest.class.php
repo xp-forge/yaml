@@ -116,6 +116,15 @@ class YamlInputTest extends AbstractYamlParserTest {
     $this->assertEquals(array('{a, b}', '{c, d}', 'e'), $this->tokensOf($value));
   }
 
+  #[
+  #  @test,
+  #  @values(array('"hello', "'hello", '"hello \"', "'hello ''")),
+  #  @expect(class= 'lang.FormatException', withMessage= '/Unclosed . quote, encountered EOF/')
+  #]
+  public function unclosed_quote($value) {
+    $this->tokensOf($value);
+  }
+
   #[@test]
   public function matching() {
     $this->assertEquals('hello', $this->newFixture()->matching('[hello]', '[', ']'));
