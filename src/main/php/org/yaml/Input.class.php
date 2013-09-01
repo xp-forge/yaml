@@ -46,9 +46,8 @@ abstract class Input extends \lang\Object {
    * @return string
    */
   public function nextToken(&$in) {
-    $o= 0;
     $s= strcspn($in, ',[]{}:"\'');
-    if ($o + $s >= strlen($in)) {
+    if ($s >= strlen($in)) {
       $token= $in;
     } else if ('[' === $in{$s}) {
       $token= '['.$this->matching($in, '[', ']', $s).']';
@@ -58,7 +57,7 @@ abstract class Input extends \lang\Object {
       $token= substr($in, 0, $s);
     }
 
-    $in= substr($in, $o + strlen($token) + 1);
+    $in= substr($in, strlen($token) + 1);
     return trim($token);
   }
 
