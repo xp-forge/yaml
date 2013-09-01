@@ -33,6 +33,36 @@ abstract class Input extends \lang\Object {
   }
 
   /**
+   * Gets tokens from input
+   *
+   * ```
+   * "one" => "one"
+   * "one, two" => "one", "two"
+   * "[one, two]" => "[one, two]"
+   * "[one, two], three" => "[one, two]", "three"
+   * ```
+   *
+   * @param  string $in
+   * @return string
+   */
+  public function nextToken(&$in) {
+    $o= 0;
+    $s= strcspn($in, ',[]{}:"\'');
+    if ($o + $s >= strlen($in)) {
+      $token= $in;
+    } else if ('[' === $in{$s}) {
+      $token= '['.$this->matching($in, '[', ']', $s).']';
+    } else if ('{' === $in{$s}) {
+      $token= '{'.$this->matching($in, '{', '}', $s).'}';
+    } else {
+      $token= substr($in, 0, $s);
+    }
+
+    $in= substr($in, $o + strlen($token) + 1);
+    return trim($token);
+  }
+
+  /**
    * Returns characters between matching begin and end characters from 
    * a given reader. Continues to read lines until sequence is matched.
    *

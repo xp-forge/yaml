@@ -42,27 +42,9 @@ class YamlParser extends \lang\Object {
     };
     $this->constructors['seq']= function($in, $reader, $parser) {
       if ('[' === $in{0}) {
-        $matching= rtrim($reader->matching($in, '[', ']'), ' ,');
-        $l= strlen($matching);
-        $r= array();
-        $o= 0;
-        while ($o < $l) {
-          $s= strcspn($matching, ',[]', $o);
-          if ($o + $s >= $l) {
-            $token= trim(substr($matching, $o), ' ');
-          } else if ('[' === $matching{$o + $s}) {
-            $nested= $reader->matching($matching, '[', ']', $o + $s);
-            $s= strlen($nested) + 1;
-            $token= '['.$nested.']';
-          } else if (0 === $s) {
-            $o++;
-            continue;
-          } else {
-            $token= trim(substr($matching, $o, $s), ' ');
-          }
-          // fputs(STDERR, "* $o, $s, '$token'\n");
+        $seq= $reader->matching($in, '[', ']');
+        while ($token= $reader->nextToken($seq)) {
           $r[]= $parser->valueOf($reader, $token);
-          $o+= $s + 1;
         }
         return $r;
       } else {
@@ -71,30 +53,9 @@ class YamlParser extends \lang\Object {
     };
     $this->constructors['map']= function($in, $reader, $parser) {
       if ('{' === $in{0}) {
-        $matching= rtrim($reader->matching($in, '{', '}'), ' ,');
-        $l= strlen($matching);
-        $r= array();
-        $o= 0;
-        // fputs(STDERR, "\n-> '$matching'\n");
-        while ($o < $l) {
-          $s= strcspn($matching, ',{}', $o);
-          if ($o + $s >= $l) {
-            $token= trim(substr($matching, $o), ' ');
-          } else if ('{' === $matching{$o + $s}) {
-            $nested= $reader->matching($matching, '{', '}', $o + $s);
-            $s= strlen($nested) + 1;
-            $token= '{'.$nested.'}';
-          } else if (0 === $s) {
-            $o++;
-            continue;
-          } else {
-            $token= trim(substr($matching, $o, $s), ' ');
-          }
-          // fputs(STDERR, "* $o, $s, '$token'\n");
-          $key= $value= null;
-          sscanf($token, "%[^:]: %[^\r]", $key, $value);
-          $r[trim($key)]= $parser->valueOf($reader, $value);
-          $o+= $s + 1;
+        $map= $reader->matching($in, '{', '}');
+        while ($token= $reader->nextToken($map)) {
+          $r[$parser->valueOf($reader, $token)]= $parser->valueOf($reader, $reader->nextToken($map));
         }
         return $r;
       } else {

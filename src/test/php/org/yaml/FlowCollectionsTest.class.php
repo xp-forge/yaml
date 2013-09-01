@@ -123,7 +123,7 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
     );
   }
 
-  #[@test, @ignore('Until after refactoring')]
+  #[@test]
   public function nested_map() {
     $this->assertEquals(
       array('map' => array('one' => 'two', 'three' => 'four')),
