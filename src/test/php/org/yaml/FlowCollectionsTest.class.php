@@ -130,4 +130,12 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
       $this->parse('{ map: { one : two , three: four } }')
     );
   }
+
+  #[@test]
+  public function nested_maps() {
+    $this->assertEquals(
+      array('a' => array('one' => 1, 'two' => 2), 'b' => array('three' => 3, 'four' => 4)),
+      $this->parse('{ a: { one : 1 , two: 2 }, b: { three: 3, four: 4 } }')
+    );
+  }
 }

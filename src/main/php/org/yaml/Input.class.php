@@ -46,18 +46,34 @@ abstract class Input extends \lang\Object {
    * @return string
    */
   public function nextToken(&$in) {
-    $s= strcspn($in, ',[]{}:"\'');
-    if ($s >= strlen($in)) {
-      $token= $in;
-    } else if ('[' === $in{$s}) {
-      $token= '['.$this->matching($in, '[', ']', $s).']';
-    } else if ('{' === $in{$s}) {
-      $token= '{'.$this->matching($in, '{', '}', $s).'}';
-    } else {
-      $token= substr($in, 0, $s);
-    }
+    $token= null;
 
-    $in= substr($in, strlen($token) + 1);
+    // fputs(STDERR, "\n> '$in'\n");
+    do {
+
+      // First, scan until we find non-space. If the next character we find
+      // starts a sequence, return the entirety of that, same for maps as
+      // well as single and double quoted strings. Next, scan until we find 
+      // a comma (in sequences), or a colon (in maps).
+      $p= strspn($in, ' ');
+      if ($p >= strlen($in)) {
+        $token= $in;
+      } else if ('[' === $in{$p}) {
+        $token= '['.$this->matching($in, '[', ']', $p).']';
+      } else if ('{' === $in{$p}) {
+        $token= '{'.$this->matching($in, '{', '}', $p).'}';
+      } else if ('"' === $in{$p} || "'" === $in{$p}) {
+        throw new \lang\MethodNotImplementedException('Strings');
+      } else if (',' === $in{$p} || ':' === $in{$p}) {
+        $in= substr($in, 1);
+        continue;
+      } else {
+        $token= substr($in, 0, $p + strcspn($in, ',:', $p));
+      }
+    } while (null === $token);
+
+    // fputs(STDERR, "  '$token'\n");
+    $in= (string)substr($in, strlen($token) + 1);
     return trim($token);
   }
 
