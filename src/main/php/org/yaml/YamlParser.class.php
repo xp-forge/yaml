@@ -47,8 +47,20 @@ class YamlParser extends \lang\Object {
         $r= array();
         $o= 0;
         while ($o < $l) {
-          $s= strcspn($matching, ',', $o);
-          $token= trim(substr($matching, $o, $s), ' ');
+          $s= strcspn($matching, ',[]', $o);
+          if ($o + $s >= $l) {
+            $token= trim(substr($matching, $o), ' ');
+          } else if ('[' === $matching{$o + $s}) {
+            $nested= $reader->matching($matching, '[', ']', $o + $s);
+            $s= strlen($nested) + 1;
+            $token= '['.$nested.']';
+          } else if (0 === $s) {
+            $o++;
+            continue;
+          } else {
+            $token= trim(substr($matching, $o, $s), ' ');
+          }
+          // fputs(STDERR, "* $o, $s, '$token'\n");
           $r[]= $parser->valueOf($reader, $token);
           $o+= $s + 1;
         }
@@ -63,9 +75,22 @@ class YamlParser extends \lang\Object {
         $l= strlen($matching);
         $r= array();
         $o= 0;
+        // fputs(STDERR, "\n-> '$matching'\n");
         while ($o < $l) {
-          $s= strcspn($matching, ',', $o);
-          $token= trim(substr($matching, $o, $s), ' ');
+          $s= strcspn($matching, ',{}', $o);
+          if ($o + $s >= $l) {
+            $token= trim(substr($matching, $o), ' ');
+          } else if ('{' === $matching{$o + $s}) {
+            $nested= $reader->matching($matching, '{', '}', $o + $s);
+            $s= strlen($nested) + 1;
+            $token= '{'.$nested.'}';
+          } else if (0 === $s) {
+            $o++;
+            continue;
+          } else {
+            $token= trim(substr($matching, $o, $s), ' ');
+          }
+          // fputs(STDERR, "* $o, $s, '$token'\n");
           $key= $value= null;
           sscanf($token, "%[^:]: %[^\r]", $key, $value);
           $r[trim($key)]= $parser->valueOf($reader, $value);

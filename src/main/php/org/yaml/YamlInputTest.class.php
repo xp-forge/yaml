@@ -60,4 +60,19 @@ class YamlInputTest extends AbstractYamlParserTest {
   public function matching_nested2() {
     $this->assertEquals('[hello],[world]', $this->newFixture()->matching('[[hello],[world]]', '[', ']'));
   }
+
+  #[@test]
+  public function matching_nested_at_offset0() {
+    $this->assertEquals('[hello],[world]', $this->newFixture()->matching('[[hello],[world]]', '[', ']', 0));
+  }
+
+  #[@test]
+  public function matching_nested_at_offset1() {
+    $this->assertEquals('hello', $this->newFixture()->matching('[[hello],[world]]', '[', ']', 1));
+  }
+
+  #[@test]
+  public function matching_nested_at_offset9() {
+    $this->assertEquals('world', $this->newFixture()->matching('[[hello],[world]]', '[', ']', 9));
+  }
 }

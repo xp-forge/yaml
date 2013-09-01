@@ -46,8 +46,8 @@ abstract class Input extends \lang\Object {
    * @param  string $end
    * @return string
    */
-  public function matching($value, $begin, $end) {
-    for ($o= strpos($value, $begin)+ strlen($begin), $i= $o, $b= 1; $b > 0; $i++) {
+  public function matching($value, $begin, $end, $offset= 0) {
+    for ($o= $offset+ strlen($begin), $i= $o, $b= 1; $b > 0; $i++) {
       if ($i >= strlen($value)) {
         if (null === ($line= $this->nextLine())) {
           throw new \lang\FormatException('Unmatched "'.$begin.'", encountered EOF');
