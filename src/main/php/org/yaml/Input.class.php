@@ -46,8 +46,6 @@ abstract class Input extends \lang\Object {
    * @return string
    */
   public function nextToken(&$in) {
-    static $escape= array('"' => '\\', "'" => "'");
-
     $token= null;
 
     // fputs(STDERR, "\n> '$in'\n");
@@ -64,8 +62,10 @@ abstract class Input extends \lang\Object {
         $token= '['.$this->matching($in, '[', ']', $p).']';
       } else if ('{' === $in{$p}) {
         $token= '{'.$this->matching($in, '{', '}', $p).'}';
-      } else if ('"' === $in{$p} || "'" === $in{$p}) {
-        $token= $in{$p}.$this->ending($in, $in{$p}, $escape[$in{$p}], $p).$in{$p};
+      } else if ('"' === $in{$p} ) {
+        $token= '"'.$this->quoted($in, '"', '\\', $p).'"';
+      } else if ("'" === $in{$p}) {
+        $token= "'".$this->quoted($in, "'", "'", $p)."'";
       } else if (',' === $in{$p} || ':' === $in{$p}) {
         $in= substr($in, 1);
         continue;
@@ -79,7 +79,7 @@ abstract class Input extends \lang\Object {
     return trim($token);
   }
 
-  public function ending($value, $chr, $escape, $offset= 0) {
+  public function quoted($value, $chr, $escape, $offset= 0) {
     for ($o= $offset+ strlen($chr), $i= $o, $l= strlen($value), $b= 1; $b > 0; $i++) {
       if ($i >= $l) {
         if (null === ($line= $this->nextLine())) {
