@@ -46,6 +46,12 @@ class YamlInputTest extends AbstractYamlParserTest {
     $this->assertEquals('Hello', $fixture->nextLine());
   }
 
+  /**
+   * Helper which gathers all tokens from `nextToken()` in an array
+   *
+   * @param  string $input
+   * @return string[]
+   */
   protected function tokensOf($input) {
     $fixture= $this->newFixture();
     $tokens= array();
@@ -55,34 +61,34 @@ class YamlInputTest extends AbstractYamlParserTest {
     return $tokens;
   }
 
-  #[@test]
-  public function single_token() {
-    $this->assertEquals(array('hello'), $this->tokensOf('hello'));
+  #[@test, @values(array('hello', '"hello"', "'hello'"))]
+  public function single_token($value) {
+    $this->assertEquals(array($value), $this->tokensOf($value));
+  }
+
+  #[@test, @values(array('a, b', 'a ,b', 'a , b'))]
+  public function comma_delimited_tokens($value) {
+    $this->assertEquals(array('a', 'b'), $this->tokensOf($value));
   }
 
   #[@test]
-  public function single_quoted_token() {
-    $this->assertEquals(array('"hello"'), $this->tokensOf('"hello"'));
-  }
-
-  #[@test]
-  public function comma_delimited_tokens() {
-    $this->assertEquals(array('hello', 'world'), $this->tokensOf('hello, world'));
-  }
-
-  #[@test]
-  public function comma_delimited_quoted_tokens() {
+  public function comma_delimited_double_quoted_tokens() {
     $this->assertEquals(array('"hello"', '"world"'), $this->tokensOf('"hello", "world"'));
   }
 
   #[@test]
-  public function colon_delimited_tokens() {
-    $this->assertEquals(array('hello', 'world'), $this->tokensOf('hello: world'));
+  public function comma_delimited_single_quoted_tokens() {
+    $this->assertEquals(array("'hello'", "'world'"), $this->tokensOf("'hello', 'world'"));
   }
 
-  #[@test]
-  public function single_element_seq_token() {
-    $this->assertEquals(array('[hello]'), $this->tokensOf('[hello]'));
+  #[@test, @values(array('a: b', 'a : b', 'a   :   b'))]
+  public function colon_delimited_tokens($value) {
+    $this->assertEquals(array('a', 'b'), $this->tokensOf($value));
+  }
+
+  #[@test, @values(array('[hello]', '["hello"]', "['hello']"))]
+  public function single_element_seq_token($value) {
+    $this->assertEquals(array($value), $this->tokensOf($value));
   }
 
   #[@test]
@@ -90,14 +96,24 @@ class YamlInputTest extends AbstractYamlParserTest {
     $this->assertEquals(array('[hello, world]'), $this->tokensOf('[hello, world]'));
   }
 
-  #[@test]
-  public function two_sequences() {
-    $this->assertEquals(array('[a, b]', '[c, d]'), $this->tokensOf('[a, b], [c, d]'));
+  #[@test, @values(array('[a, b], [c, d]', '[a, b] , [c, d]'))]
+  public function two_sequences($value) {
+    $this->assertEquals(array('[a, b]', '[c, d]'), $this->tokensOf($value));
   }
 
   #[@test, @values(array('[a, b], [c, d], e', '[a, b] , [c, d] , e'))]
   public function two_sequences_and_single_token($value) {
     $this->assertEquals(array('[a, b]', '[c, d]', 'e'), $this->tokensOf($value));
+  }
+
+  #[@test, @values(array('{a, b}, {c, d}', '{a, b} , {c, d}'))]
+  public function two_maps($value) {
+    $this->assertEquals(array('{a, b}', '{c, d}'), $this->tokensOf($value));
+  }
+
+  #[@test, @values(array('{a, b}, {c, d}, e', '{a, b} , {c, d} , e'))]
+  public function two_maps_and_single_token($value) {
+    $this->assertEquals(array('{a, b}', '{c, d}', 'e'), $this->tokensOf($value));
   }
 
   #[@test]
