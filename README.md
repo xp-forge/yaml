@@ -37,7 +37,8 @@ $ xpi info -r xp-forge/yaml
 @http://builds.planet-xp.net/
 Module<xp-forge/yaml>: YAML
 https://github.com/xp-forge/yaml
-Releases: 1, list {
+Releases: 2, list {
+  0.9.1 (series= "0.9", rc= false, published= "2013-09-01T18:02:08+02:00")
   0.9.0 (series= "0.9", rc= false, published= "2013-08-31T18:26:47+02:00")
 }
 ```
