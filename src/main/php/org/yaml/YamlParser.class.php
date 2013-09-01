@@ -23,7 +23,7 @@ class YamlParser extends \lang\Object {
 
     // Initialize default tag handlers: str, null, int, float and bool
     $literals= self::$literals;
-    $this->constructors['str']= function($in) { return $in; };
+    $this->constructors['str']= function($in) { return (string)$in; };
     $this->constructors['null']= function($in) { return null; };
     $this->constructors['int']= function($in) { 
       if (0 === strncmp('0o', $in, 2)) {
