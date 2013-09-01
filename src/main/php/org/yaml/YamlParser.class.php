@@ -42,6 +42,7 @@ class YamlParser extends \lang\Object {
     };
     $this->constructors['seq']= function($in, $reader, $parser) {
       if ('[' === $in{0}) {
+        $r= array();
         $seq= $reader->matching($in, '[', ']');
         while ($token= $reader->nextToken($seq)) {
           $r[]= $parser->valueOf($reader, $token);
@@ -53,6 +54,7 @@ class YamlParser extends \lang\Object {
     };
     $this->constructors['map']= function($in, $reader, $parser) {
       if ('{' === $in{0}) {
+        $r= array();
         $map= $reader->matching($in, '{', '}');
         while ($token= $reader->nextToken($map)) {
           $r[$parser->valueOf($reader, $token)]= $parser->valueOf($reader, $reader->nextToken($map));
