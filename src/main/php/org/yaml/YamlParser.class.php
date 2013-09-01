@@ -42,7 +42,7 @@ class YamlParser extends \lang\Object {
     };
     $this->constructors['seq']= function($in, $reader, $parser) {
       if ('[' === $in{0}) {
-        $matching= rtrim($parser->matching($reader, $in, '[', ']'), ' ,');
+        $matching= rtrim($reader->matching($in, '[', ']'), ' ,');
         $l= strlen($matching);
         $r= array();
         $o= 0;
@@ -59,7 +59,7 @@ class YamlParser extends \lang\Object {
     };
     $this->constructors['map']= function($in, $reader, $parser) {
       if ('{' === $in{0}) {
-        $matching= rtrim($parser->matching($reader, $in, '{', '}'), ' ,');
+        $matching= rtrim($reader->matching($in, '{', '}'), ' ,');
         $l= strlen($matching);
         $r= array();
         $o= 0;
@@ -76,17 +76,6 @@ class YamlParser extends \lang\Object {
         throw new \lang\FormatException('Unsupported mapping style');
       }
     };
-  }
-
-  public function matching($reader, $value, $begin, $end) {
-    while (false === ($s= strrpos($value, $end))) {
-      if (null === ($line= $reader->nextLine())) {
-        throw new \lang\FormatException('Unmatched "'.$begin.'", encountered EOF');
-      }
-      $value.= $line;
-    }
-    $offset= strlen($begin);
-    return substr($value, $offset, $s - $offset);
   }
 
   protected function indented($reader, $join) {
