@@ -3,7 +3,10 @@
 use io\streams\TextReader;
 use io\streams\MemoryInputStream;
 
-class YamlInputTest extends AbstractYamlParserTest {
+/**
+ * Abstract base class for YAML Input tests
+ */
+abstract class AbstractInputTest extends AbstractYamlParserTest {
 
   /**
    * Creates a new fixture
@@ -11,9 +14,7 @@ class YamlInputTest extends AbstractYamlParserTest {
    * @param  string str
    * @return org.yaml.Input
    */
-  protected function newFixture($str= '') {
-    return new \org\yaml\ReaderInput(new TextReader(new MemoryInputStream($str)));
-  }
+  protected abstract function newFixture($str= '');
 
   #[@test]
   public function nextLine_for_empty_input() {
