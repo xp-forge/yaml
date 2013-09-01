@@ -1,4 +1,4 @@
-<?php namespace org\yaml;
+<?php namespace org\yaml\unittest;
 
 /**
  * Abstract base class for YAML Parser tests
@@ -13,6 +13,6 @@ abstract class AbstractYamlParserTest extends \unittest\TestCase {
    * @throws lang.FormatException
    */
   protected function parse($str) {
-    return create(new YamlParser())->parse(new StringInput($str));
+    return create(new \org\yaml\YamlParser())->parse(new \org\yaml\StringInput($str));
   }
 }

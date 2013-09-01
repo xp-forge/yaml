@@ -1,4 +1,4 @@
-<?php namespace org\yaml;
+<?php namespace org\yaml\unittest;
 
 /**
  * 7.4. Flow Collection Styles

@@ -1,4 +1,4 @@
-<?php namespace org\yaml;
+<?php namespace org\yaml\unittest;
 
 use io\streams\TextReader;
 use io\streams\MemoryInputStream;
@@ -12,7 +12,7 @@ class YamlInputTest extends AbstractYamlParserTest {
    * @return org.yaml.Input
    */
   protected function newFixture($str= '') {
-    return new ReaderInput(new TextReader(new MemoryInputStream($str)));
+    return new \org\yaml\ReaderInput(new TextReader(new MemoryInputStream($str)));
   }
 
   #[@test]

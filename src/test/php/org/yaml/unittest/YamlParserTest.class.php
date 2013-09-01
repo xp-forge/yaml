@@ -1,4 +1,4 @@
-<?php namespace org\yaml;
+<?php namespace org\yaml\unittest;
 
 use util\Date;
 
@@ -6,7 +6,7 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[@test]
   public function can_create() {
-    new YamlParser();
+    new \org\yaml\YamlParser();
   }
 
   #[@test]
