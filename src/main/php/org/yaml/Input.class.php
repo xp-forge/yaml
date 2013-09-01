@@ -10,10 +10,21 @@ abstract class Input extends \lang\Object {
    */
   protected abstract function readLine();
 
+  /**
+   * Pushes a given line back onto the stack.
+   *
+   * @param  string $l
+   */
   public function resetLine($l) {
     $this->stack[]= $l;
   }
 
+  /**
+   * Returns the next line, either from the stack or from the underlying
+   * reader. Returns NULL to indicate EOF.
+   *
+   * @return string
+   */
   public function nextLine() {
     if ($this->stack) {
       return array_shift($this->stack);
