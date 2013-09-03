@@ -100,8 +100,8 @@ class YamlParser extends \lang\Object {
         if (isset($escapes[$e])) {
           $r.= $escapes[$e];
           $i+= 1;
-        } else if ('x' === $e) {
-          $r.= chr(hexdec(substr($value, $i + 2, 2)));
+        } else if ('x' === $e && 1 === sscanf(substr($value, $i + 2, 2), '%2x', $v)) {
+          $r.= chr($v);
           $i+= 3;
         } else {
           throw new \lang\FormatException('Illegal escape sequence starting with \\'.$e);

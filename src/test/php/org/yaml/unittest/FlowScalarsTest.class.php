@@ -31,6 +31,11 @@ class FlowScalarsTest extends AbstractYamlParserTest {
     );
   }
 
+  #[@test, @values(array('\c', '\xq-')), @expect('lang.FormatException')]
+  public function invalid_escape_characters($input) {
+    $this->parse('str: "<'.$input.'>"');
+  }
+
   #[@test]
   public function backslash_inside_double_quotes() {
     $this->assertEquals(
