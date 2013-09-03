@@ -19,11 +19,15 @@ class FlowScalarsTest extends AbstractYamlParserTest {
     $this->assertEquals(array('str' => $result), $this->parse($input));
   }
 
-  #[@test]
-  public function control_chars_inside_double_quotes() {
+  #[@test, @values(array(
+  #  array('\0', "\x00"), array('\a', "\x07"), array('\b', "\x08"), array('\t', "\x09"),
+  #  array('\n', "\x0a"), array('\v', "\x0b"), array('\f', "\x0c"), array('\r', "\x0d"),
+  #  array('\e', "\x1b")
+  #))]
+  public function control_chars_inside_double_quotes($input, $result) {
     $this->assertEquals(
-      array('str' => "\x081998\x091999\x092000\x0d\x0a"),
-      $this->parse('str: "\b1998\t1999\t2000\r\n"')
+      array('str' => '<'.$result.'>'),
+      $this->parse('str: "<'.$input.'>"')
     );
   }
 
@@ -33,6 +37,16 @@ class FlowScalarsTest extends AbstractYamlParserTest {
       array('str' => '\\'),
       $this->parse('str: "\\\\"')   // The input string is "\\"
     );
+  }
+
+  #[@test, @values(array('\ ', ' '))]
+  public function space_may_be_escaped_inside_double_quotes_to_force_spaces($variant) {
+    $this->assertEquals(array('str' => ' '), $this->parse('str: "'.$variant.'"'));
+  }
+
+  #[@test, @values(array('\/', '/'))]
+  public function slash_may_be_escaped_inside_double_quotes_for_json_compat($variant) {
+    $this->assertEquals(array('str' => '/'), $this->parse('str: "'.$variant.'"'));
   }
 
   #[@test]

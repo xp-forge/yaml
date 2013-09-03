@@ -81,12 +81,17 @@ class YamlParser extends \lang\Object {
   /**
    * Expand escapes sequences inside a string
    *
+   * @see    http://www.yaml.org/spec/1.2/spec.html#id2776092 - "5.7. Escaped Characters"
    * @param  string $value
    * @return string
    * @throws lang.FormatException for illegal escape sequences
    */
   protected function expand($value) {
-    static $escapes= array('r' => "\x0d", 'n' => "\x0a", 't' => "\x09", 'b' => "\x08", '\\' => '\\', '"' => '"');
+    static $escapes= array(
+      '0' => "\x00", 'a' => "\x07", 'b' => "\x08", 't' => "\x09",
+      'n' => "\x0a", 'v' => "\x0b", 'f' => "\x0c", 'r' => "\x0d",
+      'e' => "\x1b", '\\' => '\\', '"' => '"', '/' => '/', ' ' => ' '
+    );
 
     $r= '';
     for ($i= 0, $l= strlen($value); $i < $l; $i++) {
