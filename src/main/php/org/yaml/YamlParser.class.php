@@ -83,9 +83,10 @@ class YamlParser extends \lang\Object {
    *
    * @param  string $value
    * @return string
+   * @throws lang.FormatException for illegal escape sequences
    */
   protected function expand($value) {
-    static $escapes= array('r' => "\x0d", 'n' => "\x0a", 't' => "\x09", 'b' => "\x08");
+    static $escapes= array('r' => "\x0d", 'n' => "\x0a", 't' => "\x09", 'b' => "\x08", '\\' => '\\', '"' => '"');
 
     $r= '';
     for ($i= 0, $l= strlen($value); $i < $l; $i++) {
@@ -97,6 +98,8 @@ class YamlParser extends \lang\Object {
         } else if ('x' === $e) {
           $r.= chr(hexdec(substr($value, $i + 2, 2)));
           $i+= 3;
+        } else {
+          throw new \lang\FormatException('Illegal escape sequence starting with \\'.$e);
         }
       } else {
         $r.= $value{$i};

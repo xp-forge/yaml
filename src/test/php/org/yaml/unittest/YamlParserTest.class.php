@@ -265,5 +265,4 @@ class YamlParserTest extends AbstractYamlParserTest {
   public function explicit_null_tag($input) {
     $this->assertEquals(array('r' => null), $this->parse('r: '.$input));
   }
-
 }

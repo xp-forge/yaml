@@ -12,22 +12,31 @@
 class FlowScalarsTest extends AbstractYamlParserTest {
 
   #[@test, @values(array(
-  #  array('str: ""', ''), array('str: "Test"', 'Test')
-  # ))]
+  #  array('str: ""', ''), array('str: "Test"', 'Test'),
+  #  array('str: "\\""', '"'), array('str: "\\"Test\\""', '"Test"')
+  #))]
   public function double_quotes($input, $result) {
     $this->assertEquals(array('str' => $result), $this->parse($input));
   }
 
   #[@test]
-  public function control() {
+  public function control_chars_inside_double_quotes() {
     $this->assertEquals(
-      array('str' => "\x081998\x091999\x092000\x0a"),
-      $this->parse('str: "\b1998\t1999\t2000\n"')
+      array('str' => "\x081998\x091999\x092000\x0d\x0a"),
+      $this->parse('str: "\b1998\t1999\t2000\r\n"')
     );
   }
 
   #[@test]
-  public function hex_esc() {
+  public function backslash_inside_double_quotes() {
+    $this->assertEquals(
+      array('str' => '\\'),
+      $this->parse('str: "\\\\"')   // The input string is "\\"
+    );
+  }
+
+  #[@test]
+  public function hex_escapes_inside_double_quotes() {
     $this->assertEquals(
       array('str' => "\x0d\x0a is \x0d\x0a"),
       $this->parse('str: "\x0d\x0a is \r\n"')
