@@ -140,7 +140,9 @@ class YamlParser extends \lang\Object {
           continue;
         }
 
-        // Sequences (begin with a dash) and maps (key: value)
+        // Sequences (begin with a dash) and maps (key: value). A special case is the 
+        // compacted mapping, where the first key starts right inside a sequence, e.g.
+        // "- one: two\n  three: four"
         if ('-' === $line{$spaces}) {
           $key= $id++;
 
