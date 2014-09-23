@@ -1,0 +1,7 @@
+{
+  "name": "xp-forge/yaml",
+  "version": "0.9.1",
+  "require": {
+    "xp-framework/core": "~6.0"
+  }
+}
