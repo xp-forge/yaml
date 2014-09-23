@@ -1,5 +1,11 @@
 YAML parser
 ===========
+
+[![Build Status on TravisCI](https://secure.travis-ci.org/xp-forge/yaml.svg)](http://travis-ci.org/xp-forge/yaml)
+[![XP Framework Module](https://raw.githubusercontent.com/xp-framework/web/master/static/xp-framework-badge.png)](https://github.com/xp-framework/core)
+[![BSD Licence](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)](https://github.com/xp-framework/core/blob/master/LICENCE.md)
+[![Required PHP 5.4+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-5_4plus.png)](http://php.net/)
+
 * See http://www.yaml.org/
 * See http://www.yaml.org/spec/1.2/spec.html
 
@@ -25,20 +31,4 @@ $ xp -w 'create(new \org\yaml\YamlParser())->parse(new \org\yaml\FileInput($argv
     0 => "(EXCD=0; for i in core/src/test/config/unittest/*.ini; do echo "---> $i"; ./unittest $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)"
   ]
 ]
-```
-
-Installation
-------------
-
-YAML for XP Framework can be installed using the `xpi` utility. The most current release can be discovered as follows:
-
-```sh
-$ xpi info -r xp-forge/yaml
-@http://builds.planet-xp.net/
-Module<xp-forge/yaml>: YAML
-https://github.com/xp-forge/yaml
-Releases: 2, list {
-  0.9.1 (series= "0.9", rc= false, published= "2013-09-01T18:02:08+02:00")
-  0.9.0 (series= "0.9", rc= false, published= "2013-08-31T18:26:47+02:00")
-}
 ```
