@@ -40,7 +40,7 @@ class YamlParserTest extends AbstractYamlParserTest {
   #[@test, @values(array(
   #  array('num: 1', 1), array('num: 0', 0),
   #  array('num: -1', -1), array('num: +1', 1),
-  #  array('num: 0o14', 014), array('num: 0xC', 0xC)
+  #  array('num: 0o14', 12), array('num: 0xC', 12), array('num: 0xc', 12)
   #))]
   public function parse_integer($input, $result) {
     $this->assertEquals(array('num' => $result), $this->parse($input));
