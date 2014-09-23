@@ -3,6 +3,11 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 0.9.2 / 2014-09-23
+
+* Made installable via Glue - (@thekid)
+* Minor bug fixes - (@thekid)
+
 ## 0.9.1 / 2013-09-01
 
 * Added org.yaml.StringInput implementation - (@thekid)
