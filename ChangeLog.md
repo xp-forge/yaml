@@ -3,6 +3,10 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 1.0.0 / 2015-01-10
+
+* Made available via Composer - @thekid
+
 ## 0.9.2 / 2014-09-23
 
 * Made installable via Glue - (@thekid)
