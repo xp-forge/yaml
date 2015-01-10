@@ -23,7 +23,7 @@ $result= (new YamlParser())->parse(new FileInput($argv[1]));
 //   language => "php"
 //   php => [5.4, 5.5, 5.6]
 //   before_script => [
-//     "wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.2.0/setup' -O - | php",
+//     "wget 'https://github.com/xp-framework/xp-runners/.../setup' -O - | php",
 //     "composer install --prefer-dist",
 //     "echo "vendor/autoload.php" > composer.pth",
 //     "echo "use=vendor/xp-framework/core" > xp.ini",
