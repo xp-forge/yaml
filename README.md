@@ -17,7 +17,6 @@ Usage example
 use org\yaml\YamlParser;
 use org\yaml\FileInput;
 
-
 $result= (new YamlParser())->parse(new FileInput($argv[1]));
 // [
 //   language => "php"
