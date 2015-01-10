@@ -1,9 +1,9 @@
 {
-  "name" : "xp-forge/sequence",
+  "name" : "xp-forge/yaml",
   "type" : "library",
   "homepage" : "http://xp-framework.net/",
   "license" : "BSD-3-Clause",
-  "description" : "Data sequences",
+  "description" : "YAML parser",
   "keywords": ["module", "xp"],
   "require" : {
     "xp-framework/core": "dev-master",
