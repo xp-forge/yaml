@@ -19,7 +19,7 @@ Usage example
 use org\yaml\YamlParser;
 use org\yaml\FileInput;
 
-$result= (new YamlParser())->parse(new FileInput($argv[1]));
+$result= (new YamlParser())->parse(new FileInput('.travis.yml'));
 // [
 //   language => "php"
 //   php => [5.4, 5.5, 5.6]
