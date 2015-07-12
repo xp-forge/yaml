@@ -3,6 +3,10 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 1.0.3 / 2015-07-12
+
+* Rewrote codebase to use short array syntax - @thekid
+
 ## 1.0.2 / 2015-07-12
 
 * Added forward compatibility with XP 6.4.0 - @thekid
