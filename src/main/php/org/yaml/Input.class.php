@@ -1,7 +1,7 @@
 <?php namespace org\yaml;
 
 abstract class Input extends \lang\Object {
-  protected $stack= array();
+  protected $stack= [];
 
   /**
    * Reads a line

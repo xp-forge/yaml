@@ -26,17 +26,17 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
     $this->assertEquals('Hello', $this->newFixture('Hello')->nextLine());
   }
 
-  #[@test, @values(array("\r", "\n", "\r\n"))]
+  #[@test, @values(["\r", "\n", "\r\n"])]
   public function nextLine_for_one_line_input($delimiter) {
     $this->assertEquals('Hello', $this->newFixture('Hello'.$delimiter)->nextLine());
   }
 
-  #[@test, @values(array("\r", "\n", "\r\n"))]
+  #[@test, @values(["\r", "\n", "\r\n"])]
   public function nextLine_for_two_lines_of_input($delimiter) {
     $fixture= $this->newFixture('Line 1'.$delimiter.'Line 2'.$delimiter);
     $this->assertEquals(
-      array('Line 1', 'Line 2'),
-      array($fixture->nextLine(), $fixture->nextLine())
+      ['Line 1', 'Line 2'],
+      [$fixture->nextLine(), $fixture->nextLine()]
     );
   }
 
@@ -55,71 +55,71 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
    */
   protected function tokensOf($input) {
     $fixture= $this->newFixture();
-    $tokens= array();
+    $tokens= [];
     while ($token= $fixture->nextToken($input)) {
       $tokens[]= $token;
     }
     return $tokens;
   }
 
-  #[@test, @values(array('hello', '"hello"', "'hello'", '"He said: \"Hello\""', "'He said: ''Hello'''"))]
+  #[@test, @values(['hello', '"hello"', "'hello'", '"He said: \"Hello\""', "'He said: ''Hello'''"])]
   public function single_token($value) {
-    $this->assertEquals(array($value), $this->tokensOf($value));
+    $this->assertEquals([$value], $this->tokensOf($value));
   }
 
-  #[@test, @values(array('a, b', 'a ,b', 'a , b'))]
+  #[@test, @values(['a, b', 'a ,b', 'a , b'])]
   public function comma_delimited_tokens($value) {
-    $this->assertEquals(array('a', 'b'), $this->tokensOf($value));
+    $this->assertEquals(['a', 'b'], $this->tokensOf($value));
   }
 
-  #[@test, @values(array('"a", "b"', "'a', 'b'"))]
+  #[@test, @values(['"a", "b"', "'a', 'b'"])]
   public function comma_delimited_quoted_tokens($value) {
     $this->assertEquals(explode(', ', $value), $this->tokensOf($value));
   }
 
-  #[@test, @values(array('a: b', 'a : b', 'a   :   b'))]
+  #[@test, @values(['a: b', 'a : b', 'a   :   b'])]
   public function colon_delimited_tokens($value) {
-    $this->assertEquals(array('a', 'b'), $this->tokensOf($value));
+    $this->assertEquals(['a', 'b'], $this->tokensOf($value));
   }
 
-  #[@test, @values(array('"a": "b"', "'a': 'b'"))]
+  #[@test, @values(['"a": "b"', "'a': 'b'"])]
   public function colon_delimited_quoted_tokens($value) {
     $this->assertEquals(explode(': ', $value), $this->tokensOf($value));
   }
 
-  #[@test, @values(array('[a]', '["a"]', "['a']", '[a, b]'))]
+  #[@test, @values(['[a]', '["a"]', "['a']", '[a, b]'])]
   public function sequence_token($value) {
-    $this->assertEquals(array($value), $this->tokensOf($value));
+    $this->assertEquals([$value], $this->tokensOf($value));
   }
 
-  #[@test, @values(array('{a: b}', '{"a": "b"}', "{'a': 'c'}", '{a: b, c: d}'))]
+  #[@test, @values(['{a: b}', '{"a": "b"}', "{'a': 'c'}", '{a: b, c: d}'])]
   public function mapping_token($value) {
-    $this->assertEquals(array($value), $this->tokensOf($value));
+    $this->assertEquals([$value], $this->tokensOf($value));
   }
 
-  #[@test, @values(array('[a, b], [c, d]', '[a, b] , [c, d]'))]
+  #[@test, @values(['[a, b], [c, d]', '[a, b] , [c, d]'])]
   public function two_sequences($value) {
-    $this->assertEquals(array('[a, b]', '[c, d]'), $this->tokensOf($value));
+    $this->assertEquals(['[a, b]', '[c, d]'], $this->tokensOf($value));
   }
 
-  #[@test, @values(array('[a, b], [c, d], e', '[a, b] , [c, d] , e'))]
+  #[@test, @values(['[a, b], [c, d], e', '[a, b] , [c, d] , e'])]
   public function two_sequences_and_single_token($value) {
-    $this->assertEquals(array('[a, b]', '[c, d]', 'e'), $this->tokensOf($value));
+    $this->assertEquals(['[a, b]', '[c, d]', 'e'], $this->tokensOf($value));
   }
 
-  #[@test, @values(array('{a, b}, {c, d}', '{a, b} , {c, d}'))]
+  #[@test, @values(['{a, b}, {c, d}', '{a, b} , {c, d}'])]
   public function two_maps($value) {
-    $this->assertEquals(array('{a, b}', '{c, d}'), $this->tokensOf($value));
+    $this->assertEquals(['{a, b}', '{c, d}'], $this->tokensOf($value));
   }
 
-  #[@test, @values(array('{a, b}, {c, d}, e', '{a, b} , {c, d} , e'))]
+  #[@test, @values(['{a, b}, {c, d}, e', '{a, b} , {c, d} , e'])]
   public function two_maps_and_single_token($value) {
-    $this->assertEquals(array('{a, b}', '{c, d}', 'e'), $this->tokensOf($value));
+    $this->assertEquals(['{a, b}', '{c, d}', 'e'], $this->tokensOf($value));
   }
 
   #[
   #  @test,
-  #  @values(array('"hello', "'hello", '"hello \"', "'hello ''")),
+  #  @values(['"hello', "'hello", '"hello \"', "'hello ''"]),
   #  @expect(class= 'lang.FormatException', withMessage= '/Unclosed . quote, encountered EOF/')
   #]
   public function unclosed_quote($value) {
@@ -128,7 +128,7 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
 
   #[
   #  @test,
-  #  @values(array('[one', '[one, []', '[one, [nested]', '[', '[[[')),
+  #  @values(['[one', '[one, []', '[one, [nested]', '[', '[[[']),
   #  @expect(class= 'lang.FormatException', withMessage= '/Unmatched "\[", encountered EOF/')
   #]
   public function unclosed_sequence($value) {
@@ -137,7 +137,7 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
 
   #[
   #  @test,
-  #  @values(array('{one: two', '{one: two, {}', '{', '{{{')),
+  #  @values(['{one: two', '{one: two, {}', '{', '{{{']),
   #  @expect(class= 'lang.FormatException', withMessage= '/Unmatched "\{", encountered EOF/')
   #]
   public function unclosed_map($value) {

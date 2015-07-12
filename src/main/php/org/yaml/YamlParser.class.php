@@ -1,19 +1,19 @@
 <?php namespace org\yaml;
 
 class YamlParser extends \lang\Object {
-  protected $constructors= array();
+  protected $constructors= [];
   protected static $literals;
 
   static function __static() {
-    self::$literals= array(
-      'null' => null, 'Null' => null, 'NULL' => null, '~' => null,
-      'true' => true, 'True' => true, 'TRUE' => true,
+    self::$literals= [
+      'null'  => null,  'Null'  => null,  'NULL' => null, '~' => null,
+      'true'  => true,  'True'  => true,  'TRUE' => true,
       'false' => false, 'False' => false, 'FALSE' => false,
-      '.nan' => NAN, '.NaN' => NAN, '.NAN' => NAN,
-      '-.inf' => -INF, '-.Inf' => -INF, '-.INF' => -INF,
-      '+.inf' => INF, '+.Inf' => INF, '+.INF' => INF,
-      '.inf' => INF, '.Inf' => INF, '.INF' => INF
-    );
+      '.nan'  => NAN,   '.NaN'  => NAN,   '.NAN' => NAN,
+      '-.inf' => -INF,  '-.Inf' => -INF,  '-.INF' => -INF,
+      '+.inf' => INF,   '+.Inf' => INF,   '+.INF' => INF,
+      '.inf'  => INF,   '.Inf'  => INF,   '.INF' => INF
+    ];
   }
 
   /**
@@ -42,7 +42,7 @@ class YamlParser extends \lang\Object {
     };
     $this->constructors['seq']= function($in, $reader, $parser) {
       if ('[' === $in{0}) {
-        $r= array();
+        $r= [];
         $seq= $reader->matching($in, '[', ']');
         while ($token= $reader->nextToken($seq)) {
           $r[]= $parser->valueOf($reader, $token);
@@ -54,7 +54,7 @@ class YamlParser extends \lang\Object {
     };
     $this->constructors['map']= function($in, $reader, $parser) {
       if ('{' === $in{0}) {
-        $r= array();
+        $r= [];
         $map= $reader->matching($in, '{', '}');
         while ($token= $reader->nextToken($map)) {
           $r[$parser->valueOf($reader, $token)]= $parser->valueOf($reader, $reader->nextToken($map));
@@ -87,11 +87,11 @@ class YamlParser extends \lang\Object {
    * @throws lang.FormatException for illegal escape sequences
    */
   protected function expand($value) {
-    static $escapes= array(
+    static $escapes= [
       '0' => "\x00", 'a' => "\x07", 'b' => "\x08", 't' => "\x09",
       'n' => "\x0a", 'v' => "\x0b", 'f' => "\x0c", 'r' => "\x0d",
       'e' => "\x1b", '\\' => '\\', '"' => '"', '/' => '/', ' ' => ' '
-    );
+    ];
 
     $r= '';
     for ($i= 0, $l= strlen($value); $i < $l; $i++) {
@@ -135,7 +135,7 @@ class YamlParser extends \lang\Object {
         return null;
       }
 
-      $r= array();
+      $r= [];
       $id= 0;
       do {
         $p= strspn($line, ' ');
@@ -247,7 +247,7 @@ class YamlParser extends \lang\Object {
    * @return var
    */
   public function parse($reader, $level= 0) {
-    $this->identifiers= array();
+    $this->identifiers= [];
     return $this->valueOf($reader, null, 0);
   }
 }

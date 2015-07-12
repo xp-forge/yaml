@@ -15,7 +15,7 @@ class FileInputTest extends AbstractInputTest {
    * @return org.yaml.Input
    */
   protected function newFixture($str= '') {
-    return new FileInput(newinstance('io.File', array($str), '{
+    return new FileInput(newinstance('io.File', [$str], '{
       public function __construct($str) { $this->str= $str; $this->pos= 0; }
       public function open($mode= "rb") { return true; }
       public function exists() { return true; }

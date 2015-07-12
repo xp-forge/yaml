@@ -14,16 +14,16 @@ class AliasNodesTest extends AbstractYamlParserTest {
   #[@test]
   public function repeated_nodes() {
     $this->assertEquals(
-      array('Sammy Sosa', 'Sammy Sosa'),
+      ['Sammy Sosa', 'Sammy Sosa'],
       $this->parse("- &SS Sammy Sosa\n- *SS # Same\n")
     );
   }
 
   #[@test]
   public function repeated_map_nodes() {
-    $person= array('id' => 1549, 'name' => 'Timm');
+    $person= ['id' => 1549, 'name' => 'Timm'];
     $this->assertEquals(
-      array($person, $person),
+      [$person, $person],
       $this->parse("- &person\n  id: 1549\n  name: Timm\n- *person\n")
     );
   }
@@ -35,12 +35,12 @@ class AliasNodesTest extends AbstractYamlParserTest {
 
   #[@test]
   public function anchors_can_be_reused() {
-    $this->assertEquals(array(
+    $this->assertEquals([
       'First occurrence'  => 'Foo',
       'Second occurrence' => 'Foo',
       'Override anchor'   => 'Bar',
       'Reuse anchor'      => 'Bar'
-    ), $this->parse(
+    ], $this->parse(
       "First occurrence: &anchor Foo\nSecond occurrence: *anchor\n".
       "Override anchor: &anchor Bar\nReuse anchor: *anchor\n"
     ));
