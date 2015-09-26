@@ -1,5 +1,7 @@
 <?php namespace org\yaml\unittest;
 
+use lang\FormatException;
+
 /**
  * 7.3. Flow Scalar Styles
  * =======================
@@ -31,7 +33,7 @@ class FlowScalarsTest extends AbstractYamlParserTest {
     );
   }
 
-  #[@test, @values(['\c', '\xq-']), @expect('lang.FormatException')]
+  #[@test, @values(['\c', '\xq-']), @expect(FormatException::class)]
   public function invalid_escape_characters($input) {
     $this->parse('str: "<'.$input.'>"');
   }
