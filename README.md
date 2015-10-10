@@ -35,3 +35,10 @@ $result= (new YamlParser())->parse(new FileInput('.travis.yml'));
 // ]
 //
 ```
+
+Inputs
+------
+
+* `org.yaml.FileInput(io.File $in)` - Reads YAML from a file
+* `org.yaml.ReaderInput(io.streams.TextReader $in)` - Reads from a text reader
+* `org.yaml.StringInput(string $in)` - Reads from a string
