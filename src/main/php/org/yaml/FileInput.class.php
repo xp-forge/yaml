@@ -1,15 +1,18 @@
 <?php namespace org\yaml;
 
+use io\streams\TextReader;
+use io\streams\FileInputStream;
+
 class FileInput extends Input {
   protected $reader= null;
 
   /**
    * Creates a new reader input
    *
-   * @param var arg either a File object or a string pointing to a file name
+   * @param io.File|string $in object or a string pointing to a file name
    */
-  public function __construct($arg) {
-    $this->reader= new \io\streams\TextReader(new \io\streams\FileInputStream($arg));
+  public function __construct($in) {
+    $this->reader= new TextReader(new FileInputStream($in));
   }
 
   /**
