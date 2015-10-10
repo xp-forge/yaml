@@ -1,5 +1,6 @@
 <?php namespace org\yaml\unittest;
 
+use io\File;
 use org\yaml\FileInput;
 use io\streams\MemoryInputStream;
 
@@ -15,18 +16,18 @@ class FileInputTest extends AbstractInputTest {
    * @return org.yaml.Input
    */
   protected function newFixture($str= '') {
-    return new FileInput(newinstance('io.File', [$str], '{
-      public function __construct($str) { $this->str= $str; $this->pos= 0; }
-      public function open($mode= "rb") { return true; }
-      public function exists() { return true; }
-      public function size() { return strlen($this->str); }
-      public function tell() { return $this->pos; }
-      public function seek($pos= 0, $mode= 0) { $this->pos= $pos; }
-      public function read($bytes= 4096) {
+    return new FileInput(newinstance(File::class, [$str], [
+      '__construct' => function($str) { $this->str= $str; $this->pos= 0; },
+      'open' => function($mode= "rb") { return true; },
+      'exists' => function() { return true; },
+      'size' => function() { return strlen($this->str); },
+      'tell' => function() { return $this->pos; },
+      'seek' => function($pos= 0, $mode= 0) { $this->pos= $pos; },
+      'read' => function($bytes= 4096) {
         $chunk= substr($this->str, $this->pos, $bytes);
         $this->pos+= strlen($chunk);
         return $chunk;
       }
-    }'));
+    ]));
   }
 }
