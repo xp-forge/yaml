@@ -3,6 +3,10 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 3.0.0 / 2016-02-22
+
+* Added version compatibility with XP 7 - @thekid
+
 ## 2.0.0 / 2015-10-10
 
 * **Heads up: Dropped PHP 5.4 support**. *Note: As the main source is not
