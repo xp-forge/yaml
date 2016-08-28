@@ -3,6 +3,12 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 3.1.0 / 2016-08-29
+
+* Added version compatibility with XP 8 by refraining from creating an
+  anonymous instance of `io.File`
+  (@thekid)
+
 ## 3.0.0 / 2016-02-22
 
 * Added version compatibility with XP 7 - @thekid
