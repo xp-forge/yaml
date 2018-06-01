@@ -1,6 +1,6 @@
 <?php namespace org\yaml;
 
-class YamlParser extends \lang\Object {
+class YamlParser {
   protected $constructors= [];
   protected static $literals;
 

@@ -3,6 +3,9 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Added compatibility with PHP 7 - @thekid
+* Added version compatibility with XP 9 - @thekid
+
 ## 3.1.0 / 2016-08-29
 
 * Added version compatibility with XP 8 by refraining from creating an

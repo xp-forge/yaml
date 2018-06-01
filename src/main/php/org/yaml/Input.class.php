@@ -1,6 +1,6 @@
 <?php namespace org\yaml;
 
-abstract class Input extends \lang\Object {
+abstract class Input {
   protected $stack= [];
 
   /**
