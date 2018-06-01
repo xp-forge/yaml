@@ -3,6 +3,9 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 4.0.0 / 2018-06-01
+
+**Heads up:** Drop PHP 5.5 support - @thekid
 * Added compatibility with PHP 7 - @thekid
 * Added version compatibility with XP 9 - @thekid
 
