@@ -15,12 +15,10 @@ matrix:
     - php: nightly
 
 before_script:
-  - wget 'https://github.com/xp-framework/xp-runners/releases/download/v6.3.0/setup' -O - | php
+  - if [[ $TRAVIS_PHP_VERSION = "hhvm"* ]]; then echo hhvm.hack_compiler_default=false > /etc/hhvm/php.ini; fi
+  - curl -sSL https://dl.bintray.com/xp-runners/generic/xp-run-master.sh > xp-run
   - composer install --prefer-dist
   - echo "vendor/autoload.php" > composer.pth
-  - echo "use=vendor/xp-framework/core" > xp.ini
-  - echo "[runtime]" >> xp.ini
-  - echo "date.timezone=Europe/Berlin" >> xp.ini
 
 script:
-  - ./unittest src/test/php
+  - sh xp-run xp.unittest.TestRunner src/test/php
