@@ -3,9 +3,9 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
-## 4.0.0 / 2018-06-01
+## 4.0.0 / 2018-06-02
 
-**Heads up:** Drop PHP 5.5 support - @thekid
+* **Heads up:** Dropped PHP 5.5 support - @thekid
 * Added compatibility with PHP 7 - @thekid
 * Added version compatibility with XP 9 - @thekid
 
@@ -36,7 +36,7 @@ YAML for XP Framework ChangeLog
 
 ## 1.0.1 / 2015-02-12
 
-* Changed dependency to use XP ~6.0 (instead of dev-master) - @thekid
+* Changed dependency to use XP 6.0 (instead of dev-master) - @thekid
 
 ## 1.0.0 / 2015-01-10
 
