@@ -1,5 +1,7 @@
 <?php namespace org\yaml;
 
+use io\streams\TextReader;
+
 class ReaderInput extends Input {
   protected $reader= null;
 
@@ -8,7 +10,7 @@ class ReaderInput extends Input {
    *
    * @param io.streams.TextReader $reader
    */
-  public function __construct(\io\streams\TextReader $reader) {
+  public function __construct(TextReader $reader) {
     $this->reader= $reader;
   }
 

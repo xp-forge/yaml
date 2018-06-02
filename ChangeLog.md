@@ -3,7 +3,15 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
-## 4.0.0 / 2018-06-02
+## 5.0.0 / 2018-06-02
+
+* **Heads up:** Changed default charset to `utf-8` for `FileInput` and
+  `StringInput` implementations. Both classes have optional constructor
+  arguments with which a charset can be supplied. Use `NULL` for auto-
+  detecting using BOMs.
+  (@thekid)
+
+## 4.0.0 / 2018-06-01
 
 * **Heads up:** Dropped PHP 5.5 support - @thekid
 * Added compatibility with PHP 7 - @thekid

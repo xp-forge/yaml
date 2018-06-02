@@ -10,9 +10,10 @@ class FileInput extends Input {
    * Creates a new reader input
    *
    * @param io.File|string $in object or a string pointing to a file name
+   * @param  string $charset Defaults to UTF-8
    */
-  public function __construct($in) {
-    $this->reader= new TextReader(new FileInputStream($in));
+  public function __construct($in, $charset= 'utf-8') {
+    $this->reader= new TextReader(new FileInputStream($in), $charset);
   }
 
   /**

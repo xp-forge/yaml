@@ -16,6 +16,6 @@ class ReaderInputTest extends AbstractInputTest {
    * @return org.yaml.Input
    */
   protected function newFixture($str= '') {
-    return new ReaderInput(new TextReader(new MemoryInputStream($str)));
+    return new ReaderInput(new TextReader(new MemoryInputStream($str), 'utf-8'));
   }
 }

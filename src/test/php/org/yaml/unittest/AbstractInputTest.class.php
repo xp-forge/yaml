@@ -173,4 +173,9 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
   public function matching_nested_at_offset9() {
     $this->assertEquals('world', $this->newFixture()->matching('[[hello],[world]]', '[', ']', 9));
   }
+
+  #[@test]
+  public function utf8_is_default() {
+    $this->assertEquals('Über', $this->newFixture('Über')->nextLine());
+  }
 }
