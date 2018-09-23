@@ -50,6 +50,20 @@ class YamlParserTest extends AbstractYamlParserTest {
   }
 
   #[@test, @values([
+  #  '',
+  #  "\n", "\n\n",
+  #  "\n  ", "\n  \n    ",
+  #  "# Comment", "# Comment\n# Another comment\n",
+  #  "# Comment\n\n",
+  #])]
+  public function issue_2($between) {
+    $this->assertEquals(
+      ['context' => ['text' => ['Test' => 'Probieren'], 'user' => ['language' => 'de']]],
+      $this->parse("context:\n  text:\n    Test: Probieren".$between."\n  user:\n    language: de\n")
+    );
+  }
+
+  #[@test, @values([
   #  ['num: 1', 1], ['num: 0', 0],
   #  ['num: -1', -1], ['num: +1', 1],
   #  ['num: 0o14', 12], ['num: 0xC', 12], ['num: 0xc', 12]

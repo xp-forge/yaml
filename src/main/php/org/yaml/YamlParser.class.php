@@ -138,12 +138,12 @@ class YamlParser {
       do {
         $p= strspn($line, ' ');
         $l= strlen($line);
-        if ($p < $spaces) {
+        if ($p === $l) {
+          continue;
+        } else if ('#' === $line{$p}) {
+          continue;
+        } else if ($p < $spaces) {
           break;
-        } else if ($p === $l) {
-          continue;
-        } else if ('#' === $line{$spaces}) {
-          continue;
         }
 
         // Sequences (begin with a dash) and maps (key: value). A special case is the 
