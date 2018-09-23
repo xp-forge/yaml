@@ -2,19 +2,15 @@
 
 class YamlParser {
   protected $constructors= [];
-  protected static $literals;
-
-  static function __static() {
-    self::$literals= [
-      'null'  => null,  'Null'  => null,  'NULL' => null, '~' => null,
-      'true'  => true,  'True'  => true,  'TRUE' => true,
-      'false' => false, 'False' => false, 'FALSE' => false,
-      '.nan'  => NAN,   '.NaN'  => NAN,   '.NAN' => NAN,
-      '-.inf' => -INF,  '-.Inf' => -INF,  '-.INF' => -INF,
-      '+.inf' => INF,   '+.Inf' => INF,   '+.INF' => INF,
-      '.inf'  => INF,   '.Inf'  => INF,   '.INF' => INF
-    ];
-  }
+  protected static $literals= [
+    'null'  => null,  'Null'  => null,  'NULL' => null, '~' => null,
+    'true'  => true,  'True'  => true,  'TRUE' => true,
+    'false' => false, 'False' => false, 'FALSE' => false,
+    '.nan'  => NAN,   '.NaN'  => NAN,   '.NAN' => NAN,
+    '-.inf' => -INF,  '-.Inf' => -INF,  '-.INF' => -INF,
+    '+.inf' => INF,   '+.Inf' => INF,   '+.INF' => INF,
+    '.inf'  => INF,   '.Inf'  => INF,   '.INF' => INF
+  ];
 
   /**
    * Creates a new instance of the YAML parser
