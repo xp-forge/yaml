@@ -32,6 +32,16 @@ class YamlParserTest extends AbstractYamlParserTest {
   }
 
   #[@test]
+  public function parse_yaml_directive() {
+    $this->assertEquals(null, $this->parse('%YAML 1.2'));
+  }
+
+  #[@test]
+  public function parse_yaml_directive_separated_from_content() {
+    $this->assertEquals(['key' => 'value'], $this->parse("%YAML 1.2\n---\nkey: value"));
+  }
+
+  #[@test]
   public function parse_key_value() {
     $this->assertEquals(
       ['time' => '20:03:20', 'player' => 'Sammy Sosa', 'action' => 'strike (miss)'],

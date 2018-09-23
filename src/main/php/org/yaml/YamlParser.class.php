@@ -119,7 +119,9 @@ class YamlParser {
    */
   public function valueOf($reader, $value, $level= 0) {
     if (null === $value) {
-      if (null === ($line= $reader->nextLine())) return null;  // EOF
+      do {
+        if (null === ($line= $reader->nextLine())) return null;  // EOF
+      } while ('---' === $line);
 
       // Check whether the next line at same or lesser indentation level. This
       // means we have a line like "key:\n" which means we're encountering an 
@@ -244,6 +246,13 @@ class YamlParser {
    */
   public function parse($reader, $level= 0) {
     $this->identifiers= [];
+
+    // Check for identifiers, e.g. `%YAML 1.2`
+    do {
+      $line= $reader->nextLine();
+    } while ('' !== $line && '%' === $line{0});
+
+    $reader->resetLine($line);
     return $this->valueOf($reader, null, 0);
   }
 }
