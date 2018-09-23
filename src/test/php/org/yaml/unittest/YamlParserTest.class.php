@@ -1,7 +1,8 @@
 <?php namespace org\yaml\unittest;
 
-use util\Date;
+use lang\IllegalArgumentException;
 use org\yaml\YamlParser;
+use util\Date;
 
 class YamlParserTest extends AbstractYamlParserTest {
 
@@ -229,6 +230,11 @@ class YamlParserTest extends AbstractYamlParserTest {
   #[@test]
   public function explicit_str_tag() {
     $this->assertEquals(['not-date' => '2002-04-28'], $this->parse('not-date: !!str 2002-04-28'));
+  }
+
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function unknown_explicit_tag() {
+    $this->parse('!!test X');
   }
 
   #[@test, @values([
