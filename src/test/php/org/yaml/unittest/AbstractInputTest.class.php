@@ -146,6 +146,18 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
   }
 
   #[@test]
+  public function single_quoted_continued_on_next_line() {
+    $fixture= $this->newFixture("World'");
+    $this->assertEquals('HelloWorld', $fixture->quoted("'Hello", "'", '\\', 0));
+  }
+
+  #[@test]
+  public function double_quoted_continued_on_next_line() {
+    $fixture= $this->newFixture('World"');
+    $this->assertEquals('HelloWorld', $fixture->quoted('"Hello', '"', '\\', 0));
+  }
+
+  #[@test]
   public function matching() {
     $this->assertEquals('hello', $this->newFixture()->matching('[hello]', '[', ']'));
   }
