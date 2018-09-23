@@ -1,7 +1,8 @@
 <?php namespace org\yaml\unittest;
 
-use io\streams\TextReader;
 use io\streams\MemoryInputStream;
+use io\streams\TextReader;
+use lang\FormatException;
 
 /**
  * Abstract base class for YAML Input tests
@@ -120,7 +121,7 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
   #[
   #  @test,
   #  @values(['"hello', "'hello", '"hello \"', "'hello ''"]),
-  #  @expect(class= 'lang.FormatException', withMessage= '/Unclosed . quote, encountered EOF/')
+  #  @expect(class= FormatException::class, withMessage= '/Unclosed . quote, encountered EOF/')
   #]
   public function unclosed_quote($value) {
     $this->tokensOf($value);
@@ -129,7 +130,7 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
   #[
   #  @test,
   #  @values(['[one', '[one, []', '[one, [nested]', '[', '[[[']),
-  #  @expect(class= 'lang.FormatException', withMessage= '/Unmatched "\[", encountered EOF/')
+  #  @expect(class= FormatException::class, withMessage= '/Unmatched "\[", encountered EOF/')
   #]
   public function unclosed_sequence($value) {
     $this->tokensOf($value);
@@ -138,7 +139,7 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
   #[
   #  @test,
   #  @values(['{one: two', '{one: two, {}', '{', '{{{']),
-  #  @expect(class= 'lang.FormatException', withMessage= '/Unmatched "\{", encountered EOF/')
+  #  @expect(class= FormatException::class, withMessage= '/Unmatched "\{", encountered EOF/')
   #]
   public function unclosed_map($value) {
     $this->tokensOf($value);
