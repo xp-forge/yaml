@@ -29,6 +29,6 @@ class ReaderInput extends Input {
    * @return void
    */
   public function rewind() {
-    $this->reader->reset();
+    $this->reader->atBeginning() || $this->reader->reset();
   }
 }
