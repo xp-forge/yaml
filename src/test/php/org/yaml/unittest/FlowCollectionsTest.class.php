@@ -1,5 +1,7 @@
 <?php namespace org\yaml\unittest;
 
+use lang\FormatException;
+
 /**
  * 7.4. Flow Collection Styles
  * ===========================
@@ -137,5 +139,15 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
       ['a' => ['one' => 1, 'two' => 2], 'b' => ['three' => 3, 'four' => 4]],
       $this->parse('{ a: { one : 1 , two: 2 }, b: { three: 3, four: 4 } }')
     );
+  }
+
+  #[@test, @expect(FormatException::class)]
+  public function malformed_seq() {
+    $this->parse('!!seq {}');
+  }
+
+  #[@test, @expect(FormatException::class)]
+  public function malformed_map() {
+    $this->parse('!!map []');
   }
 }

@@ -1,7 +1,8 @@
 <?php namespace org\yaml\unittest;
 
-use util\Date;
+use lang\IllegalArgumentException;
 use org\yaml\YamlParser;
+use util\Date;
 
 class YamlParserTest extends AbstractYamlParserTest {
 
@@ -31,10 +32,34 @@ class YamlParserTest extends AbstractYamlParserTest {
   }
 
   #[@test]
+  public function parse_yaml_directive() {
+    $this->assertEquals(null, $this->parse('%YAML 1.2'));
+  }
+
+  #[@test]
+  public function parse_yaml_directive_separated_from_content() {
+    $this->assertEquals(['key' => 'value'], $this->parse("%YAML 1.2\n---\nkey: value"));
+  }
+
+  #[@test]
   public function parse_key_value() {
     $this->assertEquals(
       ['time' => '20:03:20', 'player' => 'Sammy Sosa', 'action' => 'strike (miss)'],
       $this->parse("time: 20:03:20\nplayer: Sammy Sosa\naction: strike (miss)")
+    );
+  }
+
+  #[@test, @values([
+  #  '',
+  #  "\n", "\n\n",
+  #  "\n  ", "\n  \n    ",
+  #  "# Comment", "# Comment\n# Another comment\n",
+  #  "# Comment\n\n",
+  #])]
+  public function issue_2($between) {
+    $this->assertEquals(
+      ['context' => ['text' => ['Test' => 'Probieren'], 'user' => ['language' => 'de']]],
+      $this->parse("context:\n  text:\n    Test: Probieren".$between."\n  user:\n    language: de\n")
     );
   }
 
@@ -229,6 +254,11 @@ class YamlParserTest extends AbstractYamlParserTest {
   #[@test]
   public function explicit_str_tag() {
     $this->assertEquals(['not-date' => '2002-04-28'], $this->parse('not-date: !!str 2002-04-28'));
+  }
+
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function unknown_explicit_tag() {
+    $this->parse('!!test X');
   }
 
   #[@test, @values([

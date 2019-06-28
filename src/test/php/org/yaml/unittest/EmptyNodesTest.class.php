@@ -25,4 +25,9 @@ class EmptyNodesTest extends AbstractYamlParserTest {
   public function empty_string_value() {
     $this->assertEquals(['key' => ''], $this->parse('key: !!str'));
   }
+
+  #[@test]
+  public function nested_empty_followed_by_toplevel_empty() {
+    $this->assertEquals(['one' => ['sub' => null], 'two' => null], $this->parse("one:\n  sub:\ntwo:\n"));
+  }
 }

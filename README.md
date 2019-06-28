@@ -16,24 +16,20 @@ Usage example
 -------------
 
 ```php
-use org\yaml\YamlParser;
-use org\yaml\FileInput;
+use org\yaml\{YamlParser, FileInput};
 
 $result= (new YamlParser())->parse(new FileInput('.travis.yml'));
 // [
 //   language => "php"
-//   php => [5.4, 5.5, 5.6]
-//   before_script => [
-//     "wget 'https://github.com/xp-framework/xp-runners/.../setup' -O - | php",
-//     "composer install --prefer-dist",
-//     "echo "vendor/autoload.php" > composer.pth",
-//     "echo "use=vendor/xp-framework/core" > xp.ini",
-//     "echo "[runtime]" >> xp.ini",
-//     "echo "date.timezone=Europe/Berlin" >> xp.ini"
+//   php => [5.6, 7, 7.1, 7.2, "hhvm", "nightly"]
+//   matrix => [
+//     allow_failures => [[
+//       php => "nightly"
+//     ]]
 //   ]
-//   script => ["./unittest src/test/php"]
+//   before_script => ["...", ...]
+//   script => ["sh xp-run xp.unittest.TestRunner src/test/php"]
 // ]
-//
 ```
 
 Inputs

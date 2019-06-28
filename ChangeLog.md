@@ -3,6 +3,11 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 5.0.1 / 2018-09-23
+
+* Fixed issue #2: Newlines and comments breaks tree structure - @thekid
+* Fixed parsing of `%YAML 1.2` directives embedded in documents - @thekid
+
 ## 5.0.0 / 2018-06-02
 
 * **Heads up:** Changed default charset to `utf-8` for `FileInput` and
