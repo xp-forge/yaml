@@ -1,7 +1,7 @@
 <?php namespace org\yaml;
 
-use io\streams\TextReader;
 use io\streams\FileInputStream;
+use io\streams\TextReader;
 
 class FileInput extends Input {
   protected $reader= null;
@@ -23,5 +23,14 @@ class FileInput extends Input {
    */
   protected function readLine() {
     return $this->reader->readLine();
+  }
+
+  /**
+   * Rewind this input to the beginning
+   *
+   * @return void
+   */
+  public function rewind() {
+    $this->reader->reset();
   }
 }

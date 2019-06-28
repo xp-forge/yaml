@@ -248,6 +248,7 @@ class YamlParser {
    */
   public function parse($reader, $level= 0) {
     $this->identifiers= [];
+    $reader->rewind();
     return $this->valueOf($reader, null, 0);
   }
 }
