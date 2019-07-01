@@ -3,6 +3,10 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 5.0.2 / 2019-07-01
+
+* Fixed issue #3: YamlParser::parse() not rewinding input - @thekid
+
 ## 5.0.1 / 2018-09-23
 
 * Fixed issue #2: Newlines and comments breaks tree structure - @thekid
