@@ -11,6 +11,13 @@ abstract class Input {
   protected abstract function readLine();
 
   /**
+   * Rewind this input to the beginning
+   *
+   * @return void
+   */
+  public abstract function rewind();
+
+  /**
    * Pushes a given line back onto the stack.
    *
    * @param  string $l

@@ -246,6 +246,7 @@ class YamlParser {
    */
   public function parse($reader, $level= 0) {
     $this->identifiers= [];
+    $reader->rewind();
 
     // Check for identifiers, e.g. `%YAML 1.2`
     do {

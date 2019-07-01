@@ -191,4 +191,17 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
   public function utf8_is_default() {
     $this->assertEquals('Über', $this->newFixture('Über')->nextLine());
   }
+
+  #[@test]
+  public function rewind() {
+    $lines= [];
+    $r= $this->newFixture("Line 1\nLine 2");
+
+    $lines[]= $r->nextLine();
+    $r->rewind();
+    $lines[]= $r->nextLine();
+    $lines[]= $r->nextLine();
+
+    $this->assertEquals(['Line 1', 'Line 1', 'Line 2'], $lines);
+  }
 }

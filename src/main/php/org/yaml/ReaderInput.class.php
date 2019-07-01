@@ -22,4 +22,13 @@ class ReaderInput extends Input {
   protected function readLine() {
     return $this->reader->readLine();
   }
+
+  /**
+   * Rewind this input to the beginning
+   *
+   * @return void
+   */
+  public function rewind() {
+    $this->reader->atBeginning() || $this->reader->reset();
+  }
 }
