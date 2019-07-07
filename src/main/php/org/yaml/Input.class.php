@@ -3,6 +3,8 @@
 use lang\FormatException;
 
 abstract class Input {
+  const CLIP = '', STRIP = '-', KEEP = '+';
+
   private static $literals= [
     'null'  => null,  'Null'  => null,  'NULL' => null, '~' => null,
     'true'  => true,  'True'  => true,  'TRUE' => true,
@@ -64,19 +66,57 @@ abstract class Input {
   /**
    * Produces the next indented token, reading as many lines as necessary
    *
+   * @see    https://yaml-multiline.info/
    * @param  string $join
+   * @param  string $mode
    * @return string
    */
-  private function indented($join) {
+  private function indented($join, $mode) {
     $r= '';
     $next= $this->nextLine();
     $spaces= strspn($next, ' ');
     do {
-      if (strspn($next, ' ') < $spaces) break;
-      $r.= $join.substr($next, $spaces);
+      if ('' === trim($next)) {
+        $r.= "\n";
+        continue;
+      } else if (strspn($next, ' ') < $spaces) {
+        $this->resetLine($next);
+        break;
+      } else {
+        $r.= $join.substr($next, $spaces);
+      }
     } while (null !== ($next= $this->nextLine()));
-    $this->resetLine($next);
-    return substr($r, 1);
+
+    switch ($mode) {
+      case self::KEEP: return substr($r, 1);
+      case self::STRIP: return rtrim(substr($r, 1), "\r\n");
+      case self::CLIP: return rtrim(substr($r, 1), "\r\n")."\n";
+    }
+  }
+
+  /**
+   * Handles multiline quoted strings
+   *
+   * @see    https://yaml-multiline.info/
+   * @param  string $context
+   * @return string
+   * @throws lang.FormatException if EOF is encountered
+   */
+  private function lines($context) {
+    $lines= '';
+    do {
+      $line= $this->nextLine();
+      if (null === $line) {
+        throw new FormatException('Unclosed '.$context.' quote, encountered EOF');
+      }
+
+      $line= ltrim($line);
+      if ('' !== $line) {
+        return '' === $lines ? ' '.$line : $lines.$line;
+      }
+      $lines.= "\n";
+    } while (true);
+    // Unreachable
   }
 
   /**
@@ -124,32 +164,6 @@ abstract class Input {
     } else {
       throw new FormatException('Illegal escape sequence starting with \\'.$e);
     }
-  }
-
-  /**
-   * Handles multiline quoted strings
-   *
-   * @see    https://yaml-multiline.info/
-   * @param  string $context
-   * @return string
-   * @throws lang.FormatException if EOF is encountered
-   */
-  private function lines($context) {
-    $lines= '';
-    do {
-      $line= $this->nextLine();
-      if (null === $line) {
-        throw new FormatException('Unclosed '.$context.' quote, encountered EOF');
-      }
-
-      $line= ltrim($line);
-      if ('' !== $line) {
-        return '' === $lines ? ' '.$line : $lines.$line;
-      }
-    
-      $lines.= "\n";
-    } while (true);
-    // Unreachable
   }
 
   /**
@@ -237,11 +251,13 @@ abstract class Input {
       } while (',' === $token);
       return ['map', $r];
     } else if ('>' === $c) {
+      $mode= $offset + 1 < $l ? $in{$offset + 1} : self::CLIP;
       $offset= strlen($in);
-      return ['str', $this->indented(' ')];
+      return ['str', $this->indented(' ', $mode)];
     } else if ('|' === $c) {
+      $mode= $offset + 1 < $l ? $in{$offset + 1} : self::CLIP;
       $offset= strlen($in);
-      return ['str', $this->indented("\n")];
+      return ['str', $this->indented("\n", $mode)];
     } else if (strspn($c, ':,]}') > 0) {
       $offset++;
       return $c;
