@@ -56,6 +56,21 @@ class DocumentsTest extends TestCase {
   }
 
   #[@test]
+  public function empty_document_between() {
+    $this->assertEquals([['A', 'B'], null, ['C', 'D']], iterator_to_array($this->documents(
+      "---\n".
+      "- A\n".
+      "- B\n".
+      "---\n".
+      "...\n".
+      "---\n".
+      "- C\n".
+      "- D\n".
+      "...\n"
+    )));
+  }
+
+  #[@test]
   public function directives() {
     $this->assertEquals([['A', 'B'], ['C', 'D']], iterator_to_array($this->documents(
       "%YAML 1.2\n".
