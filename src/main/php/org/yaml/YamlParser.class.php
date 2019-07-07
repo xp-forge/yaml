@@ -154,6 +154,7 @@ class YamlParser {
   /**
    * Parse a given input source, returning all documents
    *
+   * @see    https://yaml.org/spec/1.2/spec.html#id2800132
    * @param  org.yaml.Input $reader
    * @param  int $level
    * @return iterable
@@ -171,7 +172,14 @@ class YamlParser {
     if ('---' === $line) {
       do {
         yield $this->valueOf($reader, null, $level);
-      } while ('---' === $reader->nextLine());
+
+        $line= $reader->nextLine();
+        if ('...' === $line) {
+          do {
+            if (null === ($line= $reader->nextLine())) break 2;
+          } while ('' !== $line && '%' === $line{0});
+        }
+      } while ('---' === $line);
     } else {
       $reader->resetLine($line);
       yield $this->valueOf($reader, null, $level);

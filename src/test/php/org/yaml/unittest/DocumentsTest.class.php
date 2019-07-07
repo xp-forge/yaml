@@ -49,4 +49,20 @@ class DocumentsTest extends TestCase {
       "...\n"
     )));
   }
+
+  #[@test]
+  public function directives() {
+    $this->assertEquals([['A', 'B'], ['C', 'D']], iterator_to_array($this->documents(
+      "%YAML 1.2\n".
+      "---\n".
+      "- A\n".
+      "- B\n".
+      "...\n".
+      "%YAML 1.2\n".
+      "---\n".
+      "- C\n".
+      "- D\n".
+      "...\n"
+    )));
+  }
 }
