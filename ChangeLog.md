@@ -3,6 +3,10 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 5.2.0 / 2019-07-07
+
+* Merge PR #6: Implement support for multiple documents - @thekid
+
 ## 5.1.0 / 2019-07-07
 
 * Added support for `!!binary` tag, see https://yaml.org/type/binary.html

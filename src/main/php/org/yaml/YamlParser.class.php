@@ -68,7 +68,7 @@ class YamlParser {
 
       } while (null !== ($line= $reader->nextLine()));
       $reader->resetLine($line);
-      return $r;
+      return $r ?: null;
     } else if ('&' === $value{0}) {
       if (false === ($o= strpos($value, ' '))) {
         $id= rtrim(substr($value, 1, strcspn($value, '#') - 1));
