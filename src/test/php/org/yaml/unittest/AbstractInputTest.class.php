@@ -12,7 +12,7 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
   /**
    * Creates a new fixture
    *
-   * @param  string str
+   * @param  string $str
    * @return org.yaml.Input
    */
   protected abstract function newFixture($str= '');
@@ -48,143 +48,67 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
     $this->assertEquals('Hello', $fixture->nextLine());
   }
 
-  /**
-   * Helper which gathers all tokens from `nextToken()` in an array
-   *
-   * @param  string $input
-   * @return string[]
-   */
-  protected function tokensOf($input) {
-    $fixture= $this->newFixture();
-    $tokens= [];
-    while ($token= $fixture->nextToken($input)) {
-      $tokens[]= $token;
-    }
-    return $tokens;
-  }
-
-  #[@test, @values(['hello', '"hello"', "'hello'", '"He said: \"Hello\""', "'He said: ''Hello'''"])]
-  public function single_token($value) {
-    $this->assertEquals([$value], $this->tokensOf($value));
-  }
-
-  #[@test, @values(['a, b', 'a ,b', 'a , b'])]
-  public function comma_delimited_tokens($value) {
-    $this->assertEquals(['a', 'b'], $this->tokensOf($value));
-  }
-
-  #[@test, @values(['"a", "b"', "'a', 'b'"])]
-  public function comma_delimited_quoted_tokens($value) {
-    $this->assertEquals(explode(', ', $value), $this->tokensOf($value));
-  }
-
-  #[@test, @values(['a: b', 'a : b', 'a   :   b'])]
-  public function colon_delimited_tokens($value) {
-    $this->assertEquals(['a', 'b'], $this->tokensOf($value));
-  }
-
-  #[@test, @values(['"a": "b"', "'a': 'b'"])]
-  public function colon_delimited_quoted_tokens($value) {
-    $this->assertEquals(explode(': ', $value), $this->tokensOf($value));
-  }
-
-  #[@test, @values(['[a]', '["a"]', "['a']", '[a, b]'])]
-  public function sequence_token($value) {
-    $this->assertEquals([$value], $this->tokensOf($value));
-  }
-
-  #[@test, @values(['{a: b}', '{"a": "b"}', "{'a': 'c'}", '{a: b, c: d}'])]
-  public function mapping_token($value) {
-    $this->assertEquals([$value], $this->tokensOf($value));
-  }
-
-  #[@test, @values(['[a, b], [c, d]', '[a, b] , [c, d]'])]
-  public function two_sequences($value) {
-    $this->assertEquals(['[a, b]', '[c, d]'], $this->tokensOf($value));
-  }
-
-  #[@test, @values(['[a, b], [c, d], e', '[a, b] , [c, d] , e'])]
-  public function two_sequences_and_single_token($value) {
-    $this->assertEquals(['[a, b]', '[c, d]', 'e'], $this->tokensOf($value));
-  }
-
-  #[@test, @values(['{a, b}, {c, d}', '{a, b} , {c, d}'])]
-  public function two_maps($value) {
-    $this->assertEquals(['{a, b}', '{c, d}'], $this->tokensOf($value));
-  }
-
-  #[@test, @values(['{a, b}, {c, d}, e', '{a, b} , {c, d} , e'])]
-  public function two_maps_and_single_token($value) {
-    $this->assertEquals(['{a, b}', '{c, d}', 'e'], $this->tokensOf($value));
+  #[@test, @values([
+  #  ['', null],
+  #  [' ', null],
+  #  ['        ', null],
+  #  ['Hello', ['str', 'Hello']],
+  #  ['Hello ', ['str', 'Hello']],
+  #  ['""', ['str', '']],
+  #  ['"" ', ['str', '']],
+  #  ['"\""', ['str', '"']],
+  #  ['"Hello"', ['str', 'Hello']],
+  #  ["'Hello'", ['str', 'Hello']],
+  #  ['"Hello #"', ['str', 'Hello #']],
+  #  ["'Hello #'", ['str', 'Hello #']],
+  #  ['42', ['int', '42']],
+  #  ['0o755', ['int', 0755]],
+  #  ['0xbeef', ['int', 0xbeef]],
+  #  ['6.1', ['float', '6.1']],
+  #  ['true', ['literal', true]],
+  #  ['True', ['literal', true]],
+  #  ['false', ['literal', false]],
+  #  ['False', ['literal', false]],
+  #  ['null', ['literal', null]],
+  #  ['Null', ['literal', null]],
+  #  ['~', ['literal', null]],
+  #  ['!!int 5', ['int', '5']],
+  #  ['[]', ['seq', []]],
+  #  ['[1]', ['seq', [['int', '1']]]],
+  #  ['[1, 2, 3]', ['seq', [['int', '1'], ['int', '2'], ['int', '3']]]],
+  #  ['{}', ['map', []]],
+  #  ['{one: two}', ['map', ['one' => ['str', 'two']]]],
+  #  ['{one: two, three: four}', ['map', ['one' => ['str', 'two'], 'three' => ['str', 'four']]]],
+  #])]
+  public function token($input, $expected) {
+    $this->assertEquals($expected, $this->newFixture()->tokenIn($input));
   }
 
   #[
   #  @test,
   #  @values(['"hello', "'hello", '"hello \"', "'hello ''"]),
-  #  @expect(class= FormatException::class, withMessage= '/Unclosed . quote, encountered EOF/')
+  #  @expect(class= FormatException::class, withMessage= '/Unclosed .+ quote, encountered EOF/')
   #]
   public function unclosed_quote($value) {
-    $this->tokensOf($value);
+    $this->newFixture()->tokenIn($value);
   }
 
   #[
   #  @test,
   #  @values(['[one', '[one, []', '[one, [nested]', '[', '[[[']),
-  #  @expect(class= FormatException::class, withMessage= '/Unmatched "\[", encountered EOF/')
+  #  @expect(class= FormatException::class, withMessage= '/Encountered EOF while parsing sequence/')
   #]
   public function unclosed_sequence($value) {
-    $this->tokensOf($value);
+    $this->newFixture()->tokenIn($value);
   }
 
   #[
   #  @test,
   #  @values(['{one: two', '{one: two, {}', '{', '{{{']),
-  #  @expect(class= FormatException::class, withMessage= '/Unmatched "\{", encountered EOF/')
+  #  @expect(class= FormatException::class, withMessage= '/Encountered EOF while parsing map/')
   #]
   public function unclosed_map($value) {
-    $this->tokensOf($value);
-  }
-
-  #[@test]
-  public function single_quoted_continued_on_next_line() {
-    $fixture= $this->newFixture("World'");
-    $this->assertEquals('HelloWorld', $fixture->quoted("'Hello", "'", '\\', 0));
-  }
-
-  #[@test]
-  public function double_quoted_continued_on_next_line() {
-    $fixture= $this->newFixture('World"');
-    $this->assertEquals('HelloWorld', $fixture->quoted('"Hello', '"', '\\', 0));
-  }
-
-  #[@test]
-  public function matching() {
-    $this->assertEquals('hello', $this->newFixture()->matching('[hello]', '[', ']'));
-  }
-
-  #[@test]
-  public function matching_nested() {
-    $this->assertEquals('[hello]', $this->newFixture()->matching('[[hello]]', '[', ']'));
-  }
-
-  #[@test]
-  public function matching_nested2() {
-    $this->assertEquals('[hello],[world]', $this->newFixture()->matching('[[hello],[world]]', '[', ']'));
-  }
-
-  #[@test]
-  public function matching_nested_at_offset0() {
-    $this->assertEquals('[hello],[world]', $this->newFixture()->matching('[[hello],[world]]', '[', ']', 0));
-  }
-
-  #[@test]
-  public function matching_nested_at_offset1() {
-    $this->assertEquals('hello', $this->newFixture()->matching('[[hello],[world]]', '[', ']', 1));
-  }
-
-  #[@test]
-  public function matching_nested_at_offset9() {
-    $this->assertEquals('world', $this->newFixture()->matching('[[hello],[world]]', '[', ']', 9));
+    $this->newFixture()->tokenIn($value);
   }
 
   #[@test]

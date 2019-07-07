@@ -14,8 +14,11 @@ use lang\FormatException;
 class FlowScalarsTest extends AbstractYamlParserTest {
 
   #[@test, @values([
-  #  ['str: ""', ''], ['str: "Test"', 'Test'],
-  #  ['str: "\\""', '"'], ['str: "\\"Test\\""', '"Test"']
+  #  ['str: ""', ''],
+  #  ['str: "Test"', 'Test'],
+  #  ['str: "\\""', '"'],
+  #  ['str: "\\"Test\\""', '"Test"'],
+  #  ['str: "A \\" B"', 'A " B'],
   #])]
   public function double_quotes($input, $result) {
     $this->assertEquals(['str' => $result], $this->parse($input));
@@ -64,8 +67,19 @@ class FlowScalarsTest extends AbstractYamlParserTest {
     );
   }
 
-  #[@test, @values([["str: ''", ''], ["str: 'Test'", 'Test']])]
+  #[@test, @values([["str: ''", ''], ["str: 'Test'", 'Test'], ["str: 'A '' B'", 'A \' B']])]
   public function single_quotes($input, $result) {
     $this->assertEquals(['str' => $result], $this->parse($input));
+  }
+
+  #[@test, @values([
+  #  "str: 'A string\nspanning\nmultiple\nlines\n\nNew line\n  .\n\n\nEnd'",
+  #  "str: \"A string\nspanning\nmultiple\nlines\n\nNew line\n  .\n\n\nEnd\"",
+  #])]
+  public function multiline_string($declaration) {
+    $this->assertEquals(
+      ['str' => "A string spanning multiple lines\nNew line .\n\nEnd"],
+      $this->parse($declaration)
+    );
   }
 }

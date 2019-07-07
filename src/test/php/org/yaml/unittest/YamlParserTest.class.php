@@ -64,6 +64,23 @@ class YamlParserTest extends AbstractYamlParserTest {
   }
 
   #[@test, @values([
+  #  ['str: Test', "Test"],
+  #  ['str: Test # Comment', "Test"],
+  #  ['str: "Test"', "Test"],
+  #  ['str: "A:B"', "A:B"],
+  #  ['str: "A\'B"', "A'B"],
+  #  ["str: 'A\"B'", 'A"B'],
+  #  ['str: "Test # No comment"', "Test # No comment"],
+  #  ['str: "Test # No comment" ', "Test # No comment"],
+  #  ['str: "Test # No comment" # Comment', "Test # No comment"],
+  #  ['str: "He said: \"Hello\""', 'He said: "Hello"'],
+  #  ["str: 'He said: ''Hello'''", "He said: 'Hello'"],
+  #])]
+  public function parse_string($input, $result) {
+    $this->assertEquals(['str' => $result], $this->parse($input));
+  }
+
+  #[@test, @values([
   #  ['num: 1', 1], ['num: 0', 0],
   #  ['num: -1', -1], ['num: +1', 1],
   #  ['num: 0o14', 12], ['num: 0xC', 12], ['num: 0xc', 12]
