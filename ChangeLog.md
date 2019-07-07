@@ -3,6 +3,8 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #5: Refactor parser - fixing various nesting bugs - @thekid
+
 ## 5.0.2 / 2019-07-01
 
 * Fixed issue #3: YamlParser::parse() not rewinding input - @thekid
