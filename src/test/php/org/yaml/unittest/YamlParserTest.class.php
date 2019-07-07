@@ -64,6 +64,23 @@ class YamlParserTest extends AbstractYamlParserTest {
   }
 
   #[@test, @values([
+  #  ['str: Test', "Test"],
+  #  ['str: Test # Comment', "Test"],
+  #  ['str: "Test"', "Test"],
+  #  ['str: "A:B"', "A:B"],
+  #  ['str: "A\'B"', "A'B"],
+  #  ["str: 'A\"B'", 'A"B'],
+  #  ['str: "Test # No comment"', "Test # No comment"],
+  #  ['str: "Test # No comment" ', "Test # No comment"],
+  #  ['str: "Test # No comment" # Comment', "Test # No comment"],
+  #  ['str: "He said: \"Hello\""', 'He said: "Hello"'],
+  #  ["str: 'He said: ''Hello'''", "He said: 'Hello'"],
+  #])]
+  public function parse_string($input, $result) {
+    $this->assertEquals(['str' => $result], $this->parse($input));
+  }
+
+  #[@test, @values([
   #  ['num: 1', 1], ['num: 0', 0],
   #  ['num: -1', -1], ['num: +1', 1],
   #  ['num: 0o14', 12], ['num: 0xC', 12], ['num: 0xc', 12]
@@ -230,23 +247,57 @@ class YamlParserTest extends AbstractYamlParserTest {
   #[@test]
   public function literal_style() {
     $this->assertEquals(
-      ['stats' => "65 Home Runs\n0.278 Batting Average"],
-      $this->parse("stats: |\n 65 Home Runs\n 0.278 Batting Average")
+      ['stats' => "65 Home Runs\n0.278 Batting Average\n"],
+      $this->parse("stats: |
+        65 Home Runs
+        0.278 Batting Average
+      ")
     );
   }
 
   #[@test]
-  public function folded_scalar() {
+  public function folded_style_clipped() {
+    $this->assertEquals(
+      ['sentence' => "Mark McGwire's year was crippled by a knee injury.\n"],
+      $this->parse("sentence: >
+        Mark McGwire's
+        year was crippled
+        by a knee injury.
+
+      ")
+    );
+  }
+
+  #[@test]
+  public function folded_style_stripped() {
     $this->assertEquals(
       ['sentence' => "Mark McGwire's year was crippled by a knee injury."],
-      $this->parse("sentence: >\n  Mark McGwire's\n  year was crippled\n  by a knee injury.")
+      $this->parse("sentence: >-
+        Mark McGwire's
+        year was crippled
+        by a knee injury.
+
+      ")
+    );
+  }
+
+  #[@test]
+  public function folded_style_keeping() {
+    $this->assertEquals(
+      ['sentence' => "Mark McGwire's year was crippled by a knee injury.\n\n"],
+      $this->parse("sentence: >+
+        Mark McGwire's
+        year was crippled
+        by a knee injury.
+
+      ")
     );
   }
 
   #[@test]
   public function folded_scalars() {
     $this->assertEquals(
-      ['one' => 'This is sentence number 1', 'two' => 'This is sentence number 2'],
+      ['one' => "This is sentence number 1\n", 'two' => "This is sentence number 2\n"],
       $this->parse("one: >\n  This is sentence\n  number 1\ntwo: >\n  This is sentence\n  number 2\n")
     );
   }

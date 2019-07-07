@@ -19,19 +19,34 @@ use lang\FormatException;
  */
 class FlowCollectionsTest extends AbstractYamlParserTest {
 
+  #[@test, @values([
+  #  '[one,two]',
+  #  '[one, two]',
+  #  '[ one, two ]',
+  #  '[ one  ,   two ]',
+  #  '[ "one", "two" ]',
+  #  "[ 'one', 'two' ]",
+  #])]
+  public function seq($declaration) {
+    $this->assertEquals(['one', 'two'], $this->parse($declaration));
+  }
+
   #[@test]
-  public function seq_with_surrounding_space() {
-    $this->assertEquals(['one', 'two'], $this->parse('[ one, two ]'));
+  public function seq_spanning_multiple_lines() {
+    $this->assertEquals(['one', 'two'], $this->parse("[
+      one,
+      two
+    ]"));
+  }
+
+  #[@test]
+  public function quoted_square_braces() {
+    $this->assertEquals(['[', ']'], $this->parse('[ "[", "]" ]'));
   }
 
   #[@test]
   public function seq_with_trailing_comma() {
     $this->assertEquals(['one', 'two'], $this->parse('[ one, two, ]'));
-  }
-
-  #[@test]
-  public function seq_without_space() {
-    $this->assertEquals(['one', 'two'], $this->parse('[one,two]'));
   }
 
   #[@test]
@@ -76,27 +91,35 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
     );
   }
 
+  #[@test, @values([
+  #  '{one:two,three:four}',
+  #  '{ one: two, three: four }',
+  #  '{ one : two , three : four }',
+  #  '{ one   :   two , three   :   four }',
+  #  '{ one:"two", three:"four"}',
+  #  "{ one:'two', three:'four'}",
+  #  '{ "one":two, "three":four}',
+  #  "{ 'one':two, 'three':four}",
+  #  '{ "one":"two", "three":"four"}',
+  #  "{ 'one':'two', 'three':'four'}",
+  #])]
+  public function map($declaration) {
+    $this->assertEquals(['one' => 'two', 'three' => 'four'], $this->parse($declaration));
+  }
+
   #[@test]
-  public function map_with_surrounding_space() {
-    $this->assertEquals(
-      ['one' => 'two', 'three' => 'four'],
-      $this->parse('{ one : two , three: four }')
-    );
+  public function map_spanning_multiple_lines() {
+    $this->assertEquals(['one' => 'two', 'three' => 'four'], $this->parse("{
+      one   : two,
+      three : four
+    }"));
   }
 
   #[@test]
   public function map_with_trailing_comma() {
     $this->assertEquals(
       ['one' => 'two', 'three' => 'four'],
-      $this->parse('{ one : two , three: four }')
-    );
-  }
-
-  #[@test]
-  public function map_without_space() {
-    $this->assertEquals(
-      ['one' => 'two', 'three' => 'four'],
-      $this->parse('{ one : two , three: four }')
+      $this->parse('{ one : two , three: four , }')
     );
   }
 
@@ -141,13 +164,8 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
     );
   }
 
-  #[@test, @expect(FormatException::class)]
-  public function malformed_seq() {
-    $this->parse('!!seq {}');
-  }
-
-  #[@test, @expect(FormatException::class)]
-  public function malformed_map() {
-    $this->parse('!!map []');
+  #[@test]
+  public function quoted_curly_braces() {
+    $this->assertEquals(['{' => '}'], $this->parse('{ "{" : "}" }'));
   }
 }
