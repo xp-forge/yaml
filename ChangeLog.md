@@ -3,7 +3,12 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
-* Merged PR #5: Refactor parser - fixing various nesting bugs - @thekid
+## 5.1.0 / 2019-07-07
+
+* Added support for !!binary tag, see https://yaml.org/type/binary.html
+  (@thekid)
+* Merged PR #5: Refactor parser - fixing various nesting bugs
+  (@thekid)
 
 ## 5.0.2 / 2019-07-01
 

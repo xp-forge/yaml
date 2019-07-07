@@ -1,6 +1,7 @@
 <?php namespace org\yaml;
 
 use lang\IllegalArgumentException;
+use util\Bytes;
 use util\Date;
 
 class YamlParser {
@@ -105,6 +106,7 @@ class YamlParser {
       case 'bool': return (bool)$token[1];
       case 'float': return (float)$token[1];
       case 'date': return new Date($token[1]);
+      case 'binary': return new Bytes(base64_decode($token[1]));
       case 'literal': return $token[1];
       case 'null': return null;
       case 'seq': {

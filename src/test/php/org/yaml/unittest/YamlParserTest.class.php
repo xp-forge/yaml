@@ -2,6 +2,7 @@
 
 use lang\IllegalArgumentException;
 use org\yaml\YamlParser;
+use util\Bytes;
 use util\Date;
 
 class YamlParserTest extends AbstractYamlParserTest {
@@ -305,6 +306,27 @@ class YamlParserTest extends AbstractYamlParserTest {
   #[@test]
   public function explicit_str_tag() {
     $this->assertEquals(['not-date' => '2002-04-28'], $this->parse('not-date: !!str 2002-04-28'));
+  }
+
+  #[@test]
+  public function binary_tag() {
+    $this->assertEquals(['key' => new Bytes('YAML')], $this->parse('key: !!binary "WUFNTA=="'));
+  }
+
+  #[@test]
+  public function binary_tag_with_literal() {
+    $gif= (
+      "GIF89a\f\000\f\000\204\000\000\377\377\367\365\365\356".
+      "\351\351\345fff\000\000\000\347\347\347^^^\363\363\355".
+      "\216\216\216\340\340\340\237\237\237\223\223\223\247\247".
+      "\247\236\236\236i^\020' \202\n\001\000;"
+    );
+    $this->assertEquals(['key' => new Bytes($gif)], $this->parse('key: !!binary |
+      R0lGODlhDAAMAIQAAP//9/X
+      17unp5WZmZgAAAOfn515eXv
+      Pz7Y6OjuDg4J+fn5OTk6enp
+      56enmleECcgggoBADs=
+    '));
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
