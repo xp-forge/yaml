@@ -15,7 +15,6 @@ matrix:
     - php: nightly
 
 before_script:
-  - if [[ $TRAVIS_PHP_VERSION = "hhvm"* ]]; then echo hhvm.hack_compiler_default=false > /etc/hhvm/php.ini; fi
   - curl -sSL https://dl.bintray.com/xp-runners/generic/xp-run-master.sh > xp-run
   - composer install --prefer-dist
   - echo "vendor/autoload.php" > composer.pth
