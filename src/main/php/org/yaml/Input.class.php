@@ -265,10 +265,10 @@ abstract class Input {
       return $c;
     } else if (0 === substr_compare($in, '!!', $offset, 2)) {
       $p= strcspn($in, ' ', $offset);
-      $type= substr($in, $offset + 2, $p - 2);
+      $tag= substr($in, $offset + 2, $p - 2);
       $offset+= $p + 1;
       $token= $this->token($in, $offset, $end);
-      return [$type, null === $token ? null : $token[1]];
+      return [$tag, null === $token ? null : $token[1]];
     } else {
       $p= strcspn($in, $end, $offset);
       $literal= trim(substr($in, $offset, $p));

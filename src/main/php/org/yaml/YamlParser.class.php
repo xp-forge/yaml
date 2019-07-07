@@ -94,9 +94,9 @@ class YamlParser {
   /**
    * Returns value for a given token
    *
-   * @param  var[] $token An array with type and value
+   * @param  var[] $token An array with tag and value
    * @return var
-   * @throws lang.IllegalArgumentException if the token type is unknown
+   * @throws lang.IllegalArgumentException if the tag is unknown
    */
   private function tokenValue($token) {
     switch ($token[0]) {
@@ -121,7 +121,7 @@ class YamlParser {
         }
         return $r;
       }
-      default: throw new IllegalArgumentException('Unknown type "'.$token[0].'"');
+      default: throw new IllegalArgumentException('Unknown tag "'.$token[0].'"');
     }
   }
 
