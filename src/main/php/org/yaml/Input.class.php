@@ -70,6 +70,7 @@ abstract class Input {
    * @param  string $join
    * @param  string $mode
    * @return string
+   * @throws lang.FormatException if unknown chomping mode is given
    */
   private function indented($join, $mode) {
     $r= '';
@@ -91,6 +92,7 @@ abstract class Input {
       case self::KEEP: return substr($r, 1);
       case self::STRIP: return rtrim(substr($r, 1), "\r\n");
       case self::CLIP: return rtrim(substr($r, 1), "\r\n")."\n";
+      default: throw new FormatException('Unknown chomping mode "'.$mode.'"');
     }
   }
 
