@@ -11,6 +11,11 @@ class DocumentsTest extends TestCase {
   }
 
   #[@test]
+  public function empty_input() {
+    $this->assertEquals([], iterator_to_array($this->documents('')));
+  }
+
+  #[@test]
   public function empty_document() {
     $this->assertEquals([[]], iterator_to_array($this->documents(
       "---\n".

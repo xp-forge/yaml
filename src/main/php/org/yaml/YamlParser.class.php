@@ -165,7 +165,7 @@ class YamlParser {
 
     // Check for identifiers, e.g. `%YAML 1.2`
     do {
-      $line= $reader->nextLine();
+      if (null === ($line= $reader->nextLine())) return;
     } while ('' !== $line && '%' === $line{0});
 
     // If the first line is "---", we have a multi-document YAML source
