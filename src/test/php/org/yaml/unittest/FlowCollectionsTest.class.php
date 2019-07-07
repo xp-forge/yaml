@@ -40,6 +40,11 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
   }
 
   #[@test]
+  public function quoted_square_braces() {
+    $this->assertEquals(['[', ']'], $this->parse('[ "[", "]" ]'));
+  }
+
+  #[@test]
   public function seq_with_trailing_comma() {
     $this->assertEquals(['one', 'two'], $this->parse('[ one, two, ]'));
   }
@@ -157,5 +162,10 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
       ['a' => ['one' => 1, 'two' => 2], 'b' => ['three' => 3, 'four' => 4]],
       $this->parse('{ a: { one : 1 , two: 2 }, b: { three: 3, four: 4 } }')
     );
+  }
+
+  #[@test]
+  public function quoted_curly_braces() {
+    $this->assertEquals(['{' => '}'], $this->parse('{ "{" : "}" }'));
   }
 }
