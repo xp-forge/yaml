@@ -14,12 +14,12 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[@test]
   public function parse_empty() {
-    $this->assertEquals(null, $this->parse(''));
+    $this->assertNull($this->parse(''));
   }
 
   #[@test, @values(["\n", "\n\n", " \n \n", "  \n\n"])]
   public function parse_lines($value) {
-    $this->assertEquals([], $this->parse($value));
+    $this->assertNull($this->parse($value));
   }
 
   #[@test, @values(["key: value", "key: value\n"])]
@@ -34,7 +34,7 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[@test]
   public function parse_yaml_directive() {
-    $this->assertEquals(null, $this->parse('%YAML 1.2'));
+    $this->assertNull($this->parse('%YAML 1.2'));
   }
 
   #[@test]
@@ -194,22 +194,22 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[@test]
   public function comment() {
-    $this->assertEquals([], $this->parse('# Comments are ignored'));
+    $this->assertNull($this->parse('# Comments are ignored'));
   }
 
   #[@test]
   public function indented_comment() {
-    $this->assertEquals([], $this->parse('  # Comments are ignored'));
+    $this->assertNull($this->parse('  # Comments are ignored'));
   }
 
   #[@test]
   public function comments() {
-    $this->assertEquals([], $this->parse("# Line 1\n# Line 2\n"));
+    $this->assertNull($this->parse("# Line 1\n# Line 2\n"));
   }
 
   #[@test]
   public function comments_and_whitespace() {
-    $this->assertEquals([], $this->parse("# Line 1\n\n# Line 3\n"));
+    $this->assertNull($this->parse("# Line 1\n\n# Line 3\n"));
   }
 
   #[@test, @values(['key: value # A value', 'key: value        # A value'])]

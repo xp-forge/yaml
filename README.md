@@ -38,3 +38,18 @@ Inputs
 * `org.yaml.FileInput(io.File|string $in)` - Use file instance or a file name
 * `org.yaml.ReaderInput(io.streams.TextReader $in)` - Reads from a text reader
 * `org.yaml.StringInput(string $in)` - Input from a string
+
+Multiple documents
+------------------
+
+YAML sources can contain more than one document. The `parse()` method will only parse the first (or only) document. To retrieve all documents in a given input, use the iterator returned by `documents()` instead.
+
+```php
+use org\yaml\{YamlParser, FileInput};
+use util\cmd\Console;
+
+$parser= new YamlParser();
+foreach ($parser->documents(new FileInput('objects.yml') as $i => $document) {
+  Console::writeLine('Document #', $i, ': ', $document);
+}
+```

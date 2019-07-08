@@ -16,9 +16,7 @@ class YamlParser {
    */
   public function valueOf($reader, $value, $level= 0) {
     if (null === $value) {
-      do {
-        if (null === ($line= $reader->nextLine())) return null;  // EOF
-      } while ('---' === $line);
+      if (null === ($line= $reader->nextLine())) return null;
 
       // Check whether the next line at same or lesser indentation level. This
       // means we have a line like "key:\n" which means we're encountering an 
@@ -40,6 +38,8 @@ class YamlParser {
         } else if ('#' === $line{$p}) {
           continue;
         } else if ($p < $spaces) {
+          break;
+        } else if ('---' === $line || '...' === $line) {
           break;
         }
 
@@ -68,7 +68,7 @@ class YamlParser {
 
       } while (null !== ($line= $reader->nextLine()));
       $reader->resetLine($line);
-      return $r;
+      return $r ?: null;
     } else if ('&' === $value{0}) {
       if (false === ($o= strpos($value, ' '))) {
         $id= rtrim(substr($value, 1, strcspn($value, '#') - 1));
@@ -128,7 +128,7 @@ class YamlParser {
   }
 
   /**
-   * Parse a given input source
+   * Parse a given input source, using the first (or only) document only
    *
    * @param  org.yaml.Input $reader
    * @param  int $level
@@ -142,8 +142,47 @@ class YamlParser {
     do {
       $line= $reader->nextLine();
     } while ('' !== $line && '%' === $line{0});
-    $reader->resetLine($line);
 
-    return $this->valueOf($reader, null, 0);
+    // Skip over first document start
+    if ('---' !== $line) {
+      $reader->resetLine($line);
+    }
+
+    return $this->valueOf($reader, null, $level);
+  }
+
+  /**
+   * Parse a given input source, returning all documents
+   *
+   * @see    https://yaml.org/spec/1.2/spec.html#id2800132
+   * @param  org.yaml.Input $reader
+   * @param  int $level
+   * @return iterable
+   */
+  public function documents($reader, $level= 0) {
+    $this->identifiers= [];
+    $reader->rewind();
+
+    // Check for identifiers, e.g. `%YAML 1.2`
+    do {
+      if (null === ($line= $reader->nextLine())) return;
+    } while ('' !== $line && '%' === $line{0});
+
+    // If the first line is "---", we have a multi-document YAML source
+    if ('---' === $line) {
+      do {
+        yield $this->valueOf($reader, null, $level);
+
+        $line= $reader->nextLine();
+        if ('...' === $line) {
+          do {
+            if (null === ($line= $reader->nextLine())) break 2;
+          } while ('' !== $line && '%' === $line{0});
+        }
+      } while ('---' === $line);
+    } else {
+      $reader->resetLine($line);
+      yield $this->valueOf($reader, null, $level);
+    }
   }
 }
