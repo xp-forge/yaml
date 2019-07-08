@@ -21,13 +21,13 @@ use org\yaml\{YamlParser, FileInput};
 $result= (new YamlParser())->parse(new FileInput('.travis.yml'));
 // [
 //   language => "php"
-//   php => [5.6, 7, 7.1, 7.2, "hhvm", "nightly"]
+//   php => [5.6, 7, 7.1, 7.2, 7.3, "7.4snapshot", "nightly"]
 //   matrix => [
 //     allow_failures => [[
 //       php => "nightly"
 //     ]]
 //   ]
-//   before_script => ["...", ...]
+//   before_script => ["curl ...", ...]
 //   script => ["sh xp-run xp.unittest.TestRunner src/test/php"]
 // ]
 ```
