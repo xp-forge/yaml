@@ -3,7 +3,7 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
-## 5.2.0 / 2019-07-07
+## 5.2.0 / 2019-07-08
 
 * Merge PR #6: Implement support for multiple documents - @thekid
 
