@@ -49,7 +49,7 @@ use org\yaml\{YamlParser, FileInput};
 use util\cmd\Console;
 
 $parser= new YamlParser();
-foreach ($parser->documents(new FileInput('objects.yml') as $i => $document) {
+foreach ($parser->documents(new FileInput('objects.yml')) as $i => $document) {
   Console::writeLine('Document #', $i, ': ', $document);
 }
 ```
