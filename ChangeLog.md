@@ -6,6 +6,7 @@ YAML for XP Framework ChangeLog
 ## 5.2.1 / 2019-12-01
 
 * Made compatible with XP 10 - @thekid
+* Made compatible with PHP 7.4 by using `[]` for offsets - @thekid
 
 ## 5.2.0 / 2019-07-08
 
