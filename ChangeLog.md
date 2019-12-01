@@ -3,6 +3,10 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 5.2.1 / 2019-12-01
+
+* Made compatible with XP 10 - @thekid
+
 ## 5.2.0 / 2019-07-08
 
 * Merge PR #6: Implement support for multiple documents - @thekid
