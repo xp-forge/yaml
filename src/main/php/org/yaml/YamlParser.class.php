@@ -35,7 +35,7 @@ class YamlParser {
         $l= strlen($line);
         if ($p === $l) {
           continue;
-        } else if ('#' === $line{$p}) {
+        } else if ('#' === $line[$p]) {
           continue;
         } else if ($p < $spaces) {
           break;
@@ -46,7 +46,7 @@ class YamlParser {
         // Sequences (begin with a dash) and maps (key: value). A special case is the 
         // compacted mapping, where the first key starts right inside a sequence, e.g.
         // "- one: two\n  three: four"
-        if ('-' === $line{$spaces}) {
+        if ('-' === $line[$spaces]) {
           $key= $id++;
 
           if (strpos($line, ': ')) {
@@ -57,7 +57,7 @@ class YamlParser {
           } else {
             $r[$key]= $this->valueOf($reader, substr($line, $spaces + 2), $spaces);
           }
-        } else if (!strpos('#!?{[', $line{$spaces}) && strpos($line, ':')) {
+        } else if (!strpos('#!?{[', $line[$spaces]) && strpos($line, ':')) {
           $key= $value= null;
           sscanf($line, "%[^:]: %[^\r]", $key, $value);
           $key= trim(substr($key, $spaces), ' ');
@@ -69,7 +69,7 @@ class YamlParser {
       } while (null !== ($line= $reader->nextLine()));
       $reader->resetLine($line);
       return $r ?: null;
-    } else if ('&' === $value{0}) {
+    } else if ('&' === $value[0]) {
       if (false === ($o= strpos($value, ' '))) {
         $id= rtrim(substr($value, 1, strcspn($value, '#') - 1));
         return $this->identifiers[$id]= $this->valueOf($reader, null, $level);
@@ -77,7 +77,7 @@ class YamlParser {
         $id= substr($value, 1, $o - 1);
         return $this->identifiers[$id]= $this->valueOf($reader, substr($value, $o + 1), $level);
       }
-    } else if ('*' === $value{0}) {
+    } else if ('*' === $value[0]) {
       $id= rtrim(substr($value, 1, strcspn($value, '#') - 1));
       if (!isset($this->identifiers[$id])) {
         throw new IllegalArgumentException(sprintf(
@@ -141,7 +141,7 @@ class YamlParser {
     // Check for identifiers, e.g. `%YAML 1.2`
     do {
       $line= $reader->nextLine();
-    } while ('' !== $line && '%' === $line{0});
+    } while ('' !== $line && null !== $line && '%' === $line[0]);
 
     // Skip over first document start
     if ('---' !== $line) {
@@ -166,7 +166,7 @@ class YamlParser {
     // Check for identifiers, e.g. `%YAML 1.2`
     do {
       if (null === ($line= $reader->nextLine())) return;
-    } while ('' !== $line && '%' === $line{0});
+    } while ('' !== $line && '%' === $line[0]);
 
     // If the first line is "---", we have a multi-document YAML source
     if ('---' === $line) {
@@ -177,7 +177,7 @@ class YamlParser {
         if ('...' === $line) {
           do {
             if (null === ($line= $reader->nextLine())) break 2;
-          } while ('' !== $line && '%' === $line{0});
+          } while ('' !== $line && '%' === $line[0]);
         }
       } while ('---' === $line);
     } else {

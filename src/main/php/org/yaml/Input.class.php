@@ -156,7 +156,7 @@ abstract class Input {
       'e' => "\x1b", '\\' => '\\', '"' => '"', '/' => '/', ' ' => ' '
     ];
 
-    $e= $in{$offset};
+    $e= $in[$offset];
     if (isset($escapes[$e])) {
       $offset++;
       return $escapes[$e];
@@ -184,7 +184,7 @@ abstract class Input {
     // fputs(STDERR, "T `$in`\n");
     // fputs(STDERR, "   ".str_repeat(' ', $offset)."^ ($offset)\n\n");
 
-    $c= $in{$offset};
+    $c= $in[$offset];
     if ('"' === $c) {
       $offset+= 1;
       $string= '';
@@ -195,11 +195,11 @@ abstract class Input {
         if ($i >= $l) {
           $in.= $this->lines('double');
           $l= strlen($in);
-        } else if ('\\' === $in{$i}) {
+        } else if ('\\' === $in[$i]) {
           $offset= $i + 1;
           $string.= $this->escape($in, $offset);
           continue;
-        } else if ('"' === $in{$i}) {
+        } else if ('"' === $in[$i]) {
           $offset+= $p + 1;
           return ['str', $string];
         }
@@ -215,8 +215,8 @@ abstract class Input {
         if ($i >= $l) {
           $in.= $this->lines('single');
           $l= strlen($in);
-        } else if ("'" === $in{$i}) {
-          if ($i + 1 < $l && "'" === $in{$i + 1}) {
+        } else if ("'" === $in[$i]) {
+          if ($i + 1 < $l && "'" === $in[$i + 1]) {
             $string.= "'";
             $p+= 2;
           } else {
@@ -253,11 +253,11 @@ abstract class Input {
       } while (',' === $token);
       return ['map', $r];
     } else if ('>' === $c) {
-      $mode= $offset + 1 < $l ? $in{$offset + 1} : self::CLIP;
+      $mode= $offset + 1 < $l ? $in[$offset + 1] : self::CLIP;
       $offset= strlen($in);
       return ['str', $this->indented(' ', $mode)];
     } else if ('|' === $c) {
-      $mode= $offset + 1 < $l ? $in{$offset + 1} : self::CLIP;
+      $mode= $offset + 1 < $l ? $in[$offset + 1] : self::CLIP;
       $offset= strlen($in);
       return ['str', $this->indented("\n", $mode)];
     } else if (strspn($c, ':,]}') > 0) {
