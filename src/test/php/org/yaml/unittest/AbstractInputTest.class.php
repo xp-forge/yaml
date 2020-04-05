@@ -87,7 +87,7 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
   #[
   #  @test,
   #  @values(['"hello', "'hello", '"hello \"', "'hello ''"]),
-  #  @expect(class= FormatException::class, withMessage= '/Unclosed .+ quote, encountered EOF/')
+  #  @expect(['class' => FormatException::class, 'withMessage' => '/Unclosed .+ quote, encountered EOF/'])
   #]
   public function unclosed_quote($value) {
     $this->newFixture()->tokenIn($value);
@@ -96,7 +96,7 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
   #[
   #  @test,
   #  @values(['[one', '[one, []', '[one, [nested]', '[', '[[[']),
-  #  @expect(class= FormatException::class, withMessage= '/Encountered EOF while parsing sequence/')
+  #  @expect(['class' => FormatException::class, 'withMessage' => '/Encountered EOF while parsing sequence/'])
   #]
   public function unclosed_sequence($value) {
     $this->newFixture()->tokenIn($value);
@@ -105,7 +105,7 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
   #[
   #  @test,
   #  @values(['{one: two', '{one: two, {}', '{', '{{{']),
-  #  @expect(class= FormatException::class, withMessage= '/Encountered EOF while parsing map/')
+  #  @expect(['class' => FormatException::class, 'withMessage' => '/Encountered EOF while parsing map/'])
   #]
   public function unclosed_map($value) {
     $this->newFixture()->tokenIn($value);
