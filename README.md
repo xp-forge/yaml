@@ -19,7 +19,7 @@ use org\yaml\{YamlParser, FileInput};
 $result= (new YamlParser())->parse(new FileInput('.travis.yml'));
 // [
 //   language => "php"
-//   php => [5.6, 7, 7.1, 7.2, 7.3, "7.4snapshot", "nightly"]
+//   php => [7, 7.1, 7.2, 7.3, 7.4, "nightly"]
 //   matrix => [
 //     allow_failures => [[
 //       php => "nightly"
