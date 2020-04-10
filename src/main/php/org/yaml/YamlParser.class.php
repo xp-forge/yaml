@@ -1,8 +1,7 @@
 <?php namespace org\yaml;
 
 use lang\IllegalArgumentException;
-use util\Bytes;
-use util\Date;
+use util\{Bytes, Date};
 
 class YamlParser {
 

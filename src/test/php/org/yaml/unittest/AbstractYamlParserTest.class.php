@@ -1,7 +1,6 @@
 <?php namespace org\yaml\unittest;
 
-use org\yaml\YamlParser;
-use org\yaml\StringInput;
+use org\yaml\{StringInput, YamlParser};
 
 /**
  * Abstract base class for YAML Parser tests

@@ -1,7 +1,6 @@
 <?php namespace org\yaml\unittest;
 
-use io\streams\MemoryInputStream;
-use io\streams\TextReader;
+use io\streams\{MemoryInputStream, TextReader};
 use lang\FormatException;
 
 /**

@@ -1,7 +1,6 @@
 <?php namespace org\yaml;
 
-use io\streams\FileInputStream;
-use io\streams\TextReader;
+use io\streams\{FileInputStream, TextReader};
 
 class FileInput extends Input {
   protected $reader= null;

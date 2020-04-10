@@ -1,8 +1,6 @@
 <?php namespace org\yaml\unittest;
 
-use io\streams\InputStream;
-use io\streams\MemoryInputStream;
-use io\streams\TextReader;
+use io\streams\{InputStream, MemoryInputStream, TextReader};
 use org\yaml\ReaderInput;
 
 /**

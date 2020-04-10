@@ -2,8 +2,7 @@
 
 use lang\IllegalArgumentException;
 use org\yaml\YamlParser;
-use util\Bytes;
-use util\Date;
+use util\{Bytes, Date};
 
 class YamlParserTest extends AbstractYamlParserTest {
 

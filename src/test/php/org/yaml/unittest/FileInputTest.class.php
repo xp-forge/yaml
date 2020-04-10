@@ -1,9 +1,8 @@
 <?php namespace org\yaml\unittest;
 
 use io\File;
+use io\streams\{MemoryInputStream, Streams};
 use org\yaml\FileInput;
-use io\streams\Streams;
-use io\streams\MemoryInputStream;
 
 /**
  * Tests the "File" input implementation

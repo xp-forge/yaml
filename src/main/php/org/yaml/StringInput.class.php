@@ -1,7 +1,6 @@
 <?php namespace org\yaml;
 
-use io\streams\MemoryInputStream;
-use io\streams\TextReader;
+use io\streams\{MemoryInputStream, TextReader};
 
 class StringInput extends Input {
   protected $reader= null;
