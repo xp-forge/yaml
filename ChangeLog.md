@@ -8,6 +8,7 @@ YAML for XP Framework ChangeLog
 * Implemented xp-framework/rfc#334: Drop PHP 5.6:
   . **Heads up:** Minimum required PHP version now is PHP 7.0.0
   . Rewrote code base, grouping use statements
+  . Convert `newinstance` to anonymous classes
   (@thekid)
 
 ## 5.2.2 / 2020-04-05

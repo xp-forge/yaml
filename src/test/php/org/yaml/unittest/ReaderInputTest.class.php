@@ -20,11 +20,11 @@ class ReaderInputTest extends AbstractInputTest {
 
   #[@test]
   public function rewind_does_not_call_underlying_reset_if_at_beginning() {
-    $r= new ReaderInput(new TextReader(newinstance(InputStream::class, [], [
-      'read'      => function($bytes= 8192) { return null; },
-      'available' => function() { return 0; },
-      'close'     => function() { },
-    ])));
+    $r= new ReaderInput(new TextReader(new class() implements InputStream {
+      public function read($bytes= 8192) { return null; }
+      public function available() { return 0; }
+      public function close() { }
+    }));
     $r->rewind();
   }
 }
