@@ -17,6 +17,40 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
    */
   protected abstract function newFixture($str= '');
 
+  /** @return iterable */
+  private function tokens() {
+    yield ['', null];
+    yield [' ', null];
+    yield ['        ', null];
+    yield ['Hello', ['str', 'Hello']];
+    yield ['Hello ', ['str', 'Hello']];
+    yield ['""', ['str', '']];
+    yield ['"" ', ['str', '']];
+    yield ['"\""', ['str', '"']];
+    yield ['"Hello"', ['str', 'Hello']];
+    yield ["'Hello'", ['str', 'Hello']];
+    yield ['"Hello #"', ['str', 'Hello #']];
+    yield ["'Hello #'", ['str', 'Hello #']];
+    yield ['42', ['int', '42']];
+    yield ['0o755', ['int', 493]];
+    yield ['0xbeef', ['int', 48879]];
+    yield ['6.1', ['float', '6.1']];
+    yield ['true', ['literal', true]];
+    yield ['True', ['literal', true]];
+    yield ['false', ['literal', false]];
+    yield ['False', ['literal', false]];
+    yield ['null', ['literal', null]];
+    yield ['Null', ['literal', null]];
+    yield ['~', ['literal', null]];
+    yield ['!!int 5', ['int', '5']];
+    yield ['[]', ['seq', []]];
+    yield ['[1]', ['seq', [['int', '1']]]];
+    yield ['[1, 2, 3]', ['seq', [['int', '1'], ['int', '2'], ['int', '3']]]];
+    yield ['{}', ['map', []]];
+    yield ['{one: two}', ['map', ['one' => ['str', 'two']]]];
+    yield ['{one: two, three: four}', ['map', ['one' => ['str', 'two'], 'three' => ['str', 'four']]]];
+  }
+
   #[Test]
   public function nextLine_for_empty_input() {
     $this->assertNull($this->newFixture('')->nextLine());
@@ -48,7 +82,7 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
     $this->assertEquals('Hello', $fixture->nextLine());
   }
 
-  #[Test, Values([['', null], [' ', null], ['        ', null], ['Hello', ['str', 'Hello']], ['Hello ', ['str', 'Hello']], ['""', ['str', '']], ['"" ', ['str', '']], ['"\""', ['str', '"']], ['"Hello"', ['str', 'Hello']], ["'Hello'", ['str', 'Hello']], ['"Hello #"', ['str', 'Hello #']], ["'Hello #'", ['str', 'Hello #']], ['42', ['int', '42']], ['0o755', ['int', 493]], ['0xbeef', ['int', 48879]], ['6.1', ['float', '6.1']], ['true', ['literal', true]], ['True', ['literal', true]], ['false', ['literal', false]], ['False', ['literal', false]], ['null', ['literal', null]], ['Null', ['literal', null]], ['~', ['literal', null]], ['!!int 5', ['int', '5']], ['[]', ['seq', []]], ['[1]', ['seq', [['int', '1']]]], ['[1, 2, 3]', ['seq', [['int', '1'], ['int', '2'], ['int', '3']]]], ['{}', ['map', []]], ['{one: two}', ['map', ['one' => ['str', 'two']]]], ['{one: two, three: four}', ['map', ['one' => ['str', 'two'], 'three' => ['str', 'four']]]],])]
+  #[Test, Values('tokens')]
   public function token($input, $expected) {
     $this->assertEquals($expected, $this->newFixture()->tokenIn($input));
   }
