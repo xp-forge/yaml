@@ -2,6 +2,7 @@
 
 use io\streams\{InputStream, MemoryInputStream, TextReader};
 use org\yaml\ReaderInput;
+use unittest\Test;
 
 /**
  * Tests the "Reader" input implementation
@@ -18,7 +19,7 @@ class ReaderInputTest extends AbstractInputTest {
     return new ReaderInput(new TextReader(new MemoryInputStream($str), 'utf-8'));
   }
 
-  #[@test]
+  #[Test]
   public function rewind_does_not_call_underlying_reset_if_at_beginning() {
     $r= new ReaderInput(new TextReader(new class() implements InputStream {
       public function read($bytes= 8192) { return null; }

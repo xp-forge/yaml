@@ -1,7 +1,7 @@
 <?php namespace org\yaml\unittest;
 
 use org\yaml\{StringInput, YamlParser};
-use unittest\TestCase;
+use unittest\{Test, TestCase};
 
 class DocumentsTest extends TestCase {
 
@@ -9,12 +9,12 @@ class DocumentsTest extends TestCase {
     return (new YamlParser())->documents(new StringInput($str));
   }
 
-  #[@test]
+  #[Test]
   public function empty_input() {
     $this->assertEquals([], iterator_to_array($this->documents('')));
   }
 
-  #[@test]
+  #[Test]
   public function empty_document() {
     $this->assertEquals([null], iterator_to_array($this->documents(
       "---\n".
@@ -22,7 +22,7 @@ class DocumentsTest extends TestCase {
     )));
   }
 
-  #[@test]
+  #[Test]
   public function single_document() {
     $this->assertEquals([['A', 'B']], iterator_to_array($this->documents(
       "---\n".
@@ -32,7 +32,7 @@ class DocumentsTest extends TestCase {
     )));
   }
 
-  #[@test]
+  #[Test]
   public function single_document_ended_by_eof() {
     $this->assertEquals([['A', 'B']], iterator_to_array($this->documents(
       "---\n".
@@ -41,7 +41,7 @@ class DocumentsTest extends TestCase {
     )));
   }
 
-  #[@test]
+  #[Test]
   public function multiple_documents() {
     $this->assertEquals([['A', 'B'], ['C', 'D']], iterator_to_array($this->documents(
       "---\n".
@@ -54,7 +54,7 @@ class DocumentsTest extends TestCase {
     )));
   }
 
-  #[@test]
+  #[Test]
   public function empty_document_between() {
     $this->assertEquals([['A', 'B'], null, ['C', 'D']], iterator_to_array($this->documents(
       "---\n".
@@ -69,7 +69,7 @@ class DocumentsTest extends TestCase {
     )));
   }
 
-  #[@test]
+  #[Test]
   public function directives() {
     $this->assertEquals([['A', 'B'], ['C', 'D']], iterator_to_array($this->documents(
       "%YAML 1.2\n".

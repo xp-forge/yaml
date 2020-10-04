@@ -1,6 +1,7 @@
 <?php namespace org\yaml\unittest;
 
 use lang\IllegalArgumentException;
+use unittest\{Expect, Test};
 
 /**
  * 7.1 Alias Nodes
@@ -13,7 +14,7 @@ use lang\IllegalArgumentException;
  */
 class AliasNodesTest extends AbstractYamlParserTest {
 
-  #[@test]
+  #[Test]
   public function repeated_nodes() {
     $this->assertEquals(
       ['Sammy Sosa', 'Sammy Sosa'],
@@ -21,7 +22,7 @@ class AliasNodesTest extends AbstractYamlParserTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function repeated_map_nodes() {
     $person= ['id' => 1549, 'name' => 'Timm'];
     $this->assertEquals(
@@ -30,12 +31,12 @@ class AliasNodesTest extends AbstractYamlParserTest {
     );
   }
 
-  #[@test, @expect(['class' => IllegalArgumentException::class, 'withMessage' => 'Unresolved reference "TF", have ["SS"]'])]
+  #[Test, Expect(['class' => IllegalArgumentException::class, 'withMessage' => 'Unresolved reference "TF", have ["SS"]'])]
   public function unresolved_reference() {
     $this->parse("- &SS Sammy Sosa\n- *TF # Does not exist\n");
   }
 
-  #[@test]
+  #[Test]
   public function anchors_can_be_reused() {
     $this->assertEquals([
       'First occurrence'  => 'Foo',
