@@ -267,8 +267,9 @@ abstract class Input {
       $p= strcspn($in, ' ', $offset);
       $tag= substr($in, $offset + 2, $p - 2);
       $offset+= $p + 1;
+      if ($offset >= $l) return [$tag, null];
       $token= $this->token($in, $offset, $end);
-      return [$tag, null === $token ? null : $token[1]];
+      return [$tag, $token[1]];
     } else {
       $p= strcspn($in, $end, $offset);
       $literal= trim(substr($in, $offset, $p));

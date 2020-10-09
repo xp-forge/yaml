@@ -3,6 +3,11 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.0.1 / 2020-10-09
+
+* Fixed *strspn(): Argument #3 ($offset) must be contained...* warning
+  (@thekid)
+
 ## 6.0.0 / 2020-04-10
 
 * Implemented xp-framework/rfc#334: Drop PHP 5.6:
