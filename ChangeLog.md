@@ -3,6 +3,10 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.0.2 / 2021-10-21
+
+* Made library compatible with XP 11 - @thekid
+
 ## 6.0.1 / 2020-10-09
 
 * Fixed *strspn(): Argument #3 ($offset) must be contained...* warning
