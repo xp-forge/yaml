@@ -3,6 +3,10 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.0.3 / 2022-02-26
+
+* Fixed "Creation of dynamic property" warnings in PHP 8.2 - @thekid
+
 ## 6.0.2 / 2021-10-21
 
 * Made library compatible with XP 11 - @thekid

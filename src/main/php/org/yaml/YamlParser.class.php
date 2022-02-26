@@ -4,6 +4,7 @@ use lang\IllegalArgumentException;
 use util\{Bytes, Date};
 
 class YamlParser {
+  private $identifiers= [];
 
   /**
    * Parse a value
