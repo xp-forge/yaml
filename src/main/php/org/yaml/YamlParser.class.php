@@ -6,10 +6,6 @@ use util\{Bytes, Date};
 class YamlParser {
   private $identifiers= [];
 
-  public function define($id, $value) {
-    
-  }
-
   /**
    * Returns an identifier. Throws an exception if the identifier is unknown.
    *
@@ -97,8 +93,6 @@ class YamlParser {
         $id= substr($value, 1, $o - 1);
         return $this->identifiers[$id]= $this->valueOf($reader, substr($value, $o + 1), $level);
       }
-    } else if ('*' === $value[0]) {
-      return $this->identifier(rtrim(substr($value, 1, strcspn($value, '#') - 1)));
     } else {
       return $this->tokenValue($reader->tokenIn($value));
     }
