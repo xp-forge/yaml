@@ -21,7 +21,6 @@ class MergeKeyTest extends AbstractYamlParserTest {
     'label' => 'center/big'
   ];
 
-
   #[Test]
   public function explicit_keys() {
     Assert::equals(
