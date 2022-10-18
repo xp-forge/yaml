@@ -31,9 +31,17 @@ class AliasNodesTest extends AbstractYamlParserTest {
     );
   }
 
-  #[Test, Expect(['class' => IllegalArgumentException::class, 'withMessage' => 'Unresolved reference "TF", have ["SS"]'])]
+  #[Test, Expect(class: IllegalArgumentException::class, withMessage: 'Unresolved reference "TF", have ["SS"]')]
   public function unresolved_reference() {
     $this->parse("- &SS Sammy Sosa\n- *TF # Does not exist\n");
+  }
+
+  #[Test]
+  public function external_reference() {
+    $this->assertEquals(
+      ['value' => $this],
+      $this->parse("value: *test\n", ['test' => $this])
+    );
   }
 
   #[Test]
