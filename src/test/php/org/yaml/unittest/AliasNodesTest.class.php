@@ -31,9 +31,17 @@ class AliasNodesTest extends AbstractYamlParserTest {
     );
   }
 
-  #[Test, Expect(['class' => IllegalArgumentException::class, 'withMessage' => 'Unresolved reference "TF", have ["SS"]'])]
+  #[Test, Expect(class: IllegalArgumentException::class, withMessage: 'Unresolved reference "TF", have ["SS"]')]
   public function unresolved_reference() {
     $this->parse("- &SS Sammy Sosa\n- *TF # Does not exist\n");
+  }
+
+  #[Test]
+  public function external_reference() {
+    $this->assertEquals(
+      ['value' => $this],
+      $this->parse("value: *test\n", ['test' => $this])
+    );
   }
 
   #[Test]
@@ -47,5 +55,21 @@ class AliasNodesTest extends AbstractYamlParserTest {
       "First occurrence: &anchor Foo\nSecond occurrence: *anchor\n".
       "Override anchor: &anchor Bar\nReuse anchor: *anchor\n"
     ));
+  }
+
+  #[Test]
+  public function defined_with_flow() {
+    $this->assertEquals(
+      [['x' => 1, 'y' => 2], 1],
+      $this->parse("- &CENTER { x: 1, y: 2 }\n- &TOP 1")
+    );
+  }
+
+  #[Test]
+  public function used_inside_flow() {
+    $this->assertEquals(
+      [10, 1, 'options' => [1, 10]],
+      $this->parse("- &BIG 10\n- &SMALL 1\noptions: [ *SMALL, *BIG ]")
+    );
   }
 }

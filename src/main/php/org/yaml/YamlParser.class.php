@@ -49,7 +49,7 @@ class YamlParser {
         if ('-' === $line[$spaces]) {
           $key= $id++;
 
-          if (strpos($line, ': ')) {
+          if (!strpos('*&', $line[$spaces + 2] ?? '-') && strpos($line, ': ')) {
             $reader->resetLine(str_repeat(' ', $spaces + 2).substr($line, $spaces + 2));
             $r[$key]= $this->valueOf($reader, null, $spaces);
           } else if ($spaces + 2 > $l) {
@@ -77,16 +77,6 @@ class YamlParser {
         $id= substr($value, 1, $o - 1);
         return $this->identifiers[$id]= $this->valueOf($reader, substr($value, $o + 1), $level);
       }
-    } else if ('*' === $value[0]) {
-      $id= rtrim(substr($value, 1, strcspn($value, '#') - 1));
-      if (!isset($this->identifiers[$id])) {
-        throw new IllegalArgumentException(sprintf(
-          'Unresolved reference "%s", have ["%s"]',
-          $id,
-          implode('", "', array_keys($this->identifiers))
-        ));
-      }
-      return $this->identifiers[$id];
     } else {
       return $this->tokenValue($reader->tokenIn($value));
     }
@@ -123,6 +113,15 @@ class YamlParser {
         }
         return $r;
       }
+      case '*': {
+        $id= $token[1];
+        if (isset($this->identifiers[$id])) return $this->identifiers[$id];
+        throw new IllegalArgumentException(sprintf(
+          'Unresolved reference "%s", have [%s]',
+          $id,
+          $this->identifiers ? '"'.implode('", "', array_keys($this->identifiers)).'"' : ''
+        ));
+      }
       default: throw new IllegalArgumentException('Unknown tag "'.$token[0].'"');
     }
   }
@@ -131,11 +130,11 @@ class YamlParser {
    * Parse a given input source, using the first (or only) document only
    *
    * @param  org.yaml.Input $reader
-   * @param  int $level
+   * @param  [:var] $identifiers
    * @return var
    */
-  public function parse($reader, $level= 0) {
-    $this->identifiers= [];
+  public function parse($reader, $identifiers= []) {
+    $this->identifiers= $identifiers;
     $reader->rewind();
 
     // Check for identifiers, e.g. `%YAML 1.2`
@@ -148,7 +147,7 @@ class YamlParser {
       $reader->resetLine($line);
     }
 
-    return $this->valueOf($reader, null, $level);
+    return $this->valueOf($reader, null, 0);
   }
 
   /**
@@ -156,11 +155,11 @@ class YamlParser {
    *
    * @see    https://yaml.org/spec/1.2/spec.html#id2800132
    * @param  org.yaml.Input $reader
-   * @param  int $level
+   * @param  [:var] $identifiers
    * @return iterable
    */
-  public function documents($reader, $level= 0) {
-    $this->identifiers= [];
+  public function documents($reader, $identifiers= []) {
+    $this->identifiers= $identifiers;
     $reader->rewind();
 
     // Check for identifiers, e.g. `%YAML 1.2`
@@ -171,7 +170,7 @@ class YamlParser {
     // If the first line is "---", we have a multi-document YAML source
     if ('---' === $line) {
       do {
-        yield $this->valueOf($reader, null, $level);
+        yield $this->valueOf($reader, null, 0);
 
         $line= $reader->nextLine();
         if ('...' === $line) {
@@ -182,7 +181,7 @@ class YamlParser {
       } while ('---' === $line);
     } else {
       $reader->resetLine($line);
-      yield $this->valueOf($reader, null, $level);
+      yield $this->valueOf($reader, null, 0);
     }
   }
 }
