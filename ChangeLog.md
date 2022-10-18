@@ -5,6 +5,8 @@ YAML for XP Framework ChangeLog
 
 ## 7.0.0 / ????-??-??
 
+* Merged PR #8: Implement [Merge Key](https://yaml.org/type/merge.html)
+  (@thekid)
 * Merged PR #7: Allow passing identifiers to *YamlParser*'s `parse()`
   and `documents()` methods.
   (@thekid)
