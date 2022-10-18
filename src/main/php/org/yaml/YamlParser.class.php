@@ -48,6 +48,7 @@ class YamlParser {
         // "- one: two\n  three: four"
         if ('-' === $line[$spaces]) {
           $key= $id++;
+
           if (!strpos('*&', $line[$spaces + 2] ?? '-') && strpos($line, ': ')) {
             $reader->resetLine(str_repeat(' ', $spaces + 2).substr($line, $spaces + 2));
             $r[$key]= $this->valueOf($reader, null, $spaces);
@@ -112,7 +113,7 @@ class YamlParser {
         }
         return $r;
       }
-      case '*':
+      case '*': {
         $id= $token[1];
         if (isset($this->identifiers[$id])) return $this->identifiers[$id];
         throw new IllegalArgumentException(sprintf(
@@ -120,6 +121,7 @@ class YamlParser {
           $id,
           $this->identifiers ? '"'.implode('", "', array_keys($this->identifiers)).'"' : ''
         ));
+      }
       default: throw new IllegalArgumentException('Unknown tag "'.$token[0].'"');
     }
   }
