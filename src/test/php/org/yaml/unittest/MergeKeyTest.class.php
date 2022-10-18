@@ -1,6 +1,5 @@
 <?php namespace org\yaml\unittest;
 
-use lang\IllegalArgumentException;
 use unittest\{Assert, Test};
 
 /**
