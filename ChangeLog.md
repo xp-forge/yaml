@@ -3,6 +3,12 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 7.0.0 / ????-??-??
+
+* Merged PR #7: Allow passing identifiers to *YamlParser*'s `parse()`
+  and `documents()` methods.
+  (@thekid)
+
 ## 6.0.3 / 2022-02-26
 
 * Fixed "Creation of dynamic property" warnings in PHP 8.2 - @thekid
