@@ -6,6 +6,27 @@ use util\{Bytes, Date};
 class YamlParser {
   private $identifiers= [];
 
+  public function define($id, $value) {
+    
+  }
+
+  /**
+   * Returns an identifier. Throws an exception if the identifier is unknown.
+   *
+   * @param  string $id
+   * @return var
+   * @throws lang.IllegalArgumentException
+   */
+  public function identifier($id) {
+    if (isset($this->identifiers[$id])) return $this->identifiers[$id];
+
+    throw new IllegalArgumentException(sprintf(
+      'Unresolved reference "%s", have [%s]',
+      $id,
+      $this->identifiers ? '"'.implode('", "', array_keys($this->identifiers)).'"' : ''
+    ));
+  }
+
   /**
    * Parse a value
    *
@@ -48,8 +69,7 @@ class YamlParser {
         // "- one: two\n  three: four"
         if ('-' === $line[$spaces]) {
           $key= $id++;
-
-          if (strpos($line, ': ')) {
+          if (!strpos('*&', $line[$spaces + 2] ?? '') && strpos($line, ': ')) {
             $reader->resetLine(str_repeat(' ', $spaces + 2).substr($line, $spaces + 2));
             $r[$key]= $this->valueOf($reader, null, $spaces);
           } else if ($spaces + 2 > $l) {
@@ -78,15 +98,7 @@ class YamlParser {
         return $this->identifiers[$id]= $this->valueOf($reader, substr($value, $o + 1), $level);
       }
     } else if ('*' === $value[0]) {
-      $id= rtrim(substr($value, 1, strcspn($value, '#') - 1));
-      if (!isset($this->identifiers[$id])) {
-        throw new IllegalArgumentException(sprintf(
-          'Unresolved reference "%s", have [%s]',
-          $id,
-          $this->identifiers ? '"'.implode('", "', array_keys($this->identifiers)).'"' : ''
-        ));
-      }
-      return $this->identifiers[$id];
+      return $this->identifier(rtrim(substr($value, 1, strcspn($value, '#') - 1)));
     } else {
       return $this->tokenValue($reader->tokenIn($value));
     }
@@ -109,6 +121,7 @@ class YamlParser {
       case 'binary': return new Bytes(base64_decode($token[1]));
       case 'literal': return $token[1];
       case 'null': return null;
+      case '*': return $this->identifier($token[1]);
       case 'seq': {
         $r= [];
         foreach ($token[1] as $value) {

@@ -56,4 +56,20 @@ class AliasNodesTest extends AbstractYamlParserTest {
       "Override anchor: &anchor Bar\nReuse anchor: *anchor\n"
     ));
   }
+
+  #[Test]
+  public function defined_with_flow() {
+    $this->assertEquals(
+      [['x' => 1, 'y' => 2], 1],
+      $this->parse("- &CENTER { x: 1, y: 2 }\n- &TOP 1")
+    );
+  }
+
+  #[Test]
+  public function used_inside_flow() {
+    $this->assertEquals(
+      [10, 1, 'options' => [1, 10]],
+      $this->parse("- &BIG 10\n- &SMALL 1\noptions: [ *SMALL, *BIG ]")
+    );
+  }
 }

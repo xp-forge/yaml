@@ -230,6 +230,12 @@ abstract class Input {
       $offset= strlen($in);
       $in.= $this->nextLine();
       return $this->token($in, $offset, $end);
+    } else if ('*' === $c) {
+      $offset+= 1;
+      $p= strcspn($in, $end, $offset);
+      $literal= trim(substr($in, $offset, $p));
+      $offset+= strlen($literal);
+      return ['*', $literal];
     } else if ('[' === $c) {
       $offset++;
       $r= [];
