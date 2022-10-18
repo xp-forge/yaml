@@ -3,7 +3,7 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
-## 7.0.0 / ????-??-??
+## 7.0.0 / 2022-10-18
 
 * Merged PR #8: Implement [Merge Key](https://yaml.org/type/merge.html)
   (@thekid)
