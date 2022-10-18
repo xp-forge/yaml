@@ -1,7 +1,7 @@
 <?php namespace org\yaml\unittest;
 
 use lang\IllegalArgumentException;
-use unittest\{Expect, Test};
+use unittest\{Assert, Test};
 
 /**
  * Merge Key Language-Independent Type for YAML™ Version 1.1
@@ -25,7 +25,7 @@ class MergeKeyTest extends AbstractYamlParserTest {
 
   #[Test]
   public function explicit_keys() {
-    $this->assertEquals(
+    Assert::equals(
       $this->result,
       $this->parse("x: 1\ny: 2\nr: 10\nlabel: center/big\n", $this->defines)
     );
@@ -33,7 +33,7 @@ class MergeKeyTest extends AbstractYamlParserTest {
 
   #[Test]
   public function merge_one_map() {
-    $this->assertEquals(
+    Assert::equals(
       $this->result,
       $this->parse("<< : *CENTER\nr: 10\nlabel: center/big\n", $this->defines)
     );
@@ -41,7 +41,7 @@ class MergeKeyTest extends AbstractYamlParserTest {
 
   #[Test]
   public function merge_multiple_maps() {
-    $this->assertEquals(
+    Assert::equals(
       $this->result,
       $this->parse("<< : [ *CENTER, *BIG ]\nlabel: center/big\n", $this->defines)
     );
@@ -49,7 +49,7 @@ class MergeKeyTest extends AbstractYamlParserTest {
 
   #[Test]
   public function override() {
-    $this->assertEquals(
+    Assert::equals(
       $this->result,
       $this->parse("<< : [ *BIG, *LEFT, *SMALL ]\nx: 1\nlabel: center/big\n", $this->defines)
     );
