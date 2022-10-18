@@ -7,23 +7,6 @@ class YamlParser {
   private $identifiers= [];
 
   /**
-   * Returns an identifier. Throws an exception if the identifier is unknown.
-   *
-   * @param  string $id
-   * @return var
-   * @throws lang.IllegalArgumentException
-   */
-  public function identifier($id) {
-    if (isset($this->identifiers[$id])) return $this->identifiers[$id];
-
-    throw new IllegalArgumentException(sprintf(
-      'Unresolved reference "%s", have [%s]',
-      $id,
-      $this->identifiers ? '"'.implode('", "', array_keys($this->identifiers)).'"' : ''
-    ));
-  }
-
-  /**
    * Parse a value
    *
    * @param  org.yaml.Input $reader
@@ -115,7 +98,6 @@ class YamlParser {
       case 'binary': return new Bytes(base64_decode($token[1]));
       case 'literal': return $token[1];
       case 'null': return null;
-      case '*': return $this->identifier($token[1]);
       case 'seq': {
         $r= [];
         foreach ($token[1] as $value) {
@@ -130,6 +112,14 @@ class YamlParser {
         }
         return $r;
       }
+      case '*':
+        $id= $token[1];
+        if (isset($this->identifiers[$id])) return $this->identifiers[$id];
+        throw new IllegalArgumentException(sprintf(
+          'Unresolved reference "%s", have [%s]',
+          $id,
+          $this->identifiers ? '"'.implode('", "', array_keys($this->identifiers)).'"' : ''
+        ));
       default: throw new IllegalArgumentException('Unknown tag "'.$token[0].'"');
     }
   }
