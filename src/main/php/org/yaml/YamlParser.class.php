@@ -61,7 +61,19 @@ class YamlParser {
           $key= $value= null;
           sscanf($line, "%[^:]: %[^\r]", $key, $value);
           $key= trim(substr($key, $spaces), ' ');
-          $r[$key]= $this->valueOf($reader, $value, $spaces);
+
+          // The “<<” merge key is used to indicate that all the keys of one or more specified
+          // maps should be inserted into the current map. If the value associated with the key
+          // is a single mapping node, each of its key/value pairs is inserted into the current
+          // mapping, unless the key already exists in it.
+          if ('<<' === $key) {
+            $merge= $this->valueOf($reader, $value, $spaces);
+            foreach (0 === key($merge) ? $merge : [$merge] as $map) {
+              $r+= $map;
+            }
+          } else {
+            $r[$key]= $this->valueOf($reader, $value, $spaces);
+          }
         } else {
           $r= $this->valueOf($reader, $line, $spaces);
         }
