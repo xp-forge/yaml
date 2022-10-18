@@ -85,6 +85,11 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
     );
   }
 
+  #[Test]
+  public function empty_map() {
+    $this->assertEquals(['map' => []], $this->parse('map: {}'));
+  }
+
   #[Test, Values(['{one:two,three:four}', '{ one: two, three: four }', '{ one : two , three : four }', '{ one   :   two , three   :   four }', '{ one:"two", three:"four"}', "{ one:'two', three:'four'}", '{ "one":two, "three":four}', "{ 'one':two, 'three':four}", '{ "one":"two", "three":"four"}', "{ 'one':'two', 'three':'four'}",])]
   public function map($declaration) {
     $this->assertEquals(['one' => 'two', 'three' => 'four'], $this->parse($declaration));
