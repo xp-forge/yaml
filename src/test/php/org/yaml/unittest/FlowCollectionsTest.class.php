@@ -159,7 +159,7 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
 
   #[Test]
   public function mongodb_query() {
-    $this->assertEquals(
+    Assert::equals(
       [
         ['$project' => [
           'goals' => ['tag' => 1],
