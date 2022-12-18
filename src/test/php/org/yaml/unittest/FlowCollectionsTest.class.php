@@ -156,4 +156,26 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
   public function quoted_curly_braces() {
     Assert::equals(['{' => '}'], $this->parse('{ "{" : "}" }'));
   }
+
+  #[Test]
+  public function mongodb_query() {
+    $this->assertEquals(
+      [
+        ['$project' => [
+          'goals' => ['tag' => 1],
+          'name'  => 1,
+        ]],
+        ['$limit' => 1]
+      ],
+      $this->parse(str_replace("\n        ", "\n", '
+        - $project: {
+          goals : {
+            tag : 1
+          },
+          name : 1
+        }
+        - $limit: 1
+      '))
+    );
+  }
 }
