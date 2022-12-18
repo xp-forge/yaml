@@ -2,9 +2,7 @@
 
 use org\yaml\StringInput;
 
-/**
- * Tests the "String" input implementation
- */
+/** Tests the "String" input implementation */
 class StringInputTest extends AbstractInputTest {
 
   /**

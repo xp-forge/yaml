@@ -2,10 +2,8 @@
 
 use org\yaml\{StringInput, YamlParser};
 
-/**
- * Abstract base class for YAML Parser tests
- */
-abstract class AbstractYamlParserTest extends \unittest\TestCase {
+/** Abstract base class for YAML Parser tests */
+abstract class AbstractYamlParserTest {
 
   /**
    * Parse a given string and return the data

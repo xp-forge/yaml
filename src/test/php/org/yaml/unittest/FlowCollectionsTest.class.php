@@ -1,7 +1,7 @@
 <?php namespace org\yaml\unittest;
 
 use lang\FormatException;
-use unittest\{Test, Values};
+use unittest\{Assert, Test, Values};
 
 /**
  * 7.4. Flow Collection Styles
@@ -22,12 +22,12 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
 
   #[Test, Values(['[one,two]', '[one, two]', '[ one, two ]', '[ one  ,   two ]', '[ "one", "two" ]', "[ 'one', 'two' ]",])]
   public function seq($declaration) {
-    $this->assertEquals(['one', 'two'], $this->parse($declaration));
+    Assert::equals(['one', 'two'], $this->parse($declaration));
   }
 
   #[Test]
   public function seq_spanning_multiple_lines() {
-    $this->assertEquals(['one', 'two'], $this->parse("[
+    Assert::equals(['one', 'two'], $this->parse("[
       one,
       two
     ]"));
@@ -35,27 +35,27 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
 
   #[Test]
   public function quoted_square_braces() {
-    $this->assertEquals(['[', ']'], $this->parse('[ "[", "]" ]'));
+    Assert::equals(['[', ']'], $this->parse('[ "[", "]" ]'));
   }
 
   #[Test]
   public function seq_with_trailing_comma() {
-    $this->assertEquals(['one', 'two'], $this->parse('[ one, two, ]'));
+    Assert::equals(['one', 'two'], $this->parse('[ one, two, ]'));
   }
 
   #[Test]
   public function explicit_seq() {
-    $this->assertEquals(['one', 'two'], $this->parse('!!seq [ one, two ]'));
+    Assert::equals(['one', 'two'], $this->parse('!!seq [ one, two ]'));
   }
 
   #[Test]
   public function explicit_seq_indented() {
-    $this->assertEquals(['one', 'two'], $this->parse("!!seq [\n  one,\n  two\n]"));
+    Assert::equals(['one', 'two'], $this->parse("!!seq [\n  one,\n  two\n]"));
   }
 
   #[Test]
   public function sequence_of_sequences() {
-    $this->assertEquals(
+    Assert::equals(
       [
         ['name', 'hr', 'avg'],
         ['Mark McGwire', 65, 0.278],
@@ -71,7 +71,7 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
 
   #[Test]
   public function nested_sequence() {
-    $this->assertEquals(
+    Assert::equals(
       [['one', 'two']],
       $this->parse('[[one, two]]')
     );
@@ -79,7 +79,7 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
 
   #[Test]
   public function nested_sequences() {
-    $this->assertEquals(
+    Assert::equals(
       [['one', 'two'], ['three', 'four']],
       $this->parse('[[one, two], [three, four]]')
     );
@@ -87,17 +87,17 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
 
   #[Test]
   public function empty_map() {
-    $this->assertEquals(['map' => []], $this->parse('map: {}'));
+    Assert::equals(['map' => []], $this->parse('map: {}'));
   }
 
   #[Test, Values(['{one:two,three:four}', '{ one: two, three: four }', '{ one : two , three : four }', '{ one   :   two , three   :   four }', '{ one:"two", three:"four"}', "{ one:'two', three:'four'}", '{ "one":two, "three":four}', "{ 'one':two, 'three':four}", '{ "one":"two", "three":"four"}', "{ 'one':'two', 'three':'four'}",])]
   public function map($declaration) {
-    $this->assertEquals(['one' => 'two', 'three' => 'four'], $this->parse($declaration));
+    Assert::equals(['one' => 'two', 'three' => 'four'], $this->parse($declaration));
   }
 
   #[Test]
   public function map_spanning_multiple_lines() {
-    $this->assertEquals(['one' => 'two', 'three' => 'four'], $this->parse("{
+    Assert::equals(['one' => 'two', 'three' => 'four'], $this->parse("{
       one   : two,
       three : four
     }"));
@@ -105,7 +105,7 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
 
   #[Test]
   public function map_with_trailing_comma() {
-    $this->assertEquals(
+    Assert::equals(
       ['one' => 'two', 'three' => 'four'],
       $this->parse('{ one : two , three: four , }')
     );
@@ -113,7 +113,7 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
 
   #[Test]
   public function explicit_map() {
-    $this->assertEquals(
+    Assert::equals(
       ['one' => 'two', 'three' => 'four'],
       $this->parse('!!map { one : two , three: four }')
     );
@@ -121,7 +121,7 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
 
   #[Test]
   public function flowstyle_mappings_of_mappings() {
-    $this->assertEquals(
+    Assert::equals(
       [
         'Mark McGwire' => ['hr' => 65, 'avg' => 0.278],
         'Sammy Sosa'   => ['hr' => 63, 'avg' => 0.288]
@@ -138,7 +138,7 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
 
   #[Test]
   public function nested_map() {
-    $this->assertEquals(
+    Assert::equals(
       ['map' => ['one' => 'two', 'three' => 'four']],
       $this->parse('{ map: { one : two , three: four } }')
     );
@@ -146,7 +146,7 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
 
   #[Test]
   public function nested_maps() {
-    $this->assertEquals(
+    Assert::equals(
       ['a' => ['one' => 1, 'two' => 2], 'b' => ['three' => 3, 'four' => 4]],
       $this->parse('{ a: { one : 1 , two: 2 }, b: { three: 3, four: 4 } }')
     );
@@ -154,6 +154,6 @@ class FlowCollectionsTest extends AbstractYamlParserTest {
 
   #[Test]
   public function quoted_curly_braces() {
-    $this->assertEquals(['{' => '}'], $this->parse('{ "{" : "}" }'));
+    Assert::equals(['{' => '}'], $this->parse('{ "{" : "}" }'));
   }
 }

@@ -2,11 +2,9 @@
 
 use io\streams\{MemoryInputStream, TextReader};
 use lang\FormatException;
-use unittest\{Test, Values};
+use unittest\{Assert, Test, Values};
 
-/**
- * Abstract base class for YAML Input tests
- */
+/** Abstract base class for YAML Input tests */
 abstract class AbstractInputTest extends AbstractYamlParserTest {
 
   /**
@@ -53,23 +51,23 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
 
   #[Test]
   public function nextLine_for_empty_input() {
-    $this->assertNull($this->newFixture('')->nextLine());
+    Assert::null($this->newFixture('')->nextLine());
   }
 
   #[Test]
   public function nextLine_for_non_empty_input() {
-    $this->assertEquals('Hello', $this->newFixture('Hello')->nextLine());
+    Assert::equals('Hello', $this->newFixture('Hello')->nextLine());
   }
 
   #[Test, Values(["\r", "\n", "\r\n"])]
   public function nextLine_for_one_line_input($delimiter) {
-    $this->assertEquals('Hello', $this->newFixture('Hello'.$delimiter)->nextLine());
+    Assert::equals('Hello', $this->newFixture('Hello'.$delimiter)->nextLine());
   }
 
   #[Test, Values(["\r", "\n", "\r\n"])]
   public function nextLine_for_two_lines_of_input($delimiter) {
     $fixture= $this->newFixture('Line 1'.$delimiter.'Line 2'.$delimiter);
-    $this->assertEquals(
+    Assert::equals(
       ['Line 1', 'Line 2'],
       [$fixture->nextLine(), $fixture->nextLine()]
     );
@@ -79,12 +77,12 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
   public function resetLine() {
     $fixture= $this->newFixture('Hello');
     $fixture->resetLine($fixture->nextLine());
-    $this->assertEquals('Hello', $fixture->nextLine());
+    Assert::equals('Hello', $fixture->nextLine());
   }
 
   #[Test, Values('tokens')]
   public function token($input, $expected) {
-    $this->assertEquals($expected, $this->newFixture()->tokenIn($input));
+    Assert::equals($expected, $this->newFixture()->tokenIn($input));
   }
 
   #[Test, Values(['"hello', "'hello", '"hello \"', "'hello ''"]), Expect(class: FormatException::class, withMessage: '/Unclosed .+ quote, encountered EOF/')]
@@ -104,7 +102,7 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
 
   #[Test]
   public function utf8_is_default() {
-    $this->assertEquals('Über', $this->newFixture('Über')->nextLine());
+    Assert::equals('Über', $this->newFixture('Über')->nextLine());
   }
 
   #[Test]
@@ -117,6 +115,6 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
     $lines[]= $r->nextLine();
     $lines[]= $r->nextLine();
 
-    $this->assertEquals(['Line 1', 'Line 1', 'Line 2'], $lines);
+    Assert::equals(['Line 1', 'Line 1', 'Line 2'], $lines);
   }
 }

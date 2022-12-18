@@ -1,9 +1,9 @@
 <?php namespace org\yaml\unittest;
 
 use org\yaml\{StringInput, YamlParser};
-use unittest\{Test, TestCase};
+use unittest\{Assert, Test};
 
-class DocumentsTest extends TestCase {
+class DocumentsTest {
 
   private function documents($str) {
     return (new YamlParser())->documents(new StringInput($str));
@@ -11,12 +11,12 @@ class DocumentsTest extends TestCase {
 
   #[Test]
   public function empty_input() {
-    $this->assertEquals([], iterator_to_array($this->documents('')));
+    Assert::equals([], iterator_to_array($this->documents('')));
   }
 
   #[Test]
   public function empty_document() {
-    $this->assertEquals([null], iterator_to_array($this->documents(
+    Assert::equals([null], iterator_to_array($this->documents(
       "---\n".
       "...\n"
     )));
@@ -24,7 +24,7 @@ class DocumentsTest extends TestCase {
 
   #[Test]
   public function single_document() {
-    $this->assertEquals([['A', 'B']], iterator_to_array($this->documents(
+    Assert::equals([['A', 'B']], iterator_to_array($this->documents(
       "---\n".
       "- A\n".
       "- B\n".
@@ -34,7 +34,7 @@ class DocumentsTest extends TestCase {
 
   #[Test]
   public function single_document_ended_by_eof() {
-    $this->assertEquals([['A', 'B']], iterator_to_array($this->documents(
+    Assert::equals([['A', 'B']], iterator_to_array($this->documents(
       "---\n".
       "- A\n".
       "- B\n"
@@ -43,7 +43,7 @@ class DocumentsTest extends TestCase {
 
   #[Test]
   public function multiple_documents() {
-    $this->assertEquals([['A', 'B'], ['C', 'D']], iterator_to_array($this->documents(
+    Assert::equals([['A', 'B'], ['C', 'D']], iterator_to_array($this->documents(
       "---\n".
       "- A\n".
       "- B\n".
@@ -56,7 +56,7 @@ class DocumentsTest extends TestCase {
 
   #[Test]
   public function empty_document_between() {
-    $this->assertEquals([['A', 'B'], null, ['C', 'D']], iterator_to_array($this->documents(
+    Assert::equals([['A', 'B'], null, ['C', 'D']], iterator_to_array($this->documents(
       "---\n".
       "- A\n".
       "- B\n".
@@ -71,7 +71,7 @@ class DocumentsTest extends TestCase {
 
   #[Test]
   public function directives() {
-    $this->assertEquals([['A', 'B'], ['C', 'D']], iterator_to_array($this->documents(
+    Assert::equals([['A', 'B'], ['C', 'D']], iterator_to_array($this->documents(
       "%YAML 1.2\n".
       "---\n".
       "- A\n".

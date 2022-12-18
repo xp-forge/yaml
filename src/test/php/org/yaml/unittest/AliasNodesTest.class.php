@@ -1,7 +1,7 @@
 <?php namespace org\yaml\unittest;
 
 use lang\IllegalArgumentException;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
 /**
  * 7.1 Alias Nodes
@@ -16,7 +16,7 @@ class AliasNodesTest extends AbstractYamlParserTest {
 
   #[Test]
   public function repeated_nodes() {
-    $this->assertEquals(
+    Assert::equals(
       ['Sammy Sosa', 'Sammy Sosa'],
       $this->parse("- &SS Sammy Sosa\n- *SS # Same\n")
     );
@@ -25,7 +25,7 @@ class AliasNodesTest extends AbstractYamlParserTest {
   #[Test]
   public function repeated_map_nodes() {
     $person= ['id' => 1549, 'name' => 'Timm'];
-    $this->assertEquals(
+    Assert::equals(
       [$person, $person],
       $this->parse("- &person\n  id: 1549\n  name: Timm\n- *person\n")
     );
@@ -38,7 +38,7 @@ class AliasNodesTest extends AbstractYamlParserTest {
 
   #[Test]
   public function external_reference() {
-    $this->assertEquals(
+    Assert::equals(
       ['value' => $this],
       $this->parse("value: *test\n", ['test' => $this])
     );
@@ -46,7 +46,7 @@ class AliasNodesTest extends AbstractYamlParserTest {
 
   #[Test]
   public function anchors_can_be_reused() {
-    $this->assertEquals([
+    Assert::equals([
       'First occurrence'  => 'Foo',
       'Second occurrence' => 'Foo',
       'Override anchor'   => 'Bar',
@@ -59,7 +59,7 @@ class AliasNodesTest extends AbstractYamlParserTest {
 
   #[Test]
   public function defined_with_flow() {
-    $this->assertEquals(
+    Assert::equals(
       [['x' => 1, 'y' => 2], 1],
       $this->parse("- &CENTER { x: 1, y: 2 }\n- &TOP 1")
     );
@@ -67,7 +67,7 @@ class AliasNodesTest extends AbstractYamlParserTest {
 
   #[Test]
   public function used_inside_flow() {
-    $this->assertEquals(
+    Assert::equals(
       [10, 1, 'options' => [1, 10]],
       $this->parse("- &BIG 10\n- &SMALL 1\noptions: [ *SMALL, *BIG ]")
     );

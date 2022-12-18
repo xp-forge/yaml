@@ -1,7 +1,7 @@
 <?php namespace org\yaml\unittest;
 
 use lang\FormatException;
-use unittest\{Expect, Test, Values};
+use unittest\{Assert, Expect, Test, Values};
 
 /**
  * 7.3. Flow Scalar Styles
@@ -16,12 +16,12 @@ class FlowScalarsTest extends AbstractYamlParserTest {
 
   #[Test, Values([['str: ""', ''], ['str: "Test"', 'Test'], ['str: "\\""', '"'], ['str: "\\"Test\\""', '"Test"'], ['str: "A \\" B"', 'A " B'],])]
   public function double_quotes($input, $result) {
-    $this->assertEquals(['str' => $result], $this->parse($input));
+    Assert::equals(['str' => $result], $this->parse($input));
   }
 
   #[Test, Values([['\0', "\x00"], ['\a', "\x07"], ['\b', "\x08"], ['\t', "\x09"], ['\n', "\x0a"], ['\v', "\x0b"], ['\f', "\x0c"], ['\r', "\x0d"], ['\e', "\x1b"]])]
   public function control_chars_inside_double_quotes($input, $result) {
-    $this->assertEquals(
+    Assert::equals(
       ['str' => '<'.$result.'>'],
       $this->parse('str: "<'.$input.'>"')
     );
@@ -34,7 +34,7 @@ class FlowScalarsTest extends AbstractYamlParserTest {
 
   #[Test]
   public function backslash_inside_double_quotes() {
-    $this->assertEquals(
+    Assert::equals(
       ['str' => '\\'],
       $this->parse('str: "\\\\"')   // The input string is "\\"
     );
@@ -42,17 +42,17 @@ class FlowScalarsTest extends AbstractYamlParserTest {
 
   #[Test, Values(['\ ', ' '])]
   public function space_may_be_escaped_inside_double_quotes_to_force_spaces($variant) {
-    $this->assertEquals(['str' => ' '], $this->parse('str: "'.$variant.'"'));
+    Assert::equals(['str' => ' '], $this->parse('str: "'.$variant.'"'));
   }
 
   #[Test, Values(['\/', '/'])]
   public function slash_may_be_escaped_inside_double_quotes_for_json_compat($variant) {
-    $this->assertEquals(['str' => '/'], $this->parse('str: "'.$variant.'"'));
+    Assert::equals(['str' => '/'], $this->parse('str: "'.$variant.'"'));
   }
 
   #[Test]
   public function hex_escapes_inside_double_quotes() {
-    $this->assertEquals(
+    Assert::equals(
       ['str' => "\x0d\x0a is \x0d\x0a"],
       $this->parse('str: "\x0d\x0a is \r\n"')
     );
@@ -60,12 +60,12 @@ class FlowScalarsTest extends AbstractYamlParserTest {
 
   #[Test, Values([["str: ''", ''], ["str: 'Test'", 'Test'], ["str: 'A '' B'", 'A \' B']])]
   public function single_quotes($input, $result) {
-    $this->assertEquals(['str' => $result], $this->parse($input));
+    Assert::equals(['str' => $result], $this->parse($input));
   }
 
   #[Test, Values(["str: 'A string\nspanning\nmultiple\nlines\n\nNew line\n  .\n\n\nEnd'", "str: \"A string\nspanning\nmultiple\nlines\n\nNew line\n  .\n\n\nEnd\"",])]
   public function multiline_string($declaration) {
-    $this->assertEquals(
+    Assert::equals(
       ['str' => "A string spanning multiple lines\nNew line .\n\nEnd"],
       $this->parse($declaration)
     );

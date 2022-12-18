@@ -1,6 +1,6 @@
 <?php namespace org\yaml\unittest;
 
-use unittest\{Ignore, Test};
+use unittest\{Assert, Ignore, Test};
 
 /**
  * 7.2 Empty Nodes
@@ -15,21 +15,21 @@ class EmptyNodesTest extends AbstractYamlParserTest {
 
   #[Test]
   public function empty_value() {
-    $this->assertEquals(['key' => null], $this->parse('key: '));
+    Assert::equals(['key' => null], $this->parse('key: '));
   }
 
   #[Test, Ignore('Key types not yet supported')]
   public function empty_string_key() {
-    $this->assertEquals(['' => 'value'], $this->parse('!!str : value'));
+    Assert::equals(['' => 'value'], $this->parse('!!str : value'));
   }
 
   #[Test]
   public function empty_string_value() {
-    $this->assertEquals(['key' => ''], $this->parse('key: !!str'));
+    Assert::equals(['key' => ''], $this->parse('key: !!str'));
   }
 
   #[Test]
   public function nested_empty_followed_by_toplevel_empty() {
-    $this->assertEquals(['one' => ['sub' => null], 'two' => null], $this->parse("one:\n  sub:\ntwo:\n"));
+    Assert::equals(['one' => ['sub' => null], 'two' => null], $this->parse("one:\n  sub:\ntwo:\n"));
   }
 }

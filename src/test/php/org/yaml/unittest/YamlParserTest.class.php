@@ -2,7 +2,7 @@
 
 use lang\IllegalArgumentException;
 use org\yaml\YamlParser;
-use unittest\{Expect, Test, Values};
+use unittest\{Assert, Expect, Test, Values};
 use util\{Bytes, Date};
 
 class YamlParserTest extends AbstractYamlParserTest {
@@ -14,37 +14,37 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test]
   public function parse_empty() {
-    $this->assertNull($this->parse(''));
+    Assert::null($this->parse(''));
   }
 
   #[Test, Values(["\n", "\n\n", " \n \n", "  \n\n"])]
   public function parse_lines($value) {
-    $this->assertNull($this->parse($value));
+    Assert::null($this->parse($value));
   }
 
   #[Test, Values(["key: value", "key: value\n"])]
   public function parse_single_key_value($value) {
-    $this->assertEquals(['key' => 'value'], $this->parse($value));
+    Assert::equals(['key' => 'value'], $this->parse($value));
   }
 
   #[Test]
   public function parse_single_key_value_surrounded_by_empty_lines() {
-    $this->assertEquals(['key' => 'value'], $this->parse("\nkey: value\n\n"));
+    Assert::equals(['key' => 'value'], $this->parse("\nkey: value\n\n"));
   }
 
   #[Test]
   public function parse_yaml_directive() {
-    $this->assertNull($this->parse('%YAML 1.2'));
+    Assert::null($this->parse('%YAML 1.2'));
   }
 
   #[Test]
   public function parse_yaml_directive_separated_from_content() {
-    $this->assertEquals(['key' => 'value'], $this->parse("%YAML 1.2\n---\nkey: value"));
+    Assert::equals(['key' => 'value'], $this->parse("%YAML 1.2\n---\nkey: value"));
   }
 
   #[Test]
   public function parse_key_value() {
-    $this->assertEquals(
+    Assert::equals(
       ['time' => '20:03:20', 'player' => 'Sammy Sosa', 'action' => 'strike (miss)'],
       $this->parse("time: 20:03:20\nplayer: Sammy Sosa\naction: strike (miss)")
     );
@@ -52,7 +52,7 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test, Values(['', "\n", "\n\n", "\n  ", "\n  \n    ", "# Comment", "# Comment\n# Another comment\n", "# Comment\n\n",])]
   public function issue_2($between) {
-    $this->assertEquals(
+    Assert::equals(
       ['context' => ['text' => ['Test' => 'Probieren'], 'user' => ['language' => 'de']]],
       $this->parse("context:\n  text:\n    Test: Probieren".$between."\n  user:\n    language: de\n")
     );
@@ -60,48 +60,48 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test, Values([['str: Test', "Test"], ['str: Test # Comment', "Test"], ['str: "Test"', "Test"], ['str: "A:B"', "A:B"], ['str: "A\'B"', "A'B"], ["str: 'A\"B'", 'A"B'], ['str: "Test # No comment"', "Test # No comment"], ['str: "Test # No comment" ', "Test # No comment"], ['str: "Test # No comment" # Comment', "Test # No comment"], ['str: "He said: \"Hello\""', 'He said: "Hello"'], ["str: 'He said: ''Hello'''", "He said: 'Hello'"],])]
   public function parse_string($input, $result) {
-    $this->assertEquals(['str' => $result], $this->parse($input));
+    Assert::equals(['str' => $result], $this->parse($input));
   }
 
   #[Test, Values([['num: 1', 1], ['num: 0', 0], ['num: -1', -1], ['num: +1', 1], ['num: 0o14', 12], ['num: 0xC', 12], ['num: 0xc', 12]])]
   public function parse_integer($input, $result) {
-    $this->assertEquals(['num' => $result], $this->parse($input));
+    Assert::equals(['num' => $result], $this->parse($input));
   }
 
   #[Test, Values([['num: 1.0', 1.0], ['num: 0.0', 0.0], ['num: 0.5', 0.5], ['num: -1.0', -1.0], ['num: +1.0', 1.0], ['num: 1.23015e+3', 1.23015e+3], ['num: 12.3015e+02', 12.3015e+02]])]
   public function parse_float($input, $result) {
-    $this->assertEquals(['num' => $result], $this->parse($input));
+    Assert::equals(['num' => $result], $this->parse($input));
   }
 
   #[Test, Values(['nan: .nan', 'nan: .NaN', 'nan: .NAN'])]
   public function parse_nan($input) {
     $r= $this->parse($input);
-    $this->assertTrue(is_nan($r['nan']), $r['nan']);
+    Assert::true(is_nan($r['nan']), $r['nan']);
   }
 
   #[Test, Values([['num: .inf', INF], ['num: .Inf', INF], ['num: .INF', INF], ['num: -.inf', -INF], ['num: -.Inf', -INF], ['num: -.INF', -INF], ['num: +.inf', +INF], ['num: +.Inf', +INF], ['num: +.INF', +INF],])]
   public function parse_inf($input, $result) {
-    $this->assertEquals(['num' => $result], $this->parse($input));
+    Assert::equals(['num' => $result], $this->parse($input));
   }
 
   #[Test, Values([['bool: true', true], ['bool: True', true], ['bool: TRUE', true], ['bool: false', false], ['bool: False', false], ['bool: FALSE', false]])]
   public function parse_bool($input, $result) {
-    $this->assertEquals(['bool' => $result], $this->parse($input));
+    Assert::equals(['bool' => $result], $this->parse($input));
   }
 
   #[Test, Values(['nil: ', 'nil: null', 'nil: Null', 'nil: NULL', 'nil: ~'])]
   public function parse_null($value) {
-    $this->assertEquals(['nil' => null], $this->parse($value));
+    Assert::equals(['nil' => null], $this->parse($value));
   }
 
   #[Test]
   public function parse_date() {
-    $this->assertEquals(['date' => new Date('2002-12-14')], $this->parse('date: 2002-12-14'));
+    Assert::equals(['date' => new Date('2002-12-14')], $this->parse('date: 2002-12-14'));
   }
 
   #[Test]
   public function parse_canonical() {
-    $this->assertEquals(
+    Assert::equals(
       ['canonical' => new Date('2001-12-15 02:59:43', \util\TimeZone::getByName('GMT'))],
       $this->parse('canonical: 2001-12-15T02:59:43.1Z')
     );
@@ -109,7 +109,7 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test]
   public function parse_iso8601() {
-    $this->assertEquals(
+    Assert::equals(
       ['iso8601' => new Date('2001-12-14 21:59:43-05:00')],
       $this->parse('iso8601: 2001-12-14t21:59:43.10-05:00')
     );
@@ -117,7 +117,7 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test]
   public function spaced() {
-    $this->assertEquals(
+    Assert::equals(
       ['spaced' => new Date('2001-12-14 21:59:43-05:00')],
       $this->parse('spaced: 2001-12-14 21:59:43.10 -5')
     );
@@ -125,7 +125,7 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test]
   public function parse_sequence() {
-    $this->assertEquals(
+    Assert::equals(
       ['Mark McGwire', 'Sammy Sosa', 'Ken Griffey'],
       $this->parse("- Mark McGwire\n- Sammy Sosa\n- Ken Griffey")
     );
@@ -133,7 +133,7 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test]
   public function mapping_scalars_to_sequences() {
-    $this->assertEquals(
+    Assert::equals(
       [
         'american' => ['Boston Red Sox', 'Detroit Tigers', 'New York Yankees'],
         'national' => ['New York Mets', 'Chicago Cubs', 'Atlanta Braves']
@@ -147,7 +147,7 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test]
   public function sequence_of_mappings() {
-    $this->assertEquals(
+    Assert::equals(
       [
         ['name' => 'Mark McGwire', 'hr' => 65, 'avg' => 0.278],
         ['name' => 'Sammy Sosa', 'hr' => 63, 'avg' => 0.288]
@@ -161,32 +161,32 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test]
   public function comment() {
-    $this->assertNull($this->parse('# Comments are ignored'));
+    Assert::null($this->parse('# Comments are ignored'));
   }
 
   #[Test]
   public function indented_comment() {
-    $this->assertNull($this->parse('  # Comments are ignored'));
+    Assert::null($this->parse('  # Comments are ignored'));
   }
 
   #[Test]
   public function comments() {
-    $this->assertNull($this->parse("# Line 1\n# Line 2\n"));
+    Assert::null($this->parse("# Line 1\n# Line 2\n"));
   }
 
   #[Test]
   public function comments_and_whitespace() {
-    $this->assertNull($this->parse("# Line 1\n\n# Line 3\n"));
+    Assert::null($this->parse("# Line 1\n\n# Line 3\n"));
   }
 
   #[Test, Values(['key: value # A value', 'key: value        # A value'])]
   public function comment_at_end_of_line($value) {
-    $this->assertEquals(['key' => 'value'], $this->parse($value));
+    Assert::equals(['key' => 'value'], $this->parse($value));
   }
 
   #[Test]
   public function comment_at_end_of_lines() {
-    $this->assertEquals(
+    Assert::equals(
       ['hr' => 65, 'avg' => 0.278, 'rbi' => 147],
       $this->parse("hr:  65    # Home runs\navg: 0.278 # Batting average\nrbi: 147   # Runs Batted In")
     );
@@ -194,7 +194,7 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test]
   public function compact_nested_mapping() {
-    $this->assertEquals(
+    Assert::equals(
       [
         ['item' => 'Super Hoop', 'quantity' => 1],
         ['item' => 'Basketball', 'quantity' => 4],
@@ -214,7 +214,7 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test]
   public function literal_style() {
-    $this->assertEquals(
+    Assert::equals(
       ['stats' => "65 Home Runs\n0.278 Batting Average\n"],
       $this->parse("stats: |
         65 Home Runs
@@ -225,7 +225,7 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test]
   public function folded_style_clipped() {
-    $this->assertEquals(
+    Assert::equals(
       ['sentence' => "Mark McGwire's year was crippled by a knee injury.\n"],
       $this->parse("sentence: >
         Mark McGwire's
@@ -238,7 +238,7 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test]
   public function folded_style_stripped() {
-    $this->assertEquals(
+    Assert::equals(
       ['sentence' => "Mark McGwire's year was crippled by a knee injury."],
       $this->parse("sentence: >-
         Mark McGwire's
@@ -251,7 +251,7 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test]
   public function folded_style_keeping() {
-    $this->assertEquals(
+    Assert::equals(
       ['sentence' => "Mark McGwire's year was crippled by a knee injury.\n\n"],
       $this->parse("sentence: >+
         Mark McGwire's
@@ -264,7 +264,7 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test]
   public function folded_scalars() {
-    $this->assertEquals(
+    Assert::equals(
       ['one' => "This is sentence number 1\n", 'two' => "This is sentence number 2\n"],
       $this->parse("one: >\n  This is sentence\n  number 1\ntwo: >\n  This is sentence\n  number 2\n")
     );
@@ -272,12 +272,12 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test]
   public function explicit_str_tag() {
-    $this->assertEquals(['not-date' => '2002-04-28'], $this->parse('not-date: !!str 2002-04-28'));
+    Assert::equals(['not-date' => '2002-04-28'], $this->parse('not-date: !!str 2002-04-28'));
   }
 
   #[Test]
   public function binary_tag() {
-    $this->assertEquals(['key' => new Bytes('YAML')], $this->parse('key: !!binary "WUFNTA=="'));
+    Assert::equals(['key' => new Bytes('YAML')], $this->parse('key: !!binary "WUFNTA=="'));
   }
 
   #[Test]
@@ -288,7 +288,7 @@ class YamlParserTest extends AbstractYamlParserTest {
       "\216\216\216\340\340\340\237\237\237\223\223\223\247\247".
       "\247\236\236\236i^\020' \202\n\001\000;"
     );
-    $this->assertEquals(['key' => new Bytes($gif)], $this->parse('key: !!binary |
+    Assert::equals(['key' => new Bytes($gif)], $this->parse('key: !!binary |
       R0lGODlhDAAMAIQAAP//9/X
       17unp5WZmZgAAAOfn515eXv
       Pz7Y6OjuDg4J+fn5OTk6enp
@@ -303,27 +303,27 @@ class YamlParserTest extends AbstractYamlParserTest {
 
   #[Test, Values([['!!int 3', 3], ['!!int 0', 0], ['!!int -1', -1], ['!!int 0o7', 7], ['!!int 0x3A', 58]])]
   public function explicit_int_tag($input, $value) {
-    $this->assertEquals(['r' => $value], $this->parse('r: '.$input));
+    Assert::equals(['r' => $value], $this->parse('r: '.$input));
   }
 
   #[Test, Values([['!!float 0.3', 0.3], ['!!float 0.0', 0.0], ['!!float -1.0', -1.0], ['!!float 3', 3.0], ['!!float 0.', 0.0], ['!!float .5', 0.5], ['!!float +.INF', INF], ['!!float -.INF', -INF]])]
   public function explicit_float_tag($input, $value) {
-    $this->assertEquals(['r' => $value], $this->parse('r: '.$input));
+    Assert::equals(['r' => $value], $this->parse('r: '.$input));
   }
 
   #[Test]
   public function explicit_float_nan() {
     $r= $this->parse('nan: !!float .NAN');
-    $this->assertTrue(is_nan($r['nan']), $r['nan']);
+    Assert::true(is_nan($r['nan']), $r['nan']);
   }
 
   #[Test, Values([['!!bool true', true], ['!!bool TRUE', true], ['!!bool True', true], ['!!bool false', false], ['!!bool FALSE', false], ['!!bool False', false]])]
   public function explicit_bool_tag($input, $value) {
-    $this->assertEquals(['r' => $value], $this->parse('r: '.$input));
+    Assert::equals(['r' => $value], $this->parse('r: '.$input));
   }
 
   #[Test, Values(['!!null ""', '!!null'])]
   public function explicit_null_tag($input) {
-    $this->assertEquals(['r' => null], $this->parse('r: '.$input));
+    Assert::equals(['r' => null], $this->parse('r: '.$input));
   }
 }
