@@ -1,7 +1,7 @@
 <?php namespace org\yaml\unittest;
 
 use lang\FormatException;
-use unittest\{Assert, Test, Values};
+use test\{Assert, Test, Values};
 
 /**
  * 7.4. Flow Collection Styles

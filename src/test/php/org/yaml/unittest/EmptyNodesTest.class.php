@@ -1,6 +1,6 @@
 <?php namespace org\yaml\unittest;
 
-use unittest\{Assert, Ignore, Test};
+use test\{Assert, Ignore, Test};
 
 /**
  * 7.2 Empty Nodes

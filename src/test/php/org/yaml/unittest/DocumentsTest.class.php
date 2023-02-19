@@ -1,7 +1,7 @@
 <?php namespace org\yaml\unittest;
 
 use org\yaml\{StringInput, YamlParser};
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 class DocumentsTest {
 

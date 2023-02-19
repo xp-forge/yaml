@@ -2,7 +2,7 @@
 
 use io\streams\{InputStream, MemoryInputStream, TextReader};
 use org\yaml\ReaderInput;
-use unittest\Test;
+use test\Test;
 
 /** Tests the "Reader" input implementation */
 class ReaderInputTest extends AbstractInputTest {

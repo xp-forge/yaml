@@ -1,7 +1,7 @@
 <?php namespace org\yaml\unittest;
 
 use lang\IllegalArgumentException;
-use unittest\{Assert, Expect, Test};
+use test\{Assert, Expect, Test};
 
 /**
  * 7.1 Alias Nodes
@@ -31,7 +31,7 @@ class AliasNodesTest extends AbstractYamlParserTest {
     );
   }
 
-  #[Test, Expect(class: IllegalArgumentException::class, withMessage: 'Unresolved reference "TF", have ["SS"]')]
+  #[Test, Expect(class: IllegalArgumentException::class, message: 'Unresolved reference "TF", have ["SS"]')]
   public function unresolved_reference() {
     $this->parse("- &SS Sammy Sosa\n- *TF # Does not exist\n");
   }

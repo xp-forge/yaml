@@ -1,6 +1,6 @@
 <?php namespace org\yaml\unittest;
 
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 /**
  * Merge Key Language-Independent Type for YAML™ Version 1.1

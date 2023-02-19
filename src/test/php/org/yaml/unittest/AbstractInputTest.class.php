@@ -2,7 +2,7 @@
 
 use io\streams\{MemoryInputStream, TextReader};
 use lang\FormatException;
-use unittest\{Assert, Test, Values};
+use test\{Assert, Expect, Test, Values};
 
 /** Abstract base class for YAML Input tests */
 abstract class AbstractInputTest extends AbstractYamlParserTest {
@@ -80,22 +80,22 @@ abstract class AbstractInputTest extends AbstractYamlParserTest {
     Assert::equals('Hello', $fixture->nextLine());
   }
 
-  #[Test, Values('tokens')]
+  #[Test, Values(from: 'tokens')]
   public function token($input, $expected) {
     Assert::equals($expected, $this->newFixture()->tokenIn($input));
   }
 
-  #[Test, Values(['"hello', "'hello", '"hello \"', "'hello ''"]), Expect(class: FormatException::class, withMessage: '/Unclosed .+ quote, encountered EOF/')]
+  #[Test, Values(['"hello', "'hello", '"hello \"', "'hello ''"]), Expect(class: FormatException::class, message: '/Unclosed .+ quote, encountered EOF/')]
   public function unclosed_quote($value) {
     $this->newFixture()->tokenIn($value);
   }
 
-  #[Test, Values(['[one', '[one, []', '[one, [nested]', '[', '[[[']), Expect(class: FormatException::class, withMessage: '/Encountered EOF while parsing sequence/')]
+  #[Test, Values(['[one', '[one, []', '[one, [nested]', '[', '[[[']), Expect(class: FormatException::class, message: '/Encountered EOF while parsing sequence/')]
   public function unclosed_sequence($value) {
     $this->newFixture()->tokenIn($value);
   }
 
-  #[Test, Values(['{one: two', '{one: two, {}', '{', '{{{']), Expect(class: FormatException::class, withMessage: '/Encountered EOF while parsing map/')]
+  #[Test, Values(['{one: two', '{one: two, {}', '{', '{{{']), Expect(class: FormatException::class, message: '/Encountered EOF while parsing map/')]
   public function unclosed_map($value) {
     $this->newFixture()->tokenIn($value);
   }
