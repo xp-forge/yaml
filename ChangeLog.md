@@ -3,6 +3,8 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #10: Migrate to new testing library - @thekid
+
 ## 7.0.1 / 2022-10-18
 
 * Fixed nested maps spanning multiple lines in flow syntax - @thekid
