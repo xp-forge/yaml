@@ -2,7 +2,7 @@
 
 use lang\IllegalArgumentException;
 use org\yaml\YamlParser;
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 use util\{Bytes, Date};
 
 class YamlParserTest extends AbstractYamlParserTest {
