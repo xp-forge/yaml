@@ -58,9 +58,17 @@ class YamlParser {
             $r[$key]= $this->valueOf($reader, substr($line, $spaces + 2), $spaces);
           }
         } else if (!strpos('#!?{[', $line[$spaces]) && strpos($line, ':')) {
-          $key= $value= null;
-          sscanf($line, "%[^:]: %[^\r]", $key, $value);
-          $key= trim(substr($key, $spaces), ' ');
+
+          // Parse keys and values, including string handling
+          if ('"' === $line[$spaces] || "'" === $line[$spaces]) {
+            $p= strcspn($line, $line[$spaces], $spaces + 1);
+            $key= trim(substr($line, $spaces + 1, $p));
+            $p+= strcspn($line, ':', $spaces + 1 + $p);
+          } else {
+            $p= strcspn($line, ':', $spaces);
+            $key= trim(substr($line, $spaces, $p));
+          }
+          $value= $spaces + $p + 2 >= $l ? null : substr($line, $spaces + $p + 2);
 
           // The “<<” merge key is used to indicate that all the keys of one or more specified
           // maps should be inserted into the current map. If the value associated with the key
