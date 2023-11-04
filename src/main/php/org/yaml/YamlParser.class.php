@@ -60,15 +60,40 @@ class YamlParser {
         } else if (!strpos('#!?{[', $line[$spaces]) && strpos($line, ':')) {
 
           // Parse keys and values, including string handling
-          if ('"' === $line[$spaces] || "'" === $line[$spaces]) {
-            $p= strcspn($line, $line[$spaces], $spaces + 1);
-            $key= trim(substr($line, $spaces + 1, $p));
-            $p+= strcspn($line, ':', $spaces + 1 + $p);
+          if ('"' === $line[$spaces]) {
+            $start= $spaces + 1;
+            $key= '';
+
+            dq: $p= strcspn($line, '\\"', $start);
+            if ('\\' === $line[$start + $p]) {
+              $key.= substr($line, $start, $p).'"';
+              $start+= $p + 2;
+              goto dq;
+            }
+
+            $key= trim($key.substr($line, $start, $p));
+            $start+= $p;
+            $start+= strcspn($line, ':', $start);
+          } else if ("'" === $line[$spaces]) {
+            $start= $spaces + 1;
+            $key= '';
+
+            sq: $p= strcspn($line, "'", $start);
+            if ("'" === $line[$start + $p + 1] ?? null) {
+              $key.= substr($line, $start, $p)."'";
+              $start+= $p + 2;
+              goto sq;
+            }
+
+            $key= trim($key.substr($line, $start, $p));
+            $start+= $p;
+            $start+= strcspn($line, ':', $start);
           } else {
             $p= strcspn($line, ':', $spaces);
             $key= trim(substr($line, $spaces, $p));
+            $start= $spaces + $p;
           }
-          $value= $spaces + $p + 2 >= $l ? null : substr($line, $spaces + $p + 2);
+          $value= $start + 2 >= $l ? null : substr($line, $start + 2);
 
           // The “<<” merge key is used to indicate that all the keys of one or more specified
           // maps should be inserted into the current map. If the value associated with the key

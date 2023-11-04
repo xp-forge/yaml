@@ -131,12 +131,9 @@ class YamlParserTest extends AbstractYamlParserTest {
     );
   }
 
-  #[Test]
-  public function string_keys() {
-    Assert::equals(
-      ['one' => 1, 'two' => 2, 'three' => 3, '4th element' => 4, '5th:' => 5],
-      $this->parse("one: 1\n\"two\": 2\n'three': 3\n4th element: 4\n\"5th:\": 5")
-    );
+  #[Test, Values([['key', 'key'], ['"key"', 'key'], ["'key'", 'key'], ['key b', 'key b'], ['"key:"', 'key:'], ['"key \"b\""', 'key "b"'], ["'key ''b'''", "key 'b'"]])]
+  public function string_keys($declaration, $expected) {
+    Assert::equals([$expected => 1], $this->parse("{$declaration}: 1"));
   }
 
   #[Test]
