@@ -270,10 +270,10 @@ abstract class Input {
       $offset++;
       return $c;
     } else if (0 === substr_compare($in, '!!', $offset, 2)) {
-      $p= strcspn($in, ' ', $offset);
+      $p= strcspn($in, ' '.$end, $offset);
       $tag= substr($in, $offset + 2, $p - 2);
       $offset+= $p + 1;
-      if ($offset >= $l) return [$tag, null];
+      if ($offset >= $l || $end === $in[$offset]) return [$tag, null];
       $token= $this->token($in, $offset, $end);
       return [$tag, $token[1]];
     } else {
