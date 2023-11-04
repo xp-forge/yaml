@@ -3,6 +3,8 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 7.1.0 / 2023-11-04
+
 * Added PHP 8.4 to the test matrix - @thekid
 * Merged PR #11: Support quoted and typed keys - @thekid
 * Merged PR #10: Migrate to new testing library - @thekid
