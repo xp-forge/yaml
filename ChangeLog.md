@@ -3,6 +3,7 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #11: Support quoted and typed keys - @thekid
 * Merged PR #10: Migrate to new testing library - @thekid
 
 ## 7.0.1 / 2022-10-18
