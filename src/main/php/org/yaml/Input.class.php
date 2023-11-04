@@ -176,7 +176,7 @@ abstract class Input {
    * @param  string $end
    * @return var[]
    */
-  private function token(&$in, &$offset, $end= '#') {
+  public function token(&$in, &$offset, $end= '#') {
     $l= strlen($in);
     $offset+= strspn($in, ' ', $offset);
     if ($offset >= $l) return null;
@@ -186,7 +186,7 @@ abstract class Input {
 
     $c= $in[$offset];
     if ('"' === $c) {
-      $offset+= 1;
+      $offset++;
       $string= '';
       do {
         $p= strcspn($in, '\\"', $offset);
@@ -206,7 +206,7 @@ abstract class Input {
         $offset+= $p;
       } while (true);
     } else if ("'" === $c) {
-      $offset+= 1;
+      $offset++;
       $string= '';
       do {
         $p= strcspn($in, "'", $offset);
@@ -231,7 +231,7 @@ abstract class Input {
       $in.= $this->nextLine();
       return $this->token($in, $offset, $end);
     } else if ('*' === $c) {
-      $offset+= 1;
+      $offset++;
       $p= strcspn($in, $end, $offset);
       $literal= trim(substr($in, $offset, $p));
       $offset+= strlen($literal);
@@ -270,10 +270,10 @@ abstract class Input {
       $offset++;
       return $c;
     } else if (0 === substr_compare($in, '!!', $offset, 2)) {
-      $p= strcspn($in, ' ', $offset);
+      $p= strcspn($in, ' '.$end, $offset);
       $tag= substr($in, $offset + 2, $p - 2);
       $offset+= $p + 1;
-      if ($offset >= $l) return [$tag, null];
+      if ($offset >= $l || $end === $in[$offset]) return [$tag, null];
       $token= $this->token($in, $offset, $end);
       return [$tag, $token[1]];
     } else {

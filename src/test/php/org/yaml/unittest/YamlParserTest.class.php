@@ -131,6 +131,11 @@ class YamlParserTest extends AbstractYamlParserTest {
     );
   }
 
+  #[Test, Values([['key', 'key'], ['"key"', 'key'], ["'key'", 'key'], ['key b', 'key b'], ['"key:"', 'key:'], ['"key::b"', 'key::b'], ['"key \"b\""', 'key "b"'], ["'key ''b'''", "key 'b'"], ['!!str key', 'key']])]
+  public function string_keys($declaration, $expected) {
+    Assert::equals([$expected => 1], $this->parse("{$declaration}: 1"));
+  }
+
   #[Test]
   public function mapping_scalars_to_sequences() {
     Assert::equals(
