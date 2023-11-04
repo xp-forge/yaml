@@ -186,7 +186,7 @@ abstract class Input {
 
     $c= $in[$offset];
     if ('"' === $c) {
-      $offset+= 1;
+      $offset++;
       $string= '';
       do {
         $p= strcspn($in, '\\"', $offset);
@@ -206,7 +206,7 @@ abstract class Input {
         $offset+= $p;
       } while (true);
     } else if ("'" === $c) {
-      $offset+= 1;
+      $offset++;
       $string= '';
       do {
         $p= strcspn($in, "'", $offset);
@@ -231,7 +231,7 @@ abstract class Input {
       $in.= $this->nextLine();
       return $this->token($in, $offset, $end);
     } else if ('*' === $c) {
-      $offset+= 1;
+      $offset++;
       $p= strcspn($in, $end, $offset);
       $literal= trim(substr($in, $offset, $p));
       $offset+= strlen($literal);
