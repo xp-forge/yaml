@@ -176,7 +176,7 @@ abstract class Input {
    * @param  string $end
    * @return var[]
    */
-  private function token(&$in, &$offset, $end= '#') {
+  public function token(&$in, &$offset, $end= '#') {
     $l= strlen($in);
     $offset+= strspn($in, ' ', $offset);
     if ($offset >= $l) return null;
