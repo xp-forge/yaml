@@ -3,6 +3,10 @@ YAML for XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 8.0.0 / 2024-02-04
+
+* Implemented xp-framework/rfc#341: Drop XP <= 9 compatibility - @thekid
+
 ## 7.1.0 / 2023-11-04
 
 * Added PHP 8.4 to the test matrix - @thekid
