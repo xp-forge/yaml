@@ -190,6 +190,16 @@ class YamlParserTest extends AbstractYamlParserTest {
   }
 
   #[Test]
+  public function single_quotes_in_double_quotes() {
+    Assert::equals(['key' => "It's great"], $this->parse('key: "It\'s great"'));
+  }
+
+  #[Test]
+  public function double_quotes_in_single_quotes() {
+    Assert::equals(['key' => 'He said: "Hi"'], $this->parse('key: \'He said: "Hi"\''));
+  }
+
+  #[Test]
   public function comment_at_end_of_lines() {
     Assert::equals(
       ['hr' => 65, 'avg' => 0.278, 'rbi' => 147],
